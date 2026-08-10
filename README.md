@@ -2,6 +2,8 @@
 
 PrintPath is an open-source, visual workflow for turning an everyday 3D-printing idea into a precise, reviewable design specification. The first prototype captures the job, dimensions, printer profile, and print-readiness checks without requiring CAD knowledge.
 
+**Live prototype:** [printpath.willymlee.workers.dev](https://printpath.willymlee.workers.dev)
+
 ## Current prototype
 
 - Guided four-step design intake
