@@ -24,6 +24,7 @@ import {
   WandSparkles,
   X,
 } from "lucide-react";
+import Dashboard, { type AppPage, type StarterTemplate } from "./Dashboard";
 
 type ProjectSpec = {
   name: string;
@@ -36,13 +37,16 @@ type ProjectSpec = {
   clearance: number;
   cornerRadius: number;
   printer: string;
+  plate: string;
   nozzle: number;
   material: string;
   layerHeight: number;
   strength: string;
+  partCount: number;
+  assemblyMethod: string;
 };
 
-type NumberKey = "width" | "depth" | "height" | "wall" | "clearance" | "cornerRadius" | "nozzle" | "layerHeight";
+type NumberKey = "width" | "depth" | "height" | "wall" | "clearance" | "cornerRadius" | "nozzle" | "layerHeight" | "partCount";
 
 const STORAGE_KEY = "printpath-project-v1";
 
@@ -56,11 +60,14 @@ const starterSpec: ProjectSpec = {
   wall: 3.2,
   clearance: 0.35,
   cornerRadius: 6,
-  printer: "Bambu Lab A1",
+  printer: "Bambu Lab P1S",
+  plate: "Textured PEI Plate",
   nozzle: 0.4,
   material: "PLA",
   layerHeight: 0.2,
   strength: "Balanced",
+  partCount: 1,
+  assemblyMethod: "Single print",
 };
 
 const freshSpec: ProjectSpec = {
@@ -76,13 +83,7 @@ const steps = [
   { label: "Review", detail: "Check the brief", icon: PackageCheck },
 ];
 
-const printerVolumes: Record<string, [number, number, number]> = {
-  "Bambu Lab A1 mini": [180, 180, 180],
-  "Bambu Lab A1": [256, 256, 256],
-  "Bambu Lab P1S / P1P": [256, 256, 256],
-  "Bambu Lab X1C": [256, 256, 256],
-  "Other / not sure": [220, 220, 220],
-};
+const P1S_BUILD_VOLUME: [number, number, number] = [256, 256, 256];
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
@@ -91,7 +92,7 @@ function clamp(value: number, min: number, max: number) {
 function loadProject(): ProjectSpec {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? { ...starterSpec, ...JSON.parse(stored) } : starterSpec;
+    return stored ? { ...starterSpec, ...JSON.parse(stored), printer: "Bambu Lab P1S" } : starterSpec;
   } catch {
     return starterSpec;
   }
@@ -233,6 +234,7 @@ function Metric({ label, value, detail, icon: Icon }: { label: string; value: st
 
 export default function App() {
   const [spec, setSpec] = useState<ProjectSpec>(loadProject);
+  const [currentPage, setCurrentPage] = useState<AppPage>("overview");
   const [activeStep, setActiveStep] = useState(1);
   const [mobileNav, setMobileNav] = useState(false);
   const [saveState, setSaveState] = useState<"saved" | "saving">("saved");
@@ -247,12 +249,11 @@ export default function App() {
   }, [spec]);
 
   const checks = useMemo(() => {
-    const volume = printerVolumes[spec.printer] ?? printerVolumes["Other / not sure"];
-    return [
+    const baseChecks = [
       {
         label: "Build volume",
-        detail: `${volume[0]} × ${volume[1]} × ${volume[2]} mm`,
-        ok: spec.width <= volume[0] && spec.depth <= volume[1] && spec.height <= volume[2],
+        detail: `${P1S_BUILD_VOLUME[0]} × ${P1S_BUILD_VOLUME[1]} × ${P1S_BUILD_VOLUME[2]} mm · P1S`,
+        ok: spec.width <= P1S_BUILD_VOLUME[0] && spec.depth <= P1S_BUILD_VOLUME[1] && spec.height <= P1S_BUILD_VOLUME[2],
       },
       {
         label: "Wall thickness",
@@ -264,7 +265,20 @@ export default function App() {
         detail: `${spec.clearance} mm clearance`,
         ok: spec.clearance >= 0.2,
       },
+      {
+        label: "Plate & nozzle",
+        detail: `${spec.plate} · ${spec.nozzle} mm nozzle`,
+        ok: Boolean(spec.plate) && [0.2, 0.4, 0.6, 0.8].includes(spec.nozzle),
+      },
     ];
+    if (spec.partCount > 1) {
+      baseChecks.push({
+        label: "Assembly plan",
+        detail: `${spec.partCount} parts · ${spec.assemblyMethod}`,
+        ok: spec.assemblyMethod !== "Not sure yet",
+      });
+    }
+    return baseChecks;
   }, [spec]);
 
   const readyCount = checks.filter((check) => check.ok).length;
@@ -283,7 +297,59 @@ export default function App() {
   function startFresh() {
     setSpec(freshSpec);
     setActiveStep(0);
+    setCurrentPage("workbench");
     setMobileNav(false);
+  }
+
+  function navigate(page: AppPage) {
+    setCurrentPage(page);
+    setMobileNav(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function useTemplate(template: StarterTemplate) {
+    const templates: Record<StarterTemplate, ProjectSpec> = {
+      "grid-fit-tile": {
+        ...starterSpec,
+        name: "Gridfinity fit tile",
+        description: "A single 42 mm confidence tile to verify scale, first-layer grip, and grid feel before printing a larger system.",
+        category: "Container or organizer",
+        width: 42,
+        depth: 42,
+        height: 6,
+        wall: 2,
+        clearance: 0.25,
+        cornerRadius: 4,
+      },
+      "loose-tray": {
+        ...starterSpec,
+        name: "Loose-fit 2×2 tray",
+        description: "A small open tray that uses the Gridfinity footprint without committing the drawer to a full base system.",
+        category: "Container or organizer",
+        width: 84,
+        depth: 84,
+        height: 28,
+        wall: 2.4,
+        clearance: 0.3,
+        cornerRadius: 5,
+      },
+      "drawer-strip": {
+        ...starterSpec,
+        name: "Custom drawer base strip",
+        description: "A measured single-row strip used to verify drawer fit before producing a complete multi-plate base.",
+        category: "Container or organizer",
+        width: 210,
+        depth: 42,
+        height: 6,
+        wall: 2,
+        clearance: 0.3,
+        cornerRadius: 4,
+      },
+      blank: freshSpec,
+    };
+    setSpec(templates[template]);
+    setActiveStep(template === "blank" ? 0 : 1);
+    navigate("workbench");
   }
 
   function exportSpec() {
@@ -370,14 +436,9 @@ export default function App() {
       <div className="section-heading">
         <span className="step-kicker">Step 3 of 4</span>
         <h2>Choose your print setup</h2>
-        <p>We’ll use this to flag fragile walls and parts that do not fit the build plate.</p>
+        <p>Your P1S profile keeps build volume, plate, nozzle, and assembly limits visible.</p>
       </div>
-      <label className="field field-wide">
-        <span>Printer</span>
-        <select value={spec.printer} onChange={(event) => updateField("printer", event.target.value)}>
-          {Object.keys(printerVolumes).map((printer) => <option key={printer}>{printer}</option>)}
-        </select>
-      </label>
+      <div className="locked-printer-row"><span className="helper-icon"><Printer size={20} /></span><div><small>PRINTER PROFILE</small><strong>Bambu Lab P1S</strong><p>256 × 256 × 256 mm build volume</p></div><span className="ready-badge">Active</span></div>
       <div className="measurement-grid">
         <label className="field">
           <span>Nozzle</span>
@@ -386,17 +447,22 @@ export default function App() {
           </select>
         </label>
         <label className="field">
+          <span>Build plate</span>
+          <select value={spec.plate} onChange={(event) => updateField("plate", event.target.value)}>
+            <option>Textured PEI Plate</option><option>Smooth PEI / High Temp Plate</option><option>Cool Plate</option><option>Engineering Plate</option>
+          </select>
+        </label>
+        <label className="field">
           <span>Material</span>
           <select value={spec.material} onChange={(event) => updateField("material", event.target.value)}>
             <option>PLA</option><option>PETG</option><option>ABS</option><option>ASA</option><option>TPU</option>
           </select>
         </label>
-        <label className="field">
-          <span>Layer height</span>
-          <select value={spec.layerHeight} onChange={(event) => updateField("layerHeight", Number(event.target.value))}>
-            <option value={0.12}>0.12 mm · Fine</option><option value={0.16}>0.16 mm · Quality</option><option value={0.2}>0.20 mm · Standard</option><option value={0.28}>0.28 mm · Draft</option>
-          </select>
-        </label>
+      </div>
+      <div className="measurement-grid setup-secondary-grid">
+        <label className="field"><span>Layer height</span><select value={spec.layerHeight} onChange={(event) => updateField("layerHeight", Number(event.target.value))}><option value={0.12}>0.12 mm · Fine</option><option value={0.16}>0.16 mm · Quality</option><option value={0.2}>0.20 mm · Standard</option><option value={0.28}>0.28 mm · Draft</option></select></label>
+        <label className="field"><span>Number of parts</span><input type="number" min="1" max="24" step="1" value={spec.partCount} onChange={(event) => updateNumber("partCount", event.target.value)} /></label>
+        <label className="field"><span>Assembly</span><select value={spec.assemblyMethod} onChange={(event) => updateField("assemblyMethod", event.target.value)}><option>Single print</option><option>Slides together</option><option>Snap fit</option><option>Screws</option><option>Glue</option><option>Not sure yet</option></select></label>
       </div>
       <div className="strength-options">
         <span>Strength preference</span>
@@ -418,7 +484,8 @@ export default function App() {
       <dl className="spec-list">
         <div><dt>Envelope</dt><dd>{spec.width} × {spec.depth} × {spec.height} mm</dd></div>
         <div><dt>Construction</dt><dd>{spec.wall} mm walls · {spec.cornerRadius} mm corners</dd></div>
-        <div><dt>Print profile</dt><dd>{spec.printer} · {spec.material} · {spec.layerHeight} mm layers</dd></div>
+        <div><dt>Print profile</dt><dd>P1S · {spec.nozzle} mm · {spec.plate}</dd></div>
+        <div><dt>Part plan</dt><dd>{spec.partCount} {spec.partCount === 1 ? "part" : "parts"} · {spec.assemblyMethod}</dd></div>
       </dl>
       <button className="primary-button large" onClick={exportSpec} type="button"><Download size={18} /> Export project spec</button>
       <button className="secondary-button large" type="button"><WandSparkles size={18} /> CAD generation is the next build milestone</button>
@@ -438,20 +505,35 @@ export default function App() {
           <div className="brand"><span className="brand-mark"><Box size={24} /></span><div><strong>PrintPath</strong><small>Make it real.</small></div></div>
           <button className="icon-button close-nav" onClick={() => setMobileNav(false)} aria-label="Close navigation"><X size={20} /></button>
           <nav className="main-nav" aria-label="Main navigation">
-            <button className="active"><Home size={18} /><span>Workbench</span></button>
-            <button><Layers3 size={18} /><span>My projects</span><em>1</em></button>
-            <button><Sparkles size={18} /><span>Design library</span></button>
+            <button className={currentPage === "overview" ? "active" : ""} onClick={() => navigate("overview")}><Home size={18} /><span>Overview</span></button>
+            <button className={currentPage === "projects" ? "active" : ""} onClick={() => navigate("projects")}><Layers3 size={18} /><span>My projects</span><em>3</em></button>
+            <button className={currentPage === "library" ? "active" : ""} onClick={() => navigate("library")}><Sparkles size={18} /><span>Design library</span></button>
+            {currentPage === "workbench" && <button className="active" onClick={() => navigate("workbench")}><PencilRuler size={18} /><span>Active workbench</span></button>}
           </nav>
           <button className="new-project-button" onClick={startFresh}><Plus size={18} /> New project</button>
         </div>
         <div className="sidebar-bottom">
           <div className="roadmap-card"><span><Sparkles size={16} /></span><strong>Building in public</strong><p>This prototype is the first step toward an open design-to-print workflow.</p><button>View roadmap <ChevronRight size={14} /></button></div>
-          <button className="settings-link"><Settings size={18} /> Settings</button>
+          <button className={`settings-link ${currentPage === "settings" ? "active" : ""}`} onClick={() => navigate("settings")}><Settings size={18} /> Machine setup</button>
           <div className="profile"><span>WB</span><div><strong>William</strong><small>Maker workspace</small></div><ChevronRight size={16} /></div>
         </div>
       </aside>
       {mobileNav && <button className="nav-backdrop" onClick={() => setMobileNav(false)} aria-label="Close navigation" />}
 
+      {currentPage !== "workbench" ? (
+        <Dashboard
+          page={currentPage}
+          activeProjectName={spec.name}
+          nozzle={spec.nozzle}
+          plate={spec.plate}
+          onNavigate={navigate}
+          onOpenProject={() => navigate("workbench")}
+          onNewProject={startFresh}
+          onUseTemplate={useTemplate}
+          onNozzleChange={(value) => updateField("nozzle", value)}
+          onPlateChange={(value) => updateField("plate", value)}
+        />
+      ) : (
       <main className="workspace">
         <header className="workspace-header">
           <div>
@@ -463,6 +545,14 @@ export default function App() {
             <button className="secondary-button" onClick={exportSpec}><Download size={17} /> Export</button>
           </div>
         </header>
+
+        <div className="machine-context">
+          <span><Printer size={16} /><strong>Bambu Lab P1S</strong></span>
+          <span><Box size={15} />256 × 256 × 256 mm</span>
+          <span><CircleCheck size={15} />{spec.nozzle} mm nozzle</span>
+          <span><Layers3 size={15} />{spec.plate}</span>
+          <button onClick={() => navigate("settings")}>Edit setup</button>
+        </div>
 
         <div className="workflow-layout">
           <section className="workflow-panel">
@@ -499,10 +589,10 @@ export default function App() {
             <div className="metrics-row">
               <Metric icon={Clock3} label="Rough time" value={`~${estimatedHours} hr`} detail="early estimate" />
               <Metric icon={Layers3} label="Material" value={`~${estimatedGrams} g`} detail={spec.material} />
-              <Metric icon={Gauge} label="Readiness" value={`${readyCount}/3`} detail={readyCount === 3 ? "checks passed" : "needs review"} />
+              <Metric icon={Gauge} label="Readiness" value={`${readyCount}/${checks.length}`} detail={readyCount === checks.length ? "checks passed" : "needs review"} />
             </div>
             <div className="readiness-card">
-              <div className="readiness-header"><div><span className="eyebrow">Automatic checks</span><strong>Print readiness</strong></div><span className={readyCount === 3 ? "ready-badge" : "review-badge"}>{readyCount === 3 ? "Looking good" : "Review needed"}</span></div>
+              <div className="readiness-header"><div><span className="eyebrow">Automatic checks</span><strong>Print readiness</strong></div><span className={readyCount === checks.length ? "ready-badge" : "review-badge"}>{readyCount === checks.length ? "Looking good" : "Review needed"}</span></div>
               <div className="checks-list">
                 {checks.map((check) => (
                   <div className={check.ok ? "check-row ok" : "check-row warning"} key={check.label}>
@@ -516,6 +606,7 @@ export default function App() {
           </section>
         </div>
       </main>
+      )}
     </div>
   );
 }

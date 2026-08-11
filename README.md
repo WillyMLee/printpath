@@ -7,8 +7,13 @@ PrintPath is an open-source, visual workflow for turning an everyday 3D-printing
 ## Current prototype
 
 - Guided four-step design intake
+- Confidence-first overview and proof-print path
+- P1S-specific 256 × 256 × 256 mm machine profile
+- Explicit build-plate and nozzle awareness
 - Live dimension visualization
-- Bambu Lab printer and material profiles
+- Gridfinity starter series: fit tile, loose tray, and drawer strip
+- Projects and design-library scaffolding
+- Multi-part plate, checkpoint, and assembly planning
 - Build-volume, wall-thickness, and clearance checks
 - Automatic local saving
 - Portable JSON project-spec export
