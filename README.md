@@ -7,12 +7,13 @@ PrintPath is an open-source, visual workflow for turning an everyday 3D-printing
 ## Current prototype
 
 - Guided four-step design intake
-- Confidence-first overview and proof-print path
+- Plain-language “Make a Design” starting point
 - P1S-specific 256 × 256 × 256 mm machine profile
 - Explicit build-plate and nozzle awareness
 - Live dimension visualization
-- Gridfinity starter series: fit tile, loose tray, and drawer strip
-- Projects and design-library scaffolding
+- Custom-fit Gridfinity layouts, edge fillers, and fractional bins
+- Filterable templates for board games, bathrooms, bedrooms, plants, and everyday objects
+- Prefilled dimensions, materials, part counts, and assembly assumptions for every template
 - Multi-part plate, checkpoint, and assembly planning
 - Build-volume, wall-thickness, and clearance checks
 - Automatic local saving

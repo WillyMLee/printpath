@@ -301,6 +301,12 @@ export default function App() {
     setMobileNav(false);
   }
 
+  function startIdea(idea: string) {
+    setSpec({ ...freshSpec, description: idea });
+    setActiveStep(0);
+    navigate("workbench");
+  }
+
   function navigate(page: AppPage) {
     setCurrentPage(page);
     setMobileNav(false);
@@ -308,9 +314,8 @@ export default function App() {
   }
 
   function useTemplate(template: StarterTemplate) {
-    const templates: Record<StarterTemplate, ProjectSpec> = {
+    const templates: Record<Exclude<StarterTemplate, "blank">, Partial<ProjectSpec>> = {
       "grid-fit-tile": {
-        ...starterSpec,
         name: "Gridfinity fit tile",
         description: "A single 42 mm confidence tile to verify scale, first-layer grip, and grid feel before printing a larger system.",
         category: "Container or organizer",
@@ -322,7 +327,6 @@ export default function App() {
         cornerRadius: 4,
       },
       "loose-tray": {
-        ...starterSpec,
         name: "Loose-fit 2×2 tray",
         description: "A small open tray that uses the Gridfinity footprint without committing the drawer to a full base system.",
         category: "Container or organizer",
@@ -334,7 +338,6 @@ export default function App() {
         cornerRadius: 5,
       },
       "drawer-strip": {
-        ...starterSpec,
         name: "Custom drawer base strip",
         description: "A measured single-row strip used to verify drawer fit before producing a complete multi-plate base.",
         category: "Container or organizer",
@@ -345,9 +348,109 @@ export default function App() {
         clearance: 0.3,
         cornerRadius: 4,
       },
-      blank: freshSpec,
+      "grid-customizer": {
+        name: "Custom drawer Gridfinity layout",
+        description: "A measured Gridfinity layout that uses full 42 mm cells, centers the usable grid, and fills the leftover drawer space intentionally.",
+        category: "Container or organizer",
+        width: 210, depth: 168, height: 7, wall: 2.4, clearance: 0.3, cornerRadius: 4,
+        partCount: 2, assemblyMethod: "Slides together",
+      },
+      "grid-edge-filler": {
+        name: "Gridfinity edge and corner fillers",
+        description: "Measured strips and corner pieces that keep a standard Gridfinity grid centered and secure inside a drawer with awkward leftover space.",
+        category: "Container or organizer",
+        width: 42, depth: 14, height: 7, wall: 2.4, clearance: 0.3, cornerRadius: 3,
+        partCount: 4, assemblyMethod: "Slides together",
+      },
+      "grid-fractional-bin": {
+        name: "Fractional-width Gridfinity bin",
+        description: "A half-width bin for objects that are smaller than one standard Gridfinity cell, with a separate test fit before the full-height print.",
+        category: "Container or organizer",
+        width: 21, depth: 42, height: 35, wall: 2, clearance: 0.3, cornerRadius: 4,
+      },
+      "token-tray": {
+        name: "Pourable board game token tray",
+        description: "A rounded token well with a low pouring corner so pieces can move between the tray, table, and game box quickly.",
+        category: "Container or organizer",
+        width: 90, depth: 70, height: 22, wall: 2.4, clearance: 0.35, cornerRadius: 8,
+      },
+      "card-holder": {
+        name: "Sleeved card holder",
+        description: "A slightly leaning card well sized for a sleeved deck, with finger access and enough clearance to remove cards without binding.",
+        category: "Holder or mount",
+        width: 72, depth: 100, height: 45, wall: 2.4, clearance: 0.5, cornerRadius: 5,
+      },
+      "board-game-insert": {
+        name: "Modular board game box organizer",
+        description: "A six-part box insert that separates cards, tokens, boards, and player pieces into labeled modules with a plate-by-plate assembly plan.",
+        category: "Container or organizer",
+        width: 240, depth: 240, height: 55, wall: 2.2, clearance: 0.5, cornerRadius: 5,
+        partCount: 6, assemblyMethod: "Slides together",
+      },
+      "vanity-organizer": {
+        name: "Custom vanity drawer organizer",
+        description: "A measured compartment layout for cosmetics and daily tools that works around drawer rails, pipes, and other obstacles.",
+        category: "Container or organizer",
+        width: 220, depth: 140, height: 38, wall: 2.4, clearance: 0.5, cornerRadius: 7,
+        partCount: 2, assemblyMethod: "Slides together",
+      },
+      "toothbrush-dock": {
+        name: "Toothbrush and razor dock",
+        description: "Ventilated upright storage with removable drip cups sized to the handles you use and designed for easy cleaning.",
+        category: "Holder or mount",
+        width: 105, depth: 70, height: 95, wall: 2.6, clearance: 0.6, cornerRadius: 8,
+        material: "PETG", partCount: 2, assemblyMethod: "Slides together",
+      },
+      "nightstand-dock": {
+        name: "Nightstand charging dock",
+        description: "A phone rest with a routed charging cable, watch landing area, and pocket tray sized to the devices on the nightstand.",
+        category: "Holder or mount",
+        width: 170, depth: 110, height: 35, wall: 2.8, clearance: 0.5, cornerRadius: 9,
+        partCount: 2, assemblyMethod: "Slides together",
+      },
+      "jewelry-tray": {
+        name: "Stackable jewelry tray",
+        description: "A soft-corner compartment tray with room for rings, small pieces, and alignment features for adding another layer later.",
+        category: "Container or organizer",
+        width: 180, depth: 120, height: 25, wall: 2.2, clearance: 0.35, cornerRadius: 8,
+      },
+      "plant-drip-tray": {
+        name: "Exact-fit planter drip tray",
+        description: "A low-profile waterproof saucer matched to the planter base with a raised lip sized for routine runoff.",
+        category: "Container or organizer",
+        width: 145, depth: 145, height: 12, wall: 2.8, clearance: 1, cornerRadius: 14,
+        material: "PETG",
+      },
+      "trellis-clips": {
+        name: "Plant and trellis clips",
+        description: "A small batch of reusable clips tuned to the plant stem and trellis rod diameters without pinching new growth.",
+        category: "Holder or mount",
+        width: 22, depth: 18, height: 10, wall: 2, clearance: 0.5, cornerRadius: 4,
+        material: "PETG", partCount: 8,
+      },
+      "propagation-stand": {
+        name: "Propagation tube stand",
+        description: "A broad, water-safe holder that keeps glass propagation tubes upright and separates them for easy removal.",
+        category: "Holder or mount",
+        width: 160, depth: 80, height: 60, wall: 3, clearance: 0.7, cornerRadius: 10,
+        material: "PETG", partCount: 2, assemblyMethod: "Slides together",
+      },
+      "cable-guide": {
+        name: "Measured cable guide set",
+        description: "Snap-in cable routing matched to the cable thickness and the desk or furniture edge it mounts beneath.",
+        category: "Holder or mount",
+        width: 28, depth: 18, height: 14, wall: 2.4, clearance: 0.4, cornerRadius: 5,
+        partCount: 6,
+      },
+      "wall-hook": {
+        name: "Purpose-fit wall hook",
+        description: "A load-aware hook shaped around the exact object it holds and the fastener or mounting tape used on the wall.",
+        category: "Holder or mount",
+        width: 55, depth: 35, height: 70, wall: 3.2, clearance: 0.4, cornerRadius: 7,
+        strength: "Strong",
+      },
     };
-    setSpec(templates[template]);
+    setSpec(template === "blank" ? freshSpec : { ...starterSpec, ...templates[template] });
     setActiveStep(template === "blank" ? 0 : 1);
     navigate("workbench");
   }
@@ -529,6 +632,7 @@ export default function App() {
           onNavigate={navigate}
           onOpenProject={() => navigate("workbench")}
           onNewProject={startFresh}
+          onStartIdea={startIdea}
           onUseTemplate={useTemplate}
           onNozzleChange={(value) => updateField("nozzle", value)}
           onPlateChange={(value) => updateField("plate", value)}
