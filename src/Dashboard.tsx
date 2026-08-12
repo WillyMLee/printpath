@@ -282,6 +282,7 @@ const catalogTemplates: Array<{
   tone: string;
   popular?: boolean;
 }> = [
+  { id: "loose-tray", title: "Exact-fit open tray", category: "Everyday", description: "A production-ready first generator for a measured, square-corner tray with uniform walls.", time: "~1.5 hr", parts: "1 part", input: "Outer W × D × H", icon: Box, tone: "slate", popular: true },
   { id: "grid-customizer", title: "Custom drawer grid", category: "Gridfinity", description: "Centers full 42 mm cells and turns the leftover width into intentional edge space.", time: "~2–6 hr", parts: "2–6 parts", input: "Drawer W × D", icon: LayoutGrid, tone: "mint", popular: true },
   { id: "grid-edge-filler", title: "Edge & corner fillers", category: "Gridfinity", description: "Measured strips and corners that lock a standard grid into an awkward drawer.", time: "~45 min", parts: "1–4 parts", input: "Remaining gap", icon: PanelsTopLeft, tone: "mint" },
   { id: "grid-fractional-bin", title: "Fractional-width bins", category: "Gridfinity", description: "Half- and quarter-width storage when a full cell wastes too much room.", time: "~1.2 hr", parts: "1 part", input: "Object width", icon: Grid3X3, tone: "mint", popular: true },

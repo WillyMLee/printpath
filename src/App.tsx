@@ -6,11 +6,13 @@ import {
   CircleCheck,
   Clock3,
   Download,
+  ExternalLink,
   FileJson,
   Gauge,
   Home,
   Layers3,
   Lightbulb,
+  Link2,
   Menu,
   PackageCheck,
   PencilRuler,
@@ -18,10 +20,11 @@ import {
   Printer,
   RotateCcw,
   Ruler,
-  Save,
   Settings,
+  ShieldCheck,
   Sparkles,
-  WandSparkles,
+  Wifi,
+  WifiOff,
   X,
 } from "lucide-react";
 import Dashboard, { type AppPage, type StarterTemplate } from "./Dashboard";
@@ -44,11 +47,14 @@ type ProjectSpec = {
   strength: string;
   partCount: number;
   assemblyMethod: string;
+  geometryKind: "brief-only" | "open-tray";
 };
 
 type NumberKey = "width" | "depth" | "height" | "wall" | "clearance" | "cornerRadius" | "nozzle" | "layerHeight" | "partCount";
 
 const STORAGE_KEY = "printpath-project-v1";
+const BRIDGE_PAIRING_KEY = "printpath-bridge-pairing-v1";
+const BRIDGE_URL = "http://127.0.0.1:32145";
 
 const starterSpec: ProjectSpec = {
   name: "Under-desk headphone hanger",
@@ -68,6 +74,7 @@ const starterSpec: ProjectSpec = {
   strength: "Balanced",
   partCount: 1,
   assemblyMethod: "Single print",
+  geometryKind: "brief-only",
 };
 
 const freshSpec: ProjectSpec = {
@@ -213,7 +220,7 @@ function PartPreview({ spec }: { spec: ProjectSpec }) {
             <text x={x + visualWidth + dx / 2 + 17} y={y + dy / 2 - 16}>{spec.depth} mm</text>
           </g>
         </svg>
-        <span className="preview-note">Concept visualization · printable geometry comes next</span>
+        <span className="preview-note">{spec.geometryKind === "open-tray" ? "Concept preview · exact tray STL available at Review" : "Concept visualization · printable geometry comes next"}</span>
       </div>
     </div>
   );
@@ -238,6 +245,9 @@ export default function App() {
   const [activeStep, setActiveStep] = useState(1);
   const [mobileNav, setMobileNav] = useState(false);
   const [saveState, setSaveState] = useState<"saved" | "saving">("saved");
+  const [pairingCode, setPairingCode] = useState(() => localStorage.getItem(BRIDGE_PAIRING_KEY) || "");
+  const [bridgeState, setBridgeState] = useState<{ status: "checking" | "online" | "offline"; paired: boolean; version?: string }>({ status: "checking", paired: false });
+  const [handoffState, setHandoffState] = useState<{ status: "idle" | "sending" | "success" | "error"; message?: string }>({ status: "idle" });
 
   useEffect(() => {
     setSaveState("saving");
@@ -247,6 +257,10 @@ export default function App() {
     }, 450);
     return () => window.clearTimeout(timeout);
   }, [spec]);
+
+  useEffect(() => {
+    void checkBridge(pairingCode);
+  }, []);
 
   const checks = useMemo(() => {
     const baseChecks = [
@@ -327,15 +341,16 @@ export default function App() {
         cornerRadius: 4,
       },
       "loose-tray": {
-        name: "Loose-fit 2×2 tray",
-        description: "A small open tray that uses the Gridfinity footprint without committing the drawer to a full base system.",
+        name: "Exact-fit open tray",
+        description: "A simple square-corner open tray sized to the measured space, with a solid base and uniform walls.",
         category: "Container or organizer",
-        width: 84,
-        depth: 84,
+        width: 120,
+        depth: 80,
         height: 28,
         wall: 2.4,
         clearance: 0.3,
-        cornerRadius: 5,
+        cornerRadius: 0,
+        geometryKind: "open-tray",
       },
       "drawer-strip": {
         name: "Custom drawer base strip",
@@ -474,6 +489,52 @@ export default function App() {
     URL.revokeObjectURL(url);
   }
 
+  async function checkBridge(token = pairingCode) {
+    setBridgeState((current) => ({ ...current, status: "checking" }));
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 1800);
+    try {
+      const response = await fetch(`${BRIDGE_URL}/health`, {
+        cache: "no-store",
+        headers: token ? { "X-PrintPath-Token": token.trim().toUpperCase() } : undefined,
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new Error("Bridge did not respond.");
+      const result = await response.json() as { paired?: boolean; version?: string };
+      setBridgeState({ status: "online", paired: Boolean(result.paired), version: result.version });
+      if (result.paired && token) {
+        const normalized = token.trim().toUpperCase();
+        setPairingCode(normalized);
+        localStorage.setItem(BRIDGE_PAIRING_KEY, normalized);
+      }
+    } catch {
+      setBridgeState({ status: "offline", paired: false });
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+
+  async function handoffToBambu() {
+    if (!bridgeState.paired || spec.geometryKind !== "open-tray") return;
+    setHandoffState({ status: "sending" });
+    try {
+      const response = await fetch(`${BRIDGE_URL}/handoff`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-PrintPath-Token": pairingCode,
+        },
+        body: JSON.stringify({ project: spec, readiness: checks }),
+      });
+      const result = await response.json() as { ok?: boolean; fileName?: string; openedWith?: string; error?: string };
+      if (!response.ok || !result.ok) throw new Error(result.error || "The handoff failed.");
+      setHandoffState({ status: "success", message: `${result.fileName} opened with ${result.openedWith}. Review the sliced preview before printing.` });
+    } catch (error) {
+      setHandoffState({ status: "error", message: error instanceof Error ? error.message : "The handoff failed." });
+      void checkBridge(pairingCode);
+    }
+  }
+
   const stepContent = [
     <section className="form-section" key="describe">
       <div className="section-heading">
@@ -578,7 +639,7 @@ export default function App() {
       <div className="section-heading">
         <span className="step-kicker">Step 4 of 4</span>
         <h2>Your design brief is ready</h2>
-        <p>Review the assumptions, then export a clean spec for the CAD generation step.</p>
+        <p>Review the assumptions, then generate a supported model or export the brief for its CAD step.</p>
       </div>
       <div className="brief-card">
         <span className="brief-icon"><FileJson size={22} /></span>
@@ -590,8 +651,35 @@ export default function App() {
         <div><dt>Print profile</dt><dd>P1S · {spec.nozzle} mm · {spec.plate}</dd></div>
         <div><dt>Part plan</dt><dd>{spec.partCount} {spec.partCount === 1 ? "part" : "parts"} · {spec.assemblyMethod}</dd></div>
       </dl>
+      <section className="bridge-card">
+        <div className="bridge-heading">
+          <span className="bridge-icon"><Link2 size={19} /></span>
+          <div><small>LOCAL HANDOFF</small><strong>Open safely in Bambu Studio</strong></div>
+          <span className={`bridge-status ${bridgeState.status}`}>
+            {bridgeState.status === "online" ? <Wifi size={13} /> : <WifiOff size={13} />}
+            {bridgeState.status === "checking" ? "Checking" : bridgeState.status === "online" ? `Bridge ${bridgeState.version || "online"}` : "Bridge offline"}
+          </span>
+        </div>
+        <div className="bridge-safety"><ShieldCheck size={16} /><p>Your Bambu login stays in Bambu Studio. PrintPath creates the local file, then stops before slicing or printing.</p></div>
+        {bridgeState.status === "offline" ? (
+          <div className="bridge-setup"><p>Start <code>bridge/start-bridge.cmd</code> on this computer, then retry.</p><div><a className="secondary-button" href="https://github.com/WillyMLee/printpath/tree/codex/p1s-confidence-workflow/bridge" target="_blank" rel="noreferrer">Bridge setup <ExternalLink size={14} /></a><button className="secondary-button" type="button" onClick={() => void checkBridge()}>Retry connection</button></div></div>
+        ) : !bridgeState.paired ? (
+          <div className="bridge-pairing">
+            <label><span>Pairing code from the Bridge window</span><input value={pairingCode} onChange={(event) => setPairingCode(event.target.value.toUpperCase())} placeholder="PP-XXXX-XXXX-XXXX" /></label>
+            <button className="secondary-button" type="button" disabled={!pairingCode.trim()} onClick={() => void checkBridge(pairingCode)}>Pair this browser</button>
+          </div>
+        ) : (
+          <div className="bridge-connected"><CircleCheck size={16} /><span>Paired locally. No Bambu account credentials are stored here.</span></div>
+        )}
+        <div className={`geometry-readiness ${spec.geometryKind === "open-tray" ? "supported" : "unsupported"}`}>
+          <div><strong>{spec.geometryKind === "open-tray" ? "Starter geometry available" : "Geometry generator still needed"}</strong><p>{spec.geometryKind === "open-tray" ? "Generates a square-corner open-tray STL from these exact outer dimensions and wall thickness." : "This brief is preserved, but PrintPath will not invent unsafe geometry for this object type."}</p></div>
+        </div>
+        <button className="primary-button large" type="button" disabled={!bridgeState.paired || spec.geometryKind !== "open-tray" || readyCount !== checks.length || handoffState.status === "sending"} onClick={() => void handoffToBambu()}>
+          <ExternalLink size={18} /> {handoffState.status === "sending" ? "Creating local model…" : "Create STL and open in Bambu Studio"}
+        </button>
+        {handoffState.message && <p className={`handoff-message ${handoffState.status}`}>{handoffState.message}</p>}
+      </section>
       <button className="primary-button large" onClick={exportSpec} type="button"><Download size={18} /> Export project spec</button>
-      <button className="secondary-button large" type="button"><WandSparkles size={18} /> CAD generation is the next build milestone</button>
     </section>,
   ];
 
