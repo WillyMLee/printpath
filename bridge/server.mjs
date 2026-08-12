@@ -193,6 +193,10 @@ const server = createServer(async (request, response) => {
       version: VERSION,
       paired: request.headers["x-printpath-token"] === pairingToken,
       capabilities: ["open-tray-stl", "bambu-studio-handoff"],
+      bambuStudio: {
+        detected: Boolean(findBambuStudio()),
+        launchMethod: findBambuStudio() ? "direct" : "windows-file-association",
+      },
     }, origin);
     return;
   }

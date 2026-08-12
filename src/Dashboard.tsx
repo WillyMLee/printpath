@@ -13,14 +13,19 @@ import {
   Coins,
   Component,
   CreditCard,
+  Download,
   Droplets,
+  ExternalLink,
   Flower2,
   Gauge,
   Gamepad2,
   Gem,
   Grid3X3,
+  HardDrive,
+  KeyRound,
   Layers3,
   LayoutGrid,
+  Link2,
   PackageCheck,
   PackageOpen,
   PanelsTopLeft,
@@ -31,10 +36,12 @@ import {
   Sparkles,
   Sprout,
   WandSparkles,
+  Wifi,
+  WifiOff,
   Wrench,
 } from "lucide-react";
 
-export type AppPage = "overview" | "projects" | "library" | "workbench" | "settings";
+export type AppPage = "overview" | "projects" | "library" | "workbench" | "settings" | "bridge";
 
 export type StarterTemplate =
   | "grid-fit-tile" | "loose-tray" | "drawer-strip" | "grid-customizer" | "grid-edge-filler" | "grid-fractional-bin"
@@ -56,6 +63,13 @@ type DashboardProps = {
   onUseTemplate: (template: StarterTemplate) => void;
   onNozzleChange: (value: number) => void;
   onPlateChange: (value: string) => void;
+  bridgeStatus: "checking" | "online" | "offline";
+  bridgePaired: boolean;
+  bridgeVersion?: string;
+  bambuStudioDetected?: boolean;
+  pairingCode: string;
+  onPairingCodeChange: (value: string) => void;
+  onCheckBridge: () => void;
 };
 
 const plateOptions = [
@@ -357,8 +371,56 @@ function SettingsPage(props: DashboardProps) {
             <div><span><Layers3 size={18} /></span><div><strong>Plate awareness</strong><p>Shows the selected surface at review and export.</p></div></div>
             <div><span><ShieldCheck size={18} /></span><div><strong>Human slice review</strong><p>Bambu Studio remains the final authority before printing.</p></div></div>
           </div>
+          <button className="secondary-button setup-handoff-link" onClick={() => props.onNavigate("bridge")}><Link2 size={16} /> Set up Bambu handoff <ChevronRight size={15} /></button>
         </section>
       </div>
+    </>
+  );
+}
+
+function BridgePage(props: DashboardProps) {
+  const connected = props.bridgeStatus === "online";
+  return (
+    <>
+      <PageHeader
+        eyebrow="Bambu handoff"
+        title="Connect PrintPath to Bambu Studio."
+        description="A small helper stays on this Windows computer so the website can create local files without ever receiving your Bambu credentials."
+      />
+      <section className="bridge-page-hero page-card">
+        <div>
+          <span className={`bridge-page-status ${props.bridgeStatus}`}>
+            {connected ? <Wifi size={15} /> : <WifiOff size={15} />}
+            {props.bridgeStatus === "checking" ? "Checking this computer" : connected ? `Bridge ${props.bridgeVersion || "online"}` : "Not connected yet"}
+          </span>
+          <h2>{props.bridgePaired ? "This browser is paired." : connected ? "Bridge found. Enter its pairing code." : "Install the local bridge once."}</h2>
+          <p>{props.bridgePaired ? "PrintPath can now save supported models locally and open them in Bambu Studio for your review." : "The helper only listens to this computer and never talks to your Bambu account."}</p>
+        </div>
+        <div className="bridge-flow-visual" aria-hidden="true"><span><WandSparkles size={21} /></span><i /><span><HardDrive size={21} /></span><i /><span><Printer size={21} /></span></div>
+      </section>
+
+      <div className="bridge-page-grid">
+        <section className="page-card bridge-install-card">
+          <span className="page-eyebrow">One-time setup</span>
+          <div className="install-step"><span>1</span><div><strong>Download the Windows bridge</strong><p>A small open-source ZIP containing the local helper and setup instructions.</p><a className="primary-button" href="/downloads/printpath-bridge-windows.zip" download><Download size={16} /> Download bridge</a></div></div>
+          <div className="install-step"><span>2</span><div><strong>Extract it and start the helper</strong><p>Double-click <code>bridge/start-bridge.cmd</code>. Keep that window open while designing.</p></div></div>
+          <div className="install-step"><span>3</span><div><strong>Pair this browser</strong><p>Copy the code shown by the helper. It is local—not a Bambu password.</p><div className="page-pairing"><input value={props.pairingCode} onChange={(event) => props.onPairingCodeChange(event.target.value.toUpperCase())} placeholder="PP-XXXX-XXXX-XXXX" aria-label="PrintPath Bridge pairing code" /><button className="secondary-button" disabled={!props.pairingCode.trim()} onClick={props.onCheckBridge}><KeyRound size={15} /> {props.bridgePaired ? "Recheck" : "Pair"}</button></div></div></div>
+        </section>
+
+        <aside className="page-card bridge-trust-card">
+          <span className="page-eyebrow">Safety boundary</span>
+          <h2>Bambu stays in control.</h2>
+          <div className="trust-list">
+            <div><ShieldCheck size={17} /><span><strong>No account credentials</strong><small>Login remains inside Bambu Studio.</small></span></div>
+            <div><HardDrive size={17} /><span><strong>Local files only</strong><small>Models stay under Documents/PrintPath Exports.</small></span></div>
+            <div><Printer size={17} /><span><strong>No automatic print</strong><small>You inspect the sliced preview and press Print.</small></span></div>
+          </div>
+          <div className="studio-detection"><span className={props.bambuStudioDetected ? "detected" : "fallback"} /><div><strong>{props.bambuStudioDetected ? "Bambu Studio detected" : "Windows association fallback"}</strong><p>{props.bambuStudioDetected ? "The bridge can launch it directly." : "The bridge will ask Windows to open the STL with its registered app."}</p></div></div>
+          <a className="text-link bridge-source-link" href="https://github.com/WillyMLee/printpath/tree/codex/p1s-confidence-workflow/bridge" target="_blank" rel="noreferrer">Inspect the bridge source <ExternalLink size={14} /></a>
+        </aside>
+      </div>
+
+      {props.bridgePaired && <section className="page-card bridge-ready-banner"><CircleDot size={18} /><div><strong>Ready for a supported design.</strong><p>Try the Exact-fit open tray, then use its Review step to create and open the STL.</p></div><button className="primary-button" onClick={() => props.onUseTemplate("loose-tray")}>Open starter template <ArrowRight size={15} /></button></section>}
     </>
   );
 }
@@ -370,6 +432,7 @@ export default function Dashboard(props: DashboardProps) {
       {props.page === "projects" && <ProjectsPage {...props} />}
       {props.page === "library" && <LibraryPage {...props} />}
       {props.page === "settings" && <SettingsPage {...props} />}
+      {props.page === "bridge" && <BridgePage {...props} />}
     </main>
   );
 }

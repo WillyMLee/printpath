@@ -246,7 +246,7 @@ export default function App() {
   const [mobileNav, setMobileNav] = useState(false);
   const [saveState, setSaveState] = useState<"saved" | "saving">("saved");
   const [pairingCode, setPairingCode] = useState(() => localStorage.getItem(BRIDGE_PAIRING_KEY) || "");
-  const [bridgeState, setBridgeState] = useState<{ status: "checking" | "online" | "offline"; paired: boolean; version?: string }>({ status: "checking", paired: false });
+  const [bridgeState, setBridgeState] = useState<{ status: "checking" | "online" | "offline"; paired: boolean; version?: string; bambuStudioDetected?: boolean }>({ status: "checking", paired: false });
   const [handoffState, setHandoffState] = useState<{ status: "idle" | "sending" | "success" | "error"; message?: string }>({ status: "idle" });
 
   useEffect(() => {
@@ -500,8 +500,8 @@ export default function App() {
         signal: controller.signal,
       });
       if (!response.ok) throw new Error("Bridge did not respond.");
-      const result = await response.json() as { paired?: boolean; version?: string };
-      setBridgeState({ status: "online", paired: Boolean(result.paired), version: result.version });
+      const result = await response.json() as { paired?: boolean; version?: string; bambuStudio?: { detected?: boolean } };
+      setBridgeState({ status: "online", paired: Boolean(result.paired), version: result.version, bambuStudioDetected: Boolean(result.bambuStudio?.detected) });
       if (result.paired && token) {
         const normalized = token.trim().toUpperCase();
         setPairingCode(normalized);
@@ -662,7 +662,7 @@ export default function App() {
         </div>
         <div className="bridge-safety"><ShieldCheck size={16} /><p>Your Bambu login stays in Bambu Studio. PrintPath creates the local file, then stops before slicing or printing.</p></div>
         {bridgeState.status === "offline" ? (
-          <div className="bridge-setup"><p>Start <code>bridge/start-bridge.cmd</code> on this computer, then retry.</p><div><a className="secondary-button" href="https://github.com/WillyMLee/printpath/tree/codex/p1s-confidence-workflow/bridge" target="_blank" rel="noreferrer">Bridge setup <ExternalLink size={14} /></a><button className="secondary-button" type="button" onClick={() => void checkBridge()}>Retry connection</button></div></div>
+          <div className="bridge-setup"><p>Install and start the local bridge on this computer, then retry.</p><div><button className="secondary-button" type="button" onClick={() => navigate("bridge")}>Bridge setup <ExternalLink size={14} /></button><button className="secondary-button" type="button" onClick={() => void checkBridge()}>Retry connection</button></div></div>
         ) : !bridgeState.paired ? (
           <div className="bridge-pairing">
             <label><span>Pairing code from the Bridge window</span><input value={pairingCode} onChange={(event) => setPairingCode(event.target.value.toUpperCase())} placeholder="PP-XXXX-XXXX-XXXX" /></label>
@@ -699,6 +699,7 @@ export default function App() {
             <button className={currentPage === "overview" ? "active" : ""} onClick={() => navigate("overview")}><Home size={18} /><span>Overview</span></button>
             <button className={currentPage === "projects" ? "active" : ""} onClick={() => navigate("projects")}><Layers3 size={18} /><span>My projects</span><em>3</em></button>
             <button className={currentPage === "library" ? "active" : ""} onClick={() => navigate("library")}><Sparkles size={18} /><span>Design library</span></button>
+            <button className={currentPage === "bridge" ? "active" : ""} onClick={() => navigate("bridge")}><Link2 size={18} /><span>Bambu handoff</span></button>
             {currentPage === "workbench" && <button className="active" onClick={() => navigate("workbench")}><PencilRuler size={18} /><span>Active workbench</span></button>}
           </nav>
           <button className="new-project-button" onClick={startFresh}><Plus size={18} /> New project</button>
@@ -724,6 +725,13 @@ export default function App() {
           onUseTemplate={useTemplate}
           onNozzleChange={(value) => updateField("nozzle", value)}
           onPlateChange={(value) => updateField("plate", value)}
+          bridgeStatus={bridgeState.status}
+          bridgePaired={bridgeState.paired}
+          bridgeVersion={bridgeState.version}
+          bambuStudioDetected={bridgeState.bambuStudioDetected}
+          pairingCode={pairingCode}
+          onPairingCodeChange={setPairingCode}
+          onCheckBridge={() => void checkBridge(pairingCode)}
         />
       ) : (
       <main className="workspace">

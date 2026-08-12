@@ -30,8 +30,8 @@ The **Exact-fit open tray** template is the first exception: PrintPath Bridge ge
 
 The local bridge keeps Bambu authentication inside Bambu Studio and never starts a print automatically.
 
-1. Install Node.js and clone this repository on the Windows computer running Bambu Studio.
-2. Double-click `bridge/start-bridge.cmd` or run `npm run bridge`.
+1. Open **Bambu handoff** in PrintPath, download the Windows bridge ZIP, and extract it on the computer running Bambu Studio. Node.js is currently required.
+2. Double-click `bridge/start-bridge.cmd` (or run `npm run bridge` from a repository clone).
 3. Keep the bridge window open and copy its one-time pairing code into PrintPath.
 4. Open the **Exact-fit open tray** template, review its dimensions, and choose **Create STL and open in Bambu Studio**.
 5. Inspect the model, plate, filament, orientation, supports, and sliced preview in Bambu Studio before pressing Print.
