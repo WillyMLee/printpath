@@ -27,6 +27,8 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Information architecture | Maker-focused navigation, room/use template categories, and one unified process page | Shipped |
 | Branding | PrintPath cube favicon for browser tabs and bookmarks | Shipped |
 | Vase project | Visible saved-version history for Petal Twist v1 and Leaf Bloom v2; both manifold and downloadable | Design review |
+| Project controls | Working status filters and persistent version selection | Shipped |
+| 7 Wonders Duel organizer | Official inventory research, sleeve-aware four-module concept, and measurement gate | Research brief |
 | Deployment | GitHub workflow and Cloudflare Workers static hosting | Shipped |
 
 ## Next implementation candidates
@@ -94,3 +96,5 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-13:** Use text-free actual-STL renders inside the interface and reserve labeled covers for sharing or export.
 - **2026-08-13:** Treat vase redesigns as versions of one project; keep every artifact available and let one version be explicitly selected.
 - **2026-08-13:** Never remove a prior design from the visible project record; experiments remain previewable and downloadable even when another version is selected.
+- **2026-08-13:** Project filters must change the visible project set, and selecting a saved version must update the active preview and artifact links.
+- **2026-08-13:** Start the 7 Wonders Duel organizer with four lift-out modules; require actual box, sleeve, expansion, and storage-orientation answers before CAD.

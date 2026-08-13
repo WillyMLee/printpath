@@ -95,6 +95,9 @@ const plateOptions = [
   "Engineering Plate",
 ];
 
+type VaseVersionId = "petal-twist" | "leaf-bloom";
+type ProjectFilter = "all" | "progress" | "ready" | "completed";
+
 const projectCards = [
   {
     name: "Drawer Gap Tray",
@@ -105,6 +108,8 @@ const projectCards = [
     next: "Ready to reprint",
     confidence: 100,
     cover: "/projects/drawer-gap-tray-aug-2026-product.png",
+    filter: "completed" as Exclude<ProjectFilter, "all">,
+    artIndex: 1,
   },
   {
     name: "Petal Twist Vase",
@@ -115,15 +120,51 @@ const projectCards = [
     next: "Approve shape + water test",
     confidence: 86,
     cover: "/projects/petal-twist-vase-aug-2026-product.png",
+    filter: "progress" as Exclude<ProjectFilter, "all">,
+    artIndex: 2,
   },
   {
-    name: "Board game organizer",
-    kind: "Compound object",
-    status: "Later",
-    statusClass: "later",
-    parts: "6 parts · 3 plates",
-    next: "Map components first",
-    confidence: 28,
+    name: "7 Wonders Duel Organizer",
+    kind: "Board game insert",
+    status: "Research brief",
+    statusClass: "progress",
+    parts: "4 modules · 2 plates",
+    next: "Confirm box + sleeve measurements",
+    confidence: 58,
+    cover: "/projects/seven-wonders-duel-organizer-concept.svg",
+    filter: "progress" as Exclude<ProjectFilter, "all">,
+    artIndex: 3,
+  },
+];
+
+const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v1";
+
+const vaseVersions = [
+  {
+    id: "petal-twist" as const,
+    version: 1,
+    name: "Petal Twist Vase",
+    image: "/projects/petal-twist-vase-aug-2026-product.png",
+    stl: "/projects/petal-twist-vase-aug-2026.stl",
+    guide: "/projects/petal-twist-vase-aug-2026-print-guide.md",
+    dimensions: "122.6 × 122.6 × 245 mm",
+    opening: "≈77 mm opening",
+    description: "The original eight-flute vase with a stable bulb-shaped base and a soft scalloped rim.",
+    historyNote: "Original eight-flute body with a compact scalloped opening and softly rounded base.",
+    facts: [["122.6 × 122.6 × 245 mm", "P1S-safe size"], ["2.4 mm", "Continuous wall"], ["PETG", "One-piece body"]],
+  },
+  {
+    id: "leaf-bloom" as const,
+    version: 2,
+    name: "Leaf Bloom Vase",
+    image: "/projects/leaf-bloom-vase-aug-2026-product.png",
+    stl: "/projects/leaf-bloom-vase-aug-2026.stl",
+    guide: "/projects/leaf-bloom-vase-aug-2026-print-guide.md",
+    dimensions: "122.9 × 122.5 × 245 mm",
+    opening: "≈105 mm opening",
+    description: "Seven leaf-like folds rise into a wider, gently flared opening for fuller greenery.",
+    historyNote: "Seven twisted botanical folds and a wider flared opening for fuller, leaf-heavy arrangements.",
+    facts: [["122.9 × 122.5 × 245 mm", "P1S-safe size"], ["≈105 mm", "Average inner opening"], ["PETG", "One-piece body"]],
   },
 ];
 
@@ -257,6 +298,27 @@ function OverviewPage(props: DashboardProps) {
 }
 
 function ProjectsPage(props: DashboardProps) {
+  const [projectFilter, setProjectFilter] = useState<ProjectFilter>("all");
+  const [selectedVaseId, setSelectedVaseId] = useState<VaseVersionId>(() => {
+    try {
+      return localStorage.getItem(SELECTED_VASE_VERSION_KEY) === "leaf-bloom" ? "leaf-bloom" : "petal-twist";
+    } catch {
+      return "petal-twist";
+    }
+  });
+  const selectedVase = vaseVersions.find((version) => version.id === selectedVaseId) ?? vaseVersions[0];
+  const filteredProjects = projectFilter === "all" ? projectCards : projectCards.filter((project) => project.filter === projectFilter);
+  const filterOptions: Array<{ id: ProjectFilter; label: string; count: number }> = [
+    { id: "all", label: "All projects", count: projectCards.length },
+    { id: "progress", label: "In progress", count: projectCards.filter((project) => project.filter === "progress").length },
+    { id: "ready", label: "Ready", count: projectCards.filter((project) => project.filter === "ready").length },
+    { id: "completed", label: "Completed", count: projectCards.filter((project) => project.filter === "completed").length },
+  ];
+  const selectVase = (id: VaseVersionId) => {
+    setSelectedVaseId(id);
+    try { localStorage.setItem(SELECTED_VASE_VERSION_KEY, id); } catch { /* Local persistence is optional. */ }
+    document.querySelector(".completed-project-feature")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
   return (
     <>
       <PageHeader
@@ -266,13 +328,13 @@ function ProjectsPage(props: DashboardProps) {
         action={<button className="primary-button page-action" onClick={props.onNewProject}><Plus size={17} /> New project</button>}
       />
       <section className="completed-project-feature design-review-feature page-card">
-        <div className="completed-project-cover"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Isometric render of the selected Petal Twist Vase STL" /></div>
+        <div className="completed-project-cover"><img src={selectedVase.image} alt={`Isometric render of the selected ${selectedVase.name} STL`} /></div>
         <div className="completed-project-copy">
-          <span className="completion-kicker review"><Flower2 size={15} /> Selected design · Version 1</span>
-          <h2>Petal Twist Vase</h2>
-          <p>The original eight-flute vase with a stable bulb-shaped base and a soft scalloped rim. It remains the selected direction; newer experiments are preserved below.</p>
-          <div className="completed-project-facts"><span><strong>122.6 × 122.6 × 245 mm</strong><small>P1S-safe size</small></span><span><strong>2.4 mm</strong><small>Continuous wall</small></span><span><strong>PETG</strong><small>One-piece body</small></span></div>
-          <div className="completed-project-actions"><a className="primary-button" href="/projects/petal-twist-vase-aug-2026.stl" download><Download size={16} /> Download selected STL</a><a className="secondary-button" href="/projects/petal-twist-vase-aug-2026-print-guide.md" target="_blank" rel="noreferrer"><ShieldCheck size={16} /> Print approach</a></div>
+          <span className="completion-kicker review">{selectedVase.id === "petal-twist" ? <Flower2 size={15} /> : <Sprout size={15} />} Selected design · Version {selectedVase.version}</span>
+          <h2>{selectedVase.name}</h2>
+          <p>{selectedVase.description} This selection controls the preview, download, and print approach shown here.</p>
+          <div className="completed-project-facts">{selectedVase.facts.map(([value, label]) => <span key={label}><strong>{value}</strong><small>{label}</small></span>)}</div>
+          <div className="completed-project-actions"><a className="primary-button" href={selectedVase.stl} download><Download size={16} /> Download selected STL</a><a className="secondary-button" href={selectedVase.guide} target="_blank" rel="noreferrer"><ShieldCheck size={16} /> Print approach</a></div>
         </div>
       </section>
 
@@ -282,34 +344,27 @@ function ProjectsPage(props: DashboardProps) {
           <span className="version-count">2 saved versions</span>
         </div>
         <div className="design-version-grid">
-          <article className="design-version-card selected">
-            <div className="design-version-art"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Petal Twist Vase version 1" /></div>
-            <div className="design-version-copy">
-              <div className="design-version-meta"><span>Version 1 · Aug 2026</span><em><Check size={12} /> Selected</em></div>
-              <h3>Petal Twist Vase</h3>
-              <p>Original eight-flute body with a compact scalloped opening and softly rounded base.</p>
-              <div className="design-version-facts"><span>122.6 × 122.6 × 245 mm</span><span>≈77 mm opening</span></div>
-              <a className="version-download" href="/projects/petal-twist-vase-aug-2026.stl" download><Download size={14} /> Download version 1</a>
-            </div>
-          </article>
-          <article className="design-version-card">
-            <div className="design-version-art"><img src="/projects/leaf-bloom-vase-aug-2026-product.png" alt="Leaf Bloom Vase version 2" /></div>
-            <div className="design-version-copy">
-              <div className="design-version-meta"><span>Version 2 · Aug 2026</span><em className="experiment"><Sprout size={12} /> Experiment</em></div>
-              <h3>Leaf Bloom Vase</h3>
-              <p>Seven twisted botanical folds and a wider flared opening for fuller, leaf-heavy arrangements.</p>
-              <div className="design-version-facts"><span>122.9 × 122.5 × 245 mm</span><span>≈105 mm opening</span></div>
-              <a className="version-download" href="/projects/leaf-bloom-vase-aug-2026.stl" download><Download size={14} /> Download version 2</a>
-            </div>
-          </article>
+          {vaseVersions.map((version) => {
+            const selected = version.id === selectedVaseId;
+            return <article className={`design-version-card ${selected ? "selected" : ""}`} key={version.id}>
+              <div className="design-version-art"><img src={version.image} alt={`${version.name} version ${version.version}`} /></div>
+              <div className="design-version-copy">
+                <div className="design-version-meta"><span>Version {version.version} · Aug 2026</span><em className={selected ? "" : "experiment"}>{selected ? <><Check size={12} /> Selected</> : <><Sprout size={12} /> Saved design</>}</em></div>
+                <h3>{version.name}</h3>
+                <p>{version.historyNote}</p>
+                <div className="design-version-facts"><span>{version.dimensions}</span><span>{version.opening}</span></div>
+                <div className="design-version-actions"><button className={selected ? "selected-version-button" : "version-select-button"} onClick={() => selectVase(version.id)} disabled={selected}>{selected ? <><Check size={14} /> Currently selected</> : <>Select this version <ArrowRight size={14} /></>}</button><a className="version-download" href={version.stl} download><Download size={14} /> STL</a></div>
+              </div>
+            </article>;
+          })}
         </div>
       </section>
 
-      <div className="project-filter-row"><button className="active">All projects <span>3</span></button><button>In progress <span>1</span></button><button>Ready <span>0</span></button><button>Completed <span>1</span></button></div>
-      <div className="project-card-grid">
-        {projectCards.map((project, index) => (
-          <button className="project-card" key={project.name} onClick={index === 0 ? props.onOpenProject : undefined}>
-            <div className={`project-art project-art-${index + 1}`}>{project.cover ? <img src={project.cover} alt={`${project.name} cover`} /> : <span>{index === 1 ? <Wrench size={28} /> : <Component size={30} />}</span>}<em>{project.kind}</em></div>
+      <div className="project-filter-row" aria-label="Filter projects">{filterOptions.map((filter) => <button className={projectFilter === filter.id ? "active" : ""} aria-pressed={projectFilter === filter.id} key={filter.id} onClick={() => setProjectFilter(filter.id)}>{filter.label} <span>{filter.count}</span></button>)}</div>
+      {filteredProjects.length > 0 ? <div className="project-card-grid">
+        {filteredProjects.map((project) => (
+          <button className="project-card" key={project.name} onClick={() => project.name === "Drawer Gap Tray" ? props.onOpenProject() : document.getElementById(project.name === "7 Wonders Duel Organizer" ? "seven-wonders-organizer" : "vase-history-title")?.scrollIntoView({ behavior: "smooth", block: "start" })}>
+            <div className={`project-art project-art-${project.artIndex}`}>{project.cover ? <img src={project.cover} alt={`${project.name} cover`} /> : <span><Component size={30} /></span>}<em>{project.kind}</em></div>
             <div className="project-card-body">
               <div className="project-card-title"><h2>{project.name}</h2><span className={`status-chip ${project.statusClass}`}>{project.status}</span></div>
               <p>{project.parts}</p>
@@ -318,7 +373,28 @@ function ProjectsPage(props: DashboardProps) {
             </div>
           </button>
         ))}
-      </div>
+      </div> : <div className="project-empty-state"><PackageOpen size={24} /><div><strong>No {projectFilter === "ready" ? "ready-to-print" : projectFilter} projects yet.</strong><p>Projects will appear here as they move through the design and print checks.</p></div></div>}
+
+      <section className="organizer-concept page-card" id="seven-wonders-organizer" aria-labelledby="organizer-title">
+        <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Research brief</span><h2 id="organizer-title">7 Wonders Duel organizer</h2><p>A modular, table-ready insert based on the official base-game inventory and common sleeve envelopes.</p></div><span className="research-badge"><Gamepad2 size={14} /> Measure before CAD</span></div>
+        <div className="organizer-concept-grid">
+          <div className="organizer-concept-art"><img src="/projects/seven-wonders-duel-organizer-concept.svg" alt="Four-module organizer concept for 7 Wonders Duel" /></div>
+          <div className="organizer-concept-copy">
+            <span className="recommendation-tag"><BadgeCheck size={14} /> Base-game first · P1S · 4 modules</span>
+            <h3>Lift the trays out and play from them.</h3>
+            <p>The first direction uses the box efficiently while reducing setup: cards stay sorted by Age, coins arrive at the table already separated, and every token has a scoopable home.</p>
+            <div className="organizer-module-grid">
+              <span><CreditCard size={17} /><strong>Age card lane</strong><small>Three decks + Guild divider · sleeve target 50 × 75 mm</small></span>
+              <span><Gem size={17} /><strong>Wonder tray</strong><small>12 large cards · sleeve target 70 × 106 mm</small></span>
+              <span><Coins size={17} /><strong>Coin bank</strong><small>Three curved wells for values 1, 3, and 6</small></span>
+              <span><Gamepad2 size={17} /><strong>Token caddy</strong><small>Progress, Military, and Conflict pieces</small></span>
+            </div>
+            <div className="organizer-gates"><strong>Four answers before geometry</strong><span>1. Inside box width, depth, and usable height</span><span>2. Unsleeved or the exact sleeve brand</span><span>3. Base game only, or room for Pantheon / Agora</span><span>4. Horizontal or vertical box storage</span></div>
+            <button className="primary-button organizer-start" onClick={() => props.onStartIdea("A modular 7 Wonders Duel box organizer for the base game with four lift-out zones: three Age decks plus Guild cards, the 12 Wonder cards, a three-value coin bank, and a token caddy for Progress, Military, and Conflict pieces. Confirm inside box dimensions, sleeves, expansions, and vertical storage before CAD.")}>Start measured organizer <ArrowRight size={16} /></button>
+            <div className="organizer-sources"><span>Research:</span><a href="https://cdn.svc.asmodee.net/production-rprod/storage/downloads/games/7wonders-duel/en/7du-rules-us-15990558193s5I6.pdf" target="_blank" rel="noreferrer">Official contents</a><a href="https://www.rykergames.com/products/7-wonders-duel-card-sleeve-kit" target="_blank" rel="noreferrer">Card sizes</a><a href="https://foldedspace.com/product/7-wonders-duel" target="_blank" rel="noreferrer">Packing reference</a></div>
+          </div>
+        </div>
+      </section>
 
       <section className="next-project-section page-card">
         <div className="card-heading-row"><div><span className="page-eyebrow">What should we solve next?</span><h2>Three useful steps up from the gap tray</h2><p>Each option reuses the same measure → confirm → generate → handoff loop, with one new design challenge at a time.</p></div></div>
@@ -330,17 +406,17 @@ function ProjectsPage(props: DashboardProps) {
       </section>
 
       <section className="page-card assembly-scaffold">
-        <div className="assembly-intro"><span className="page-eyebrow">Compound-object scaffold</span><h2>Board game organizer · 6 parts</h2><p>This is how PrintPath will keep a complex build understandable.</p></div>
+        <div className="assembly-intro"><span className="page-eyebrow">7 Wonders Duel · Compound scaffold</span><h2>Four modules across two P1S plates</h2><p>The research brief is complete; measurements are the gate before printable geometry.</p></div>
         <div className="assembly-flow">
-          <div className="assembly-stage complete"><span><Check size={16} /></span><strong>Map objects</strong><small>Cards, tokens, board</small></div>
+          <div className="assembly-stage complete"><span><Check size={16} /></span><strong>Map objects</strong><small>Cards, coins, tokens, boards</small></div>
           <ChevronRight size={18} />
-          <div className="assembly-stage"><span>2</span><strong>Assign parts</strong><small>One job per insert</small></div>
+          <div className="assembly-stage"><span>2</span><strong>Measure box</strong><small>Inside size + usable height</small></div>
           <ChevronRight size={18} />
-          <div className="assembly-stage"><span>3</span><strong>Arrange plates</strong><small>3 labeled plates</small></div>
+          <div className="assembly-stage"><span>3</span><strong>Assign modules</strong><small>Four lift-out jobs</small></div>
           <ChevronRight size={18} />
-          <div className="assembly-stage"><span>4</span><strong>Test fit</strong><small>Stop before full run</small></div>
+          <div className="assembly-stage"><span>4</span><strong>Test fit</strong><small>One corner + card coupon</small></div>
           <ChevronRight size={18} />
-          <div className="assembly-stage"><span>5</span><strong>Assemble</strong><small>Order + hardware</small></div>
+          <div className="assembly-stage"><span>5</span><strong>Print plates</strong><small>Labelled plate order</small></div>
         </div>
       </section>
     </>
