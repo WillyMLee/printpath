@@ -25,4 +25,15 @@ If Bambu Studio uses a nonstandard installation folder, set `PRINTPATH_BAMBU_STU
 
 ## Current geometry support
 
-Version 0.1 generates a square-corner, open-tray STL for templates explicitly marked as `open-tray`. Other objects remain design briefs until their own parametric generators are implemented.
+Version 0.2 includes two local, parametric generators:
+
+- `open-tray` creates one exact-dimension, square-corner tray STL.
+- `gridfinity-pitch-strip` creates two watertight organizer modules, their individual STL files, and an all-parts STL arranged for one P1S plate.
+
+For a 255 × 40 × 50 mm drawer space, the strip generator creates two 126 × 40 × 50 mm modules. Each module has three compartments aligned to the 42 mm Gridfinity pitch, so the pair uses 252 mm and leaves 3 mm of drawer clearance.
+
+The strip is deliberately described as Gridfinity-pitch-aligned, not standard baseplate-compatible. A standard bin footprint is approximately 41.5 mm wide, so it cannot fit inside a measured 40 mm strip.
+
+## What to inspect in Bambu Studio
+
+The bridge opens the all-parts STL. Before printing, confirm that both modules are flat on the plate, the plate and filament profiles match the P1S setup, the sliced preview has continuous walls and floors, and the estimated material is acceptable. The bridge never presses Print.

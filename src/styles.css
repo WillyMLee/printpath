@@ -273,6 +273,14 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .grid-fit-stats strong { margin: 4px 0; font-size: 12px; }
 .grid-fit-stats em { color: #89948f; font-size: 8.5px; font-style: normal; }
 .grid-fit-guidance { margin: 13px 0 0; color: #5d6d67; font-size: 10.5px; line-height: 1.55; }
+.grid-fit-review.selected { border-color: #abd8c8; background: #f2faf7; }
+.grid-strip-action { width: 100%; margin-top: 14px; padding: 12px 13px; display: flex; align-items: center; gap: 11px; border: 1px solid #acd9c9; border-radius: 11px; color: #174f41; background: #e3f5ee; text-align: left; cursor: pointer; }
+.grid-strip-action:hover { border-color: #75bca5; background: #d8f0e7; }
+.grid-strip-action span { flex: 1; }
+.grid-strip-action strong, .grid-strip-action small { display: block; }
+.grid-strip-action strong { font-size: 11.5px; }
+.grid-strip-action small { margin-top: 3px; color: #5e7b71; font-size: 9px; }
+.grid-strip-selected { margin-top: 13px; padding: 10px 11px; display: flex; align-items: center; gap: 8px; border-radius: 9px; color: #216b57; background: #dff3ea; font-size: 10px; font-weight: 750; }
 .review-next-step { display: flex; gap: 11px; align-items: flex-start; margin: 16px 0 4px; padding: 16px; border: 1px solid #e3ded7; border-radius: 13px; background: #fbfaf8; }
 .review-next-step > span { width: 35px; height: 35px; display: grid; place-items: center; flex: 0 0 35px; border-radius: 10px; color: #795b49; background: #f4eae3; }
 .review-next-step p { margin: 5px 0 0; color: #706c66; font-size: 10.5px; line-height: 1.5; }
@@ -343,6 +351,10 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .dimension-markers rect { fill: white; stroke: #dce2dc; }
 .dimension-markers text { fill: #52615c; font-size: 10px; text-anchor: middle; font-weight: 700; }
 .preview-note { position: absolute; z-index: 4; left: 50%; bottom: 13px; transform: translateX(-50%); white-space: nowrap; background: rgba(255,255,255,.78); border: 1px solid rgba(213,220,214,.8); backdrop-filter: blur(8px); color: #83908b; font-size: 8px; padding: 6px 9px; border-radius: 20px; }
+.strip-part-label { fill: #547169; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.strip-dimension line { stroke: #759087; stroke-width: 1.5; }
+.strip-dimension rect { fill: #fff; stroke: #d3dfd9; }
+.strip-dimension text { fill: #466158; font-size: 10px; font-weight: 750; text-anchor: middle; }
 
 .metrics-row { border-radius: 14px; display: grid; grid-template-columns: repeat(3, 1fr); padding: 15px 12px; }
 .metric { display: flex; align-items: flex-start; gap: 9px; padding: 2px 12px; border-right: 1px solid #e7eae5; }

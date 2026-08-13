@@ -4,11 +4,11 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
-import { createOpenTrayStl, slugify } from "./stl.mjs";
+import { createGridfinityPitchStripStls, createOpenTrayStl, slugify } from "./stl.mjs";
 
 const HOST = "127.0.0.1";
 const PORT = Number(process.env.PRINTPATH_BRIDGE_PORT || 32145);
-const VERSION = "0.1.0";
+const VERSION = "0.2.0";
 const MAX_BODY_BYTES = 64 * 1024;
 
 const localDataRoot = process.env.LOCALAPPDATA || join(homedir(), ".printpath");
@@ -27,7 +27,7 @@ function formatToken(raw) {
 
 function loadOrCreateToken() {
   if (existsSync(tokenPath)) return readFileSync(tokenPath, "utf8").trim();
-  const token = formatToken(randomBytes(9).toString("base64url").replace(/[^a-z0-9]/gi, ""));
+  const token = formatToken(randomBytes(6).toString("hex"));
   writeFileSync(tokenPath, `${token}\n`, { encoding: "utf8", mode: 0o600 });
   return token;
 }
@@ -139,7 +139,7 @@ async function handleHandoff(request, response, origin) {
 
   const payload = await readJson(request);
   const project = validateProject(payload.project);
-  if (project.geometryKind !== "open-tray") {
+  if (!["open-tray", "gridfinity-pitch-strip"].includes(project.geometryKind)) {
     sendJson(response, 422, { ok: false, error: "This design does not have a safe geometry generator yet." }, origin);
     return;
   }
@@ -147,11 +147,27 @@ async function handleHandoff(request, response, origin) {
   const slug = slugify(project.name);
   const projectRoot = join(exportRoot, `${slug}-${new Date().toISOString().replace(/[:.]/g, "-")}`);
   mkdirSync(projectRoot, { recursive: true });
-  const modelPath = join(projectRoot, `${slug}.stl`);
   const manifestPath = join(projectRoot, `${slug}.printpath.json`);
-  const model = createOpenTrayStl(project);
+  let modelPath;
+  let files;
+  let generationPlan;
+  if (project.geometryKind === "open-tray") {
+    modelPath = join(projectRoot, `${slug}.stl`);
+    writeFileSync(modelPath, createOpenTrayStl(project), "utf8");
+    files = [{ type: "model/stl", name: `${slug}.stl`, role: "print" }];
+  } else {
+    const generated = createGridfinityPitchStripStls(project);
+    modelPath = join(projectRoot, `${slug}-all-parts.stl`);
+    writeFileSync(modelPath, generated.assembly, "utf8");
+    files = [{ type: "model/stl", name: `${slug}-all-parts.stl`, role: "one-plate layout" }];
+    generated.parts.forEach((part, index) => {
+      const name = `${slug}-part-${String.fromCharCode(97 + index)}.stl`;
+      writeFileSync(join(projectRoot, name), part, "utf8");
+      files.push({ type: "model/stl", name, role: `module ${index + 1}` });
+    });
+    generationPlan = generated.plan;
+  }
 
-  writeFileSync(modelPath, model, "utf8");
   writeFileSync(manifestPath, JSON.stringify({
     format: "printpath-handoff",
     version: 1,
@@ -159,16 +175,19 @@ async function handleHandoff(request, response, origin) {
     safety: "Review geometry, orientation, filament, plate, supports, and sliced preview in Bambu Studio before printing.",
     project,
     readiness: Array.isArray(payload.readiness) ? payload.readiness : [],
-    files: [{ type: "model/stl", name: `${slug}.stl` }],
+    generationPlan,
+    files,
   }, null, 2), "utf8");
 
   const openedWith = openArtifact(modelPath);
   sendJson(response, 200, {
     ok: true,
     modelGenerated: true,
-    fileName: `${slug}.stl`,
+    fileName: modelPath.split(/[\\/]/).pop(),
     outputDirectory: projectRoot,
     openedWith,
+    files,
+    generationPlan,
     nextStep: "Review and slice in Bambu Studio. PrintPath never starts the print automatically.",
   }, origin);
 }
@@ -192,7 +211,7 @@ const server = createServer(async (request, response) => {
       service: "PrintPath Bridge",
       version: VERSION,
       paired: request.headers["x-printpath-token"] === pairingToken,
-      capabilities: ["open-tray-stl", "bambu-studio-handoff"],
+      capabilities: ["open-tray-stl", "gridfinity-pitch-strip-stl", "multi-part-one-plate-layout", "bambu-studio-handoff"],
       bambuStudio: {
         detected: Boolean(findBambuStudio()),
         launchMethod: findBambuStudio() ? "direct" : "windows-file-association",

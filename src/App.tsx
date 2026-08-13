@@ -49,8 +49,8 @@ type ProjectSpec = {
   partCount: number;
   assemblyMethod: string;
   designSystem: "custom" | "gridfinity";
-  gridfinityMode?: "full-grid" | "fractional";
-  geometryKind: "brief-only" | "open-tray";
+  gridfinityMode?: "full-grid" | "fractional" | "pitch-strip";
+  geometryKind: "brief-only" | "open-tray" | "gridfinity-pitch-strip";
 };
 
 type NumberKey = "width" | "depth" | "height" | "wall" | "clearance" | "cornerRadius" | "nozzle" | "layerHeight" | "partCount";
@@ -111,6 +111,54 @@ function loadProject(): ProjectSpec {
 
 function PartPreview({ spec }: { spec: ProjectSpec }) {
   const [flipped, setFlipped] = useState(false);
+
+  if (spec.geometryKind === "gridfinity-pitch-strip") {
+    return (
+      <div className="preview-shell grid-strip-preview">
+        <div className="preview-toolbar">
+          <div>
+            <span className="eyebrow">Printable set</span>
+            <strong>Two-module drawer strip</strong>
+          </div>
+          <button className="icon-button" onClick={() => setFlipped((value) => !value)} aria-label="Rotate preview">
+            <RotateCcw size={17} />
+          </button>
+        </div>
+        <div className="preview-canvas">
+          <div className="grid-floor" />
+          <svg viewBox="0 0 680 430" role="img" aria-label="Two printable 126 by 40 by 50 millimeter organizer modules">
+            <defs>
+              <linearGradient id="stripTop" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stopColor="#78d4b7" /><stop offset="1" stopColor="#c9f2e5" /></linearGradient>
+              <linearGradient id="stripSide" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#43a487" /><stop offset="1" stopColor="#27725e" /></linearGradient>
+              <filter id="stripShadow" x="-30%" y="-40%" width="160%" height="190%"><feDropShadow dx="0" dy="14" stdDeviation="12" floodColor="#163a32" floodOpacity="0.2" /></filter>
+            </defs>
+            <ellipse cx="340" cy="335" rx="270" ry="27" fill="#24483e" opacity="0.1" />
+            <g className="strip-part-group" style={{ transformOrigin: "340px 225px", transform: flipped ? "scaleX(-1)" : "scaleX(1)" }} filter="url(#stripShadow)">
+              {[70, 370].map((partX, partIndex) => (
+                <g key={partX}>
+                  <path d={`M ${partX} 167 L ${partX + 27} 148 L ${partX + 247} 148 L ${partX + 220} 167 Z`} fill="url(#stripTop)" stroke="#277b65" strokeWidth="2" />
+                  <path d={`M ${partX + 220} 167 L ${partX + 247} 148 L ${partX + 247} 253 L ${partX + 220} 272 Z`} fill="url(#stripSide)" stroke="#236b59" strokeWidth="2" />
+                  <rect x={partX} y="167" width="220" height="105" fill="#61c3a4" stroke="#277b65" strokeWidth="2" />
+                  {[0, 1, 2].map((cell) => (
+                    <path key={cell} d={`M ${partX + 10 + cell * 70} 175 L ${partX + 30 + cell * 70} 161 L ${partX + 75 + cell * 70} 161 L ${partX + 61 + cell * 70} 175 L ${partX + 61 + cell * 70} 254 L ${partX + 10 + cell * 70} 254 Z`} fill="#eff8f3" stroke="#318d73" strokeWidth="2" />
+                  ))}
+                  <text x={partX + 110} y="302" textAnchor="middle" className="strip-part-label">PART {partIndex === 0 ? "A" : "B"} · 3 PITCHES</text>
+                </g>
+              ))}
+            </g>
+            <g className="strip-dimension">
+              <line x1="70" y1="332" x2="290" y2="332" /><line x1="70" y1="324" x2="70" y2="340" /><line x1="290" y1="324" x2="290" y2="340" />
+              <rect x="137" y="318" width="86" height="28" rx="14" /><text x="180" y="337">126 mm</text>
+              <line x1="320" y1="167" x2="320" y2="272" /><line x1="312" y1="167" x2="328" y2="167" /><line x1="312" y1="272" x2="328" y2="272" />
+              <rect x="306" y="206" width="68" height="28" rx="14" /><text x="340" y="225">50 mm</text>
+            </g>
+          </svg>
+          <span className="preview-note">2 × 126 × 40 × 50 mm · arranged on one P1S plate</span>
+        </div>
+      </div>
+    );
+  }
+
   const visualWidth = clamp(170 + (spec.width - 50) * 1.15, 165, 315);
   const visualHeight = clamp(94 + (spec.height - 20) * 1.4, 96, 190);
   const visualDepth = clamp(56 + (spec.depth - 30) * 0.7, 50, 98);
@@ -269,16 +317,20 @@ export default function App() {
   const checks = useMemo(() => {
     const isGridfinity = spec.designSystem === "gridfinity";
     const shortestGridSide = Math.min(spec.width, spec.depth);
+    const longGridSide = Math.max(spec.width, spec.depth);
+    const stripCells = Math.floor(longGridSide / 42);
+    const stripModuleLength = (longGridSide > 250 ? Math.ceil(stripCells / 2) : stripCells) * 42;
+    const printableLongestSide = spec.geometryKind === "gridfinity-pitch-strip" ? Math.max(stripModuleLength, shortestGridSide) : longGridSide;
     const baseChecks = [
       {
         label: "Build volume",
-        detail: `${P1S_BUILD_VOLUME[0]} × ${P1S_BUILD_VOLUME[1]} × ${P1S_BUILD_VOLUME[2]} mm · P1S`,
-        ok: spec.width <= P1S_BUILD_VOLUME[0] && spec.depth <= P1S_BUILD_VOLUME[1] && spec.height <= P1S_BUILD_VOLUME[2],
+        detail: spec.geometryKind === "gridfinity-pitch-strip" ? `${stripModuleLength} × ${shortestGridSide} × ${spec.height} mm per module · P1S` : `${P1S_BUILD_VOLUME[0]} × ${P1S_BUILD_VOLUME[1]} × ${P1S_BUILD_VOLUME[2]} mm · P1S`,
+        ok: printableLongestSide <= P1S_BUILD_VOLUME[0] && shortestGridSide <= P1S_BUILD_VOLUME[1] && spec.height <= P1S_BUILD_VOLUME[2],
       },
       {
         label: "Plate margin",
-        detail: `${Math.max(spec.width, spec.depth)} mm longest side · 6 mm breathing room recommended`,
-        ok: Math.max(spec.width, spec.depth) <= 250,
+        detail: `${printableLongestSide} mm longest printed side · 6 mm breathing room recommended`,
+        ok: printableLongestSide <= 250,
       },
       {
         label: "Wall thickness",
@@ -296,7 +348,7 @@ export default function App() {
         ok: Boolean(spec.plate) && [0.2, 0.4, 0.6, 0.8].includes(spec.nozzle),
       },
     ];
-    const relevantChecks = spec.geometryKind === "open-tray" ? baseChecks.filter((check) => check.label !== "Fit allowance") : baseChecks;
+    const relevantChecks = spec.geometryKind !== "brief-only" ? baseChecks.filter((check) => check.label !== "Fit allowance") : baseChecks;
     if (spec.partCount > 1) {
       relevantChecks.push({
         label: "Assembly plan",
@@ -306,9 +358,9 @@ export default function App() {
     }
     if (isGridfinity && spec.gridfinityMode !== "fractional") {
       relevantChecks.push({
-        label: "42 mm Gridfinity footprint",
-        detail: shortestGridSide >= 42 ? `${shortestGridSide} mm shortest side · full cell fits` : `${shortestGridSide} mm shortest side · needs at least 42 mm`,
-        ok: shortestGridSide >= 42,
+        label: spec.geometryKind === "gridfinity-pitch-strip" ? "Non-standard Gridfinity strategy" : "Gridfinity bin footprint",
+        detail: spec.geometryKind === "gridfinity-pitch-strip" ? `${shortestGridSide} mm custom width · 42 mm pitch aligned, not baseplate compatible` : shortestGridSide >= 41.5 ? `${shortestGridSide} mm shortest side · a 41.5 mm standard bin fits` : `${shortestGridSide} mm shortest side · needs at least 41.5 mm`,
+        ok: spec.geometryKind === "gridfinity-pitch-strip" || shortestGridSide >= 41.5,
       });
     }
     return relevantChecks;
@@ -317,18 +369,21 @@ export default function App() {
   const gridfinityPlan = useMemo(() => {
     if (spec.designSystem !== "gridfinity" || spec.gridfinityMode === "fractional") return null;
     const pitch = 42;
+    const standardBinFootprint = 41.5;
     const columns = Math.floor(spec.width / pitch);
     const rows = Math.floor(spec.depth / pitch);
     const widthRemainder = Number((spec.width - columns * pitch).toFixed(1));
     const depthRemainder = Number((spec.depth - rows * pitch).toFixed(1));
-    const fullGridFits = columns > 0 && rows > 0;
+    const fullGridFits = columns > 0 && rows > 0 && Math.min(spec.width, spec.depth) >= standardBinFootprint;
     const splitRecommended = Math.max(spec.width, spec.depth) > 250;
     const longAxisCells = spec.width >= spec.depth ? columns : rows;
     const splitModuleLength = Math.ceil(longAxisCells / 2) * pitch;
-    return { pitch, columns, rows, widthRemainder, depthRemainder, fullGridFits, splitRecommended, splitModuleLength };
-  }, [spec.designSystem, spec.gridfinityMode, spec.width, spec.depth]);
+    const canGenerateNarrowStrip = Math.min(spec.width, spec.depth) < standardBinFootprint && Math.min(spec.width, spec.depth) >= spec.wall * 2 + 8 && longAxisCells >= 2;
+    return { pitch, standardBinFootprint, columns, rows, widthRemainder, depthRemainder, fullGridFits, splitRecommended, splitModuleLength, canGenerateNarrowStrip };
+  }, [spec.designSystem, spec.gridfinityMode, spec.width, spec.depth, spec.wall]);
 
   const readyCount = checks.filter((check) => check.ok).length;
+  const hasPrintableGeometry = spec.geometryKind !== "brief-only";
   const estimatedGrams = Math.max(4, Math.round((spec.width * spec.depth * spec.height * 0.2 * 1.24) / 1000));
   const estimatedHours = Math.max(0.4, estimatedGrams / 13).toFixed(1);
 
@@ -339,6 +394,21 @@ export default function App() {
   function updateNumber(key: NumberKey, raw: string) {
     const value = Number(raw);
     if (Number.isFinite(value)) updateField(key, value);
+  }
+
+  function enableGridfinityPitchStrip() {
+    if (!gridfinityPlan?.canGenerateNarrowStrip) return;
+    setSpec((current) => ({
+      ...current,
+      name: "Non-standard Gridfinity-pitch drawer strip",
+      description: `A custom ${Math.min(current.width, current.depth)} mm-wide organizer split into ${gridfinityPlan.splitRecommended ? "two" : "one"} printable module${gridfinityPlan.splitRecommended ? "s" : ""}, with compartments aligned to the 42 mm Gridfinity pitch. It intentionally does not claim standard baseplate compatibility.`,
+      cornerRadius: 0,
+      partCount: gridfinityPlan.splitRecommended ? 2 : 1,
+      assemblyMethod: gridfinityPlan.splitRecommended ? "Placed end to end" : "Single print",
+      gridfinityMode: "pitch-strip",
+      geometryKind: "gridfinity-pitch-strip",
+    }));
+    setHandoffState({ status: "idle" });
   }
 
   function startFresh() {
@@ -559,7 +629,7 @@ export default function App() {
   }
 
   async function handoffToBambu() {
-    if (!bridgeState.paired || spec.geometryKind !== "open-tray") return;
+    if (!bridgeState.paired || !hasPrintableGeometry) return;
     setHandoffState({ status: "sending" });
     try {
       const response = await fetch(`${BRIDGE_URL}/handoff`, {
@@ -571,12 +641,13 @@ export default function App() {
         body: JSON.stringify({ project: spec, readiness: checks }),
         targetAddressSpace: "loopback",
       } as RequestInit & { targetAddressSpace: "loopback" });
-      const result = await response.json() as { ok?: boolean; fileName?: string; openedWith?: string; error?: string };
+      const result = await response.json() as { ok?: boolean; fileName?: string; openedWith?: string; files?: Array<{ role?: string }>; error?: string };
       if (!response.ok || !result.ok) throw new Error(result.error || "The handoff failed.");
       const launchMessage = result.openedWith === "Bambu Studio"
         ? `${result.fileName} opened in Bambu Studio.`
         : `${result.fileName} was saved and sent to Windows. Choose Bambu Studio if Windows asks which app to use.`;
-      setHandoffState({ status: "success", message: `${launchMessage} Review the sliced preview before printing.` });
+      const savedParts = result.files && result.files.length > 1 ? " Parts A and B were saved beside it." : "";
+      setHandoffState({ status: "success", message: `${launchMessage}${savedParts} Review the sliced preview before printing.` });
     } catch (error) {
       setHandoffState({ status: "error", message: error instanceof Error ? error.message : "The handoff failed." });
       void checkBridge(pairingCode);
@@ -623,7 +694,7 @@ export default function App() {
       {gridfinityPlan && (
         <div className={`grid-measure-note ${gridfinityPlan.fullGridFits ? "fits" : "does-not-fit"}`}>
           <Grid3X3 size={18} />
-          <div><strong>{gridfinityPlan.fullGridFits ? "A full 42 mm cell fits." : "A standard 42 mm cell does not fit across the short side."}</strong><p>PrintPath will show the exact cell count, leftover space, and safer plate split at Review.</p></div>
+          <div><strong>{gridfinityPlan.fullGridFits ? "A standard Gridfinity bin fits." : "A standard 41.5 mm bin footprint does not fit across the short side."}</strong><p>The system still uses a 42 mm pitch. PrintPath will show the exact count, leftover space, and a printable non-standard option at Review.</p></div>
         </div>
       )}
       <div className="form-divider" />
@@ -682,7 +753,7 @@ export default function App() {
       <div className="measurement-grid setup-secondary-grid">
         <label className="field"><span>Layer height</span><select value={spec.layerHeight} onChange={(event) => updateField("layerHeight", Number(event.target.value))}><option value={0.12}>0.12 mm · Fine</option><option value={0.16}>0.16 mm · Quality</option><option value={0.2}>0.20 mm · Standard</option><option value={0.28}>0.28 mm · Draft</option></select></label>
         <label className="field"><span>Number of parts</span><input type="number" min="1" max="24" step="1" value={spec.partCount} onChange={(event) => updateNumber("partCount", event.target.value)} /></label>
-        <label className="field"><span>Assembly</span><select value={spec.assemblyMethod} onChange={(event) => updateField("assemblyMethod", event.target.value)}><option>Single print</option><option>Placed side by side</option><option>Slides together</option><option>Snap fit</option><option>Screws</option><option>Glue</option><option>Not sure yet</option></select></label>
+        <label className="field"><span>Assembly</span><select value={spec.assemblyMethod} onChange={(event) => updateField("assemblyMethod", event.target.value)}><option>Single print</option><option>Placed end to end</option><option>Placed side by side</option><option>Slides together</option><option>Snap fit</option><option>Screws</option><option>Glue</option><option>Not sure yet</option></select></label>
       </div>
       <div className="strength-options">
         <span>Strength preference</span>
@@ -704,11 +775,11 @@ export default function App() {
       </div>
 
       {gridfinityPlan && (
-        <section className={`grid-fit-review ${gridfinityPlan.fullGridFits ? "fits" : "does-not-fit"}`}>
+        <section className={`grid-fit-review ${gridfinityPlan.fullGridFits ? "fits" : "does-not-fit"} ${spec.geometryKind === "gridfinity-pitch-strip" ? "selected" : ""}`}>
           <div className="grid-fit-heading">
             <span><Grid3X3 size={19} /></span>
-            <div><small>42 MM GRID CHECK</small><strong>{gridfinityPlan.fullGridFits ? "Standard cells fit this footprint" : "This strip is too narrow for a standard cell"}</strong></div>
-            <em>{gridfinityPlan.fullGridFits ? "Compatible" : "Adjust plan"}</em>
+            <div><small>42 MM GRID CHECK</small><strong>{gridfinityPlan.fullGridFits ? "Standard cells fit this footprint" : "This strip is too narrow for a standard bin"}</strong></div>
+            <em>{spec.geometryKind === "gridfinity-pitch-strip" ? "Printable plan" : gridfinityPlan.fullGridFits ? "Compatible" : "Adjust plan"}</em>
           </div>
           <div className="grid-fit-stats">
             <span><small>Along {spec.width} mm</small><strong>{gridfinityPlan.columns} cells</strong><em>{gridfinityPlan.columns * gridfinityPlan.pitch} mm used</em></span>
@@ -718,9 +789,13 @@ export default function App() {
           <p className="grid-fit-guidance">
             {gridfinityPlan.fullGridFits
               ? `Center the full cells and distribute the ${gridfinityPlan.widthRemainder} mm × ${gridfinityPlan.depthRemainder} mm remainder as intentional edge space.`
-              : `${Math.min(spec.width, spec.depth)} mm is ${Number((42 - Math.min(spec.width, spec.depth)).toFixed(1))} mm narrower than one standard cell. Use a custom narrow organizer, or increase the usable short side to at least 42 mm.`}
+              : `${Math.min(spec.width, spec.depth)} mm is ${Number((gridfinityPlan.standardBinFootprint - Math.min(spec.width, spec.depth)).toFixed(1))} mm narrower than a standard 41.5 mm bin footprint. This design keeps the 42 mm compartment rhythm without claiming standard baseplate compatibility.`}
             {gridfinityPlan.splitRecommended ? ` The ${Math.max(spec.width, spec.depth)} mm side also leaves almost no P1S plate margin, so use two ${gridfinityPlan.splitModuleLength} mm modules instead of one long print.` : ""}
           </p>
+          {gridfinityPlan.canGenerateNarrowStrip && spec.geometryKind !== "gridfinity-pitch-strip" && (
+            <button className="grid-strip-action" type="button" onClick={enableGridfinityPitchStrip}><Grid3X3 size={17} /><span><strong>Build two printable modules</strong><small>2 × {gridfinityPlan.splitModuleLength} × {Math.min(spec.width, spec.depth)} × {spec.height} mm · one P1S plate</small></span><ChevronRight size={17} /></button>
+          )}
+          {spec.geometryKind === "gridfinity-pitch-strip" && <div className="grid-strip-selected"><CircleCheck size={16} /><span>Two-module printable geometry selected</span></div>}
         </section>
       )}
 
@@ -731,7 +806,7 @@ export default function App() {
         <div><dt>Part plan</dt><dd>{spec.partCount} {spec.partCount === 1 ? "part" : "parts"} · {spec.assemblyMethod}</dd></div>
       </dl>
 
-      {spec.geometryKind === "open-tray" ? <section className="bridge-card">
+      {hasPrintableGeometry ? <section className="bridge-card">
         <div className="bridge-heading">
           <span className="bridge-icon"><Link2 size={19} /></span>
           <div><small>BAMBU HANDOFF</small><strong>Create the STL locally</strong></div>
@@ -755,10 +830,10 @@ export default function App() {
           <div className={`studio-availability ${bridgeState.bambuStudioDetected ? "detected" : "not-detected"}`}><span /><p>{bridgeState.bambuStudioDetected ? "Bambu Studio detected on this computer." : "Bambu Studio was not detected. Restart the helper after installing it, or choose Bambu Studio if Windows asks."}</p></div>
         )}
         <div className="geometry-readiness supported">
-          <div><strong>Exact tray geometry available</strong><p>Creates a square-corner STL from these outer dimensions and wall thickness.</p></div>
+          <div><strong>{spec.geometryKind === "gridfinity-pitch-strip" ? "Two printable modules ready" : "Exact tray geometry available"}</strong><p>{spec.geometryKind === "gridfinity-pitch-strip" ? "Creates part A, part B, and one all-parts STL arranged for a single P1S plate." : "Creates a square-corner STL from these outer dimensions and wall thickness."}</p></div>
         </div>
-        <button className="primary-button large" type="button" disabled={!bridgeState.paired || spec.geometryKind !== "open-tray" || readyCount !== checks.length || handoffState.status === "sending"} onClick={() => void handoffToBambu()}>
-          <ExternalLink size={18} /> {handoffState.status === "sending" ? "Creating local model…" : "Create STL and open in Bambu Studio"}
+        <button className="primary-button large" type="button" disabled={!bridgeState.paired || !hasPrintableGeometry || readyCount !== checks.length || handoffState.status === "sending"} onClick={() => void handoffToBambu()}>
+          <ExternalLink size={18} /> {handoffState.status === "sending" ? "Creating local model…" : spec.geometryKind === "gridfinity-pitch-strip" ? "Create parts and open one P1S plate" : "Create STL and open in Bambu Studio"}
         </button>
         {handoffState.message && <p className={`handoff-message ${handoffState.status}`}>{handoffState.message}</p>}
       </section> : (
@@ -767,7 +842,7 @@ export default function App() {
           <div><small>NEXT STEP</small><strong>The fit plan is ready; printable geometry is not.</strong><p>Export the reviewed specification now. PrintPath will not invent a Gridfinity base that does not fit your measured space.</p></div>
         </section>
       )}
-      <button className={`${spec.geometryKind === "open-tray" ? "secondary-button" : "primary-button"} large review-export`} onClick={exportSpec} type="button"><Download size={18} /> Export project spec</button>
+      <button className={`${hasPrintableGeometry ? "secondary-button" : "primary-button"} large review-export`} onClick={exportSpec} type="button"><Download size={18} /> Export project spec</button>
     </section>,
   ];
 
