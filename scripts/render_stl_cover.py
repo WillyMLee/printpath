@@ -74,6 +74,7 @@ def render(
     dimensions: str = "254.4 × 39.4 × 49.4 mm",
     footer: str = "SOFT MATTE PREVIEW  •  AUG 2026",
     portrait: bool = False,
+    clean: bool = False,
 ) -> None:
     scale_factor = 2
     width, height = 1200 * scale_factor, 675 * scale_factor
@@ -93,7 +94,7 @@ def render(
 
     shadow = Image.new("RGBA", image.size, (0, 0, 0, 0))
     shadow_draw = ImageDraw.Draw(shadow)
-    shadow_box = (505, 500, 985, 615) if portrait else (255, 485, 1050, 610)
+    shadow_box = (365, 480, 835, 610) if clean and portrait else (225, 470, 985, 610) if clean else (505, 500, 985, 615) if portrait else (255, 485, 1050, 610)
     shadow_draw.ellipse(tuple(value * scale_factor for value in shadow_box), fill=(21, 54, 44, 75))
     shadow = shadow.filter(ImageFilter.GaussianBlur(28 * scale_factor))
     image = Image.alpha_composite(image.convert("RGBA"), shadow)
@@ -109,11 +110,13 @@ def render(
     projected = np.stack((projected_x, projected_y), axis=-1)
     flat = projected.reshape((-1, 2))
     span = flat.max(axis=0) - flat.min(axis=0)
-    target_width, target_height = ((470, 390) if portrait else (780, 335))
+    target_width, target_height = ((560, 470) if clean and portrait else (900, 410) if clean else (470, 390) if portrait else (780, 335))
     object_scale = min(target_width * scale_factor / span[0], target_height * scale_factor / span[1])
     projected *= object_scale
-    projected[..., 0] += (765 if portrait else 665) * scale_factor
-    projected[..., 1] = (445 if portrait else 430) * scale_factor - projected[..., 1]
+    center_x = 600 if clean else 765 if portrait else 665
+    center_y = 390 if clean else 445 if portrait else 430
+    projected[..., 0] += center_x * scale_factor
+    projected[..., 1] = center_y * scale_factor - projected[..., 1]
 
     edges_a = centered[:, 1] - centered[:, 0]
     edges_b = centered[:, 2] - centered[:, 0]
@@ -149,15 +152,16 @@ def render(
     hull = lower[:-1] + upper[:-1]
     draw.line(hull + [hull[0]], fill=(28, 103, 80, 190), width=2 * scale_factor, joint="curve")
 
-    # Minimal framing and dimensional truth.
-    draw.text((72 * scale_factor, 60 * scale_factor), eyebrow, font=font(22 * scale_factor, True), fill="#2d6e5a")
-    draw.text((72 * scale_factor, 101 * scale_factor), title, font=font(42 * scale_factor, True), fill="#132d25")
-    draw.text((74 * scale_factor, 158 * scale_factor), subtitle, font=font(21 * scale_factor), fill="#65766f")
-    rounded_label(draw, (72 * scale_factor, 202 * scale_factor, 390 * scale_factor, 254 * scale_factor), status, "#ddf4e9", "#236a55")
-    rounded_label(draw, (408 * scale_factor, 202 * scale_factor, 605 * scale_factor, 254 * scale_factor), profile, "#e8ece7", "#52635c")
-    draw.rounded_rectangle((750 * scale_factor, 565 * scale_factor, 1135 * scale_factor, 630 * scale_factor), radius=18 * scale_factor, fill="#ffffffdd", outline="#dfe7e1")
-    draw.text((780 * scale_factor, 580 * scale_factor), dimensions, font=font(24 * scale_factor, True), fill="#18372d")
-    draw.text((72 * scale_factor, 598 * scale_factor), footer, font=font(18 * scale_factor, True), fill="#71827b")
+    if not clean:
+        # Labeled covers are retained for sharing; the website uses clean product renders.
+        draw.text((72 * scale_factor, 60 * scale_factor), eyebrow, font=font(22 * scale_factor, True), fill="#2d6e5a")
+        draw.text((72 * scale_factor, 101 * scale_factor), title, font=font(42 * scale_factor, True), fill="#132d25")
+        draw.text((74 * scale_factor, 158 * scale_factor), subtitle, font=font(21 * scale_factor), fill="#65766f")
+        rounded_label(draw, (72 * scale_factor, 202 * scale_factor, 390 * scale_factor, 254 * scale_factor), status, "#ddf4e9", "#236a55")
+        rounded_label(draw, (408 * scale_factor, 202 * scale_factor, 605 * scale_factor, 254 * scale_factor), profile, "#e8ece7", "#52635c")
+        draw.rounded_rectangle((750 * scale_factor, 565 * scale_factor, 1135 * scale_factor, 630 * scale_factor), radius=18 * scale_factor, fill="#ffffffdd", outline="#dfe7e1")
+        draw.text((780 * scale_factor, 580 * scale_factor), dimensions, font=font(24 * scale_factor, True), fill="#18372d")
+        draw.text((72 * scale_factor, 598 * scale_factor), footer, font=font(18 * scale_factor, True), fill="#71827b")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     image.convert("RGB").resize((1200, 675), Image.Resampling.LANCZOS).save(output_path, quality=94)
@@ -175,6 +179,7 @@ if __name__ == "__main__":
     parser.add_argument("--dimensions", default="254.4 × 39.4 × 49.4 mm")
     parser.add_argument("--footer", default="SOFT MATTE PREVIEW  •  AUG 2026")
     parser.add_argument("--portrait", action="store_true")
+    parser.add_argument("--clean", action="store_true")
     args = parser.parse_args()
     render(
         args.stl,
@@ -187,4 +192,5 @@ if __name__ == "__main__":
         dimensions=args.dimensions,
         footer=args.footer,
         portrait=args.portrait,
+        clean=args.clean,
     )

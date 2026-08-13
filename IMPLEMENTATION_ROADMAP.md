@@ -23,7 +23,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Local control tower | IndexedDB projects, drafts, immutable checkpoints, approval, and handoff state | Shipped |
 | Bambu handoff | Pairing-protected local bridge, approved-design gate, STL generation, and Studio launch | Shipped |
 | Gridfinity gap tray | One 254.4 × 39.4 × 49.4 mm part for a 255 × 40 × 50 mm envelope | Completed |
-| Project presentation | Actual-STL cover render and completed-project card | Shipped |
+| Project presentation | Clean actual-STL product renders, readable project typography, and labeled sharing covers | Shipped |
 | Information architecture | Maker-focused navigation, room/use template categories, and one unified process page | Shipped |
 | Branding | PrintPath cube favicon for browser tabs and bookmarks | Shipped |
 | Petal Twist vase | 245 mm single-piece PETG draft, actual-STL preview, manifold validation, and downloadable artifact | Design review |
@@ -91,3 +91,4 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-13:** Remove Control Tower and Bambu Handoff from primary navigation; explain both as project memory and print handoff within one process page.
 - **2026-08-13:** Organize the design library by Kitchen, Bathroom, Bedroom, Board Games, Plants, and Desk & Workshop while keeping Gridfinity as a featured system.
 - **2026-08-13:** Keep the water-holding vase seam-free at 245 mm tall; use PETG, a 2.4 mm wall, a 3.2 mm floor, and require a physical leak test.
+- **2026-08-13:** Use text-free actual-STL renders inside the interface and reserve labeled covers for sharing or export.

@@ -98,23 +98,23 @@ const plateOptions = [
 const projectCards = [
   {
     name: "Drawer Gap Tray",
-    kind: "Custom-fit gap solution",
+    kind: "Custom fit",
     status: "Completed",
     statusClass: "complete",
     parts: "1 part · 1 plate",
     next: "Ready to reprint",
     confidence: 100,
-    cover: "/projects/drawer-gap-tray-aug-2026-cover.png",
+    cover: "/projects/drawer-gap-tray-aug-2026-product.png",
   },
   {
     name: "Petal Twist Vase",
-    kind: "Water-capable floral form",
+    kind: "Floral vase",
     status: "Design review",
     statusClass: "progress",
     parts: "1 part · 1 plate",
     next: "Approve shape + water test",
     confidence: 86,
-    cover: "/projects/petal-twist-vase-aug-2026-cover.png",
+    cover: "/projects/petal-twist-vase-aug-2026-product.png",
   },
   {
     name: "Board game organizer",
@@ -231,13 +231,13 @@ function OverviewPage(props: DashboardProps) {
         <section className="page-card recent-projects">
           <div className="card-heading-row"><div><span className="page-eyebrow">Your projects</span><h2>Pick up where you left off</h2></div><button className="text-link" onClick={() => props.onNavigate("projects")}>View all <ChevronRight size={15} /></button></div>
           <button className="recent-project-row" onClick={() => props.onNavigate("projects")}>
-            <span className="project-cover-thumb"><img src="/projects/petal-twist-vase-aug-2026-cover.png" alt="Rendered Petal Twist Vase" /></span>
+            <span className="project-cover-thumb"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Rendered Petal Twist Vase" /></span>
             <div><strong>Petal Twist Vase</strong><small>245 mm tall · PETG · one part</small></div>
             <span className="review-mini">Review draft</span>
             <ChevronRight size={17} />
           </button>
           <button className="recent-project-row" onClick={props.onOpenProject}>
-            <span className="project-cover-thumb"><img src="/projects/drawer-gap-tray-aug-2026-cover.png" alt="Rendered Drawer Gap Tray" /></span>
+            <span className="project-cover-thumb"><img src="/projects/drawer-gap-tray-aug-2026-product.png" alt="Rendered Drawer Gap Tray" /></span>
             <div><strong>Drawer Gap Tray</strong><small>254.4 × 39.4 × 49.4 mm · one part</small></div>
             <span className="completed-mini"><Check size={12} /> Completed</span>
             <ChevronRight size={17} />
@@ -266,17 +266,17 @@ function ProjectsPage(props: DashboardProps) {
         action={<button className="primary-button page-action" onClick={props.onNewProject}><Plus size={17} /> New project</button>}
       />
       <section className="completed-project-feature design-review-feature page-card">
-        <div className="completed-project-cover"><img src="/projects/petal-twist-vase-aug-2026-cover.png" alt="Isometric render of the Petal Twist Vase draft STL" /></div>
+        <div className="completed-project-cover"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Isometric render of the Petal Twist Vase draft STL" /></div>
         <div className="completed-project-copy">
           <span className="completion-kicker review"><Flower2 size={15} /> Design draft · Needs your eye</span>
           <h2>Petal Twist Vase</h2>
-          <p>A single-piece PETG vase with eight soft flutes, a stable bulb-shaped base, and a scalloped petal rim. The mesh is closed; the finished print still requires a leak test before flowers go in.</p>
-          <div className="completed-project-facts"><span><strong>122.6 × 122.6 × 245 mm</strong><small>P1S-safe outside</small></span><span><strong>2.4 mm</strong><small>continuous wall</small></span><span><strong>PETG</strong><small>water-capable material</small></span></div>
+          <p>Single-piece PETG vase with soft flutes, a stable base, and a scalloped rim. The mesh is closed; complete the leak test before adding flowers.</p>
+          <div className="completed-project-facts"><span><strong>122.6 × 122.6 × 245 mm</strong><small>P1S-safe size</small></span><span><strong>2.4 mm</strong><small>Continuous wall</small></span><span><strong>PETG</strong><small>Water-capable</small></span></div>
           <div className="completed-project-actions"><a className="primary-button" href="/projects/petal-twist-vase-aug-2026.stl" download><Download size={16} /> Download draft STL</a><a className="secondary-button" href="/projects/petal-twist-vase-aug-2026-print-guide.md" target="_blank" rel="noreferrer"><ShieldCheck size={16} /> Print approach</a></div>
         </div>
       </section>
 
-      <div className="project-filter-row"><button className="active">All projects <span>3</span></button><button>In progress <span>1</span></button><button>Ready to print <span>0</span></button><button>Completed <span>1</span></button></div>
+      <div className="project-filter-row"><button className="active">All projects <span>3</span></button><button>In progress <span>1</span></button><button>Ready <span>0</span></button><button>Completed <span>1</span></button></div>
       <div className="project-card-grid">
         {projectCards.map((project, index) => (
           <button className="project-card" key={project.name} onClick={index === 0 ? props.onOpenProject : undefined}>
