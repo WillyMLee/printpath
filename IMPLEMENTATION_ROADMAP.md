@@ -25,6 +25,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Gridfinity gap tray | One 254.4 × 39.4 × 49.4 mm part for a 255 × 40 × 50 mm envelope | Completed |
 | Project presentation | Actual-STL cover render and completed-project card | Shipped |
 | Information architecture | Maker-focused navigation, room/use template categories, and one unified process page | Shipped |
+| Branding | PrintPath cube favicon for browser tabs and bookmarks | Shipped |
 | Deployment | GitHub workflow and Cloudflare Workers static hosting | Shipped |
 
 ## Next implementation candidates
