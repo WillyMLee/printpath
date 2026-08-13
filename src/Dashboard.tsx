@@ -107,14 +107,14 @@ const projectCards = [
     cover: "/projects/drawer-gap-tray-aug-2026-product.png",
   },
   {
-    name: "Petal Twist Vase",
-    kind: "Floral vase",
+    name: "Leaf Bloom Vase",
+    kind: "Botanical vase",
     status: "Design review",
     statusClass: "progress",
     parts: "1 part · 1 plate",
-    next: "Approve shape + water test",
+    next: "Review shape + water test",
     confidence: 86,
-    cover: "/projects/petal-twist-vase-aug-2026-product.png",
+    cover: "/projects/leaf-bloom-vase-aug-2026-product.png",
   },
   {
     name: "Board game organizer",
@@ -231,8 +231,8 @@ function OverviewPage(props: DashboardProps) {
         <section className="page-card recent-projects">
           <div className="card-heading-row"><div><span className="page-eyebrow">Your projects</span><h2>Pick up where you left off</h2></div><button className="text-link" onClick={() => props.onNavigate("projects")}>View all <ChevronRight size={15} /></button></div>
           <button className="recent-project-row" onClick={() => props.onNavigate("projects")}>
-            <span className="project-cover-thumb"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Rendered Petal Twist Vase" /></span>
-            <div><strong>Petal Twist Vase</strong><small>245 mm tall · PETG · one part</small></div>
+            <span className="project-cover-thumb"><img src="/projects/leaf-bloom-vase-aug-2026-product.png" alt="Rendered Leaf Bloom Vase" /></span>
+            <div><strong>Leaf Bloom Vase</strong><small>245 mm tall · PETG · design v2</small></div>
             <span className="review-mini">Review draft</span>
             <ChevronRight size={17} />
           </button>
@@ -266,13 +266,14 @@ function ProjectsPage(props: DashboardProps) {
         action={<button className="primary-button page-action" onClick={props.onNewProject}><Plus size={17} /> New project</button>}
       />
       <section className="completed-project-feature design-review-feature page-card">
-        <div className="completed-project-cover"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Isometric render of the Petal Twist Vase draft STL" /></div>
+        <div className="completed-project-cover"><img src="/projects/leaf-bloom-vase-aug-2026-product.png" alt="Isometric render of the Leaf Bloom Vase draft STL" /></div>
         <div className="completed-project-copy">
-          <span className="completion-kicker review"><Flower2 size={15} /> Design draft · Needs your eye</span>
-          <h2>Petal Twist Vase</h2>
-          <p>Single-piece PETG vase with soft flutes, a stable base, and a scalloped rim. The mesh is closed; complete the leak test before adding flowers.</p>
-          <div className="completed-project-facts"><span><strong>122.6 × 122.6 × 245 mm</strong><small>P1S-safe size</small></span><span><strong>2.4 mm</strong><small>Continuous wall</small></span><span><strong>PETG</strong><small>Water-capable</small></span></div>
-          <div className="completed-project-actions"><a className="primary-button" href="/projects/petal-twist-vase-aug-2026.stl" download><Download size={16} /> Download draft STL</a><a className="secondary-button" href="/projects/petal-twist-vase-aug-2026-print-guide.md" target="_blank" rel="noreferrer"><ShieldCheck size={16} /> Print approach</a></div>
+          <span className="completion-kicker review"><Sprout size={15} /> Botanical design · Version 2</span>
+          <h2>Leaf Bloom Vase</h2>
+          <p>Designed for fuller greenery: seven leaf-like folds rise into a wider, gently flared opening while the stable one-piece body keeps the same water-capable PETG approach.</p>
+          <div className="completed-project-facts"><span><strong>122.9 × 122.5 × 245 mm</strong><small>P1S-safe size</small></span><span><strong>≈105 mm</strong><small>Average inner opening</small></span><span><strong>PETG</strong><small>One-piece body</small></span></div>
+          <div className="completed-project-actions"><a className="primary-button" href="/projects/leaf-bloom-vase-aug-2026.stl" download><Download size={16} /> Download design v2</a><a className="secondary-button" href="/projects/leaf-bloom-vase-aug-2026-print-guide.md" target="_blank" rel="noreferrer"><ShieldCheck size={16} /> Print approach</a></div>
+          <a className="original-variant-link" href="/projects/petal-twist-vase-aug-2026.stl" download><Flower2 size={14} /> Keep the original Petal Twist STL</a>
         </div>
       </section>
 

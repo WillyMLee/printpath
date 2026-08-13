@@ -76,6 +76,7 @@ const STORAGE_KEY = "printpath-project-v1";
 const BRIDGE_PAIRING_KEY = "printpath-bridge-pairing-v1";
 const ACTIVE_PROJECT_KEY = "printpath-active-project-v1";
 const BRIDGE_URL = "http://127.0.0.1:32145";
+const SHOWCASED_PROJECT_COUNT = 3;
 const projectStore = createProjectStore<ProjectSpec>();
 
 const starterSpec: ProjectSpec = {
@@ -1145,7 +1146,7 @@ export default function App() {
           <button className="icon-button close-nav" onClick={() => setMobileNav(false)} aria-label="Close navigation"><X size={20} /></button>
           <nav className="main-nav" aria-label="Main navigation">
             <button className={currentPage === "overview" ? "active" : ""} onClick={() => navigate("overview")}><Home size={18} /><span>Overview</span></button>
-            <button className={currentPage === "projects" ? "active" : ""} onClick={() => navigate("projects")}><Layers3 size={18} /><span>My projects</span><em>{Math.max(1, storeSummary.projectCount)}</em></button>
+            <button className={currentPage === "projects" ? "active" : ""} onClick={() => navigate("projects")}><Layers3 size={18} /><span>My projects</span><em>{Math.max(SHOWCASED_PROJECT_COUNT, storeSummary.projectCount)}</em></button>
             <button className={currentPage === "library" ? "active" : ""} onClick={() => navigate("library")}><Sparkles size={18} /><span>Design library</span></button>
             <button className={currentPage === "process" ? "active" : ""} onClick={() => navigate("process")}><Link2 size={18} /><span>How it works</span></button>
             {currentPage === "workbench" && <button className="active" onClick={() => navigate("workbench")}><PencilRuler size={18} /><span>Active workbench</span></button>}
@@ -1181,7 +1182,7 @@ export default function App() {
           onPairingCodeChange={setPairingCode}
           onCheckBridge={() => void checkBridge(pairingCode)}
           projectId={projectId}
-          projectCount={storeSummary.projectCount}
+          projectCount={Math.max(SHOWCASED_PROJECT_COUNT, storeSummary.projectCount)}
           versionCount={storeSummary.versionCount}
           storageProvider={storeSummary.provider}
           syncTarget={storeSummary.syncTarget}
