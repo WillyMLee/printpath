@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import Dashboard, { type AppPage, type StarterTemplate } from "./Dashboard";
 import { createProjectStore, type ProjectStoreSummary } from "./projectStore";
+import roadmapUrl from "../IMPLEMENTATION_ROADMAP.md?url";
 
 type ProjectSpec = {
   name: string;
@@ -65,6 +66,7 @@ type ProjectSpec = {
   brimAllowed: boolean;
   orchestrationPreference: "auto" | "lean" | "reviewed";
   intentConfirmedAt?: string;
+  completedAt?: string;
   printTitle?: string;
   createdAt: string;
 };
@@ -125,9 +127,25 @@ const steps = [
 ];
 
 const P1S_BUILD_VOLUME: [number, number, number] = [256, 256, 256];
+const GAP_TRAY_COMPLETED_AT = "2026-08-13T16:50:21.505Z";
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
+}
+
+function normalizeKnownCompletedProject(project: ProjectSpec): ProjectSpec {
+  const isApprovedGapTray = project.geometryKind === "gridfinity-gap-tray"
+    && Math.max(project.width, project.depth) === 255
+    && Math.min(project.width, project.depth) === 40
+    && project.height === 50;
+  if (!isApprovedGapTray) return project;
+  return {
+    ...project,
+    name: "Drawer Gap Tray",
+    printTitle: project.printTitle || "Drawer Gap Tray · Aug 2026",
+    intentConfirmedAt: project.intentConfirmedAt || GAP_TRAY_COMPLETED_AT,
+    completedAt: project.completedAt || GAP_TRAY_COMPLETED_AT,
+  };
 }
 
 function loadProject(): ProjectSpec {
@@ -147,7 +165,7 @@ function loadProject(): ProjectSpec {
     } : parsed;
     const normalized = { ...starterSpec, ...migrated, printer: "Bambu Lab P1S" } as ProjectSpec;
     if (normalized.geometryKind === "gridfinity-gap-tray") {
-      return {
+      return normalizeKnownCompletedProject({
         ...normalized,
         name: normalized.name === "One-compartment Gridfinity gap tray" ? "One-compartment drawer gap tray" : normalized.name,
         objectIntent: "one-compartment",
@@ -157,7 +175,7 @@ function loadProject(): ProjectSpec {
         onePartRequired: true,
         floorThickness: typeof parsed.floorThickness === "number" ? parsed.floorThickness : normalized.wall,
         verticalClearance: normalized.verticalClearance ?? 0.6,
-      };
+      });
     }
     return normalized;
   } catch {
@@ -400,8 +418,15 @@ export default function App() {
     localStorage.setItem(ACTIVE_PROJECT_KEY, projectId);
     void projectStore.load(projectId).then(async (project) => {
       if (cancelled) return;
-      if (project) setSpec(project.draft);
-      else await projectStore.checkpoint(projectId, spec.name, spec, "created");
+      if (project) {
+        const normalizedProject = normalizeKnownCompletedProject(project.draft);
+        setSpec(normalizedProject);
+        if (normalizedProject.completedAt && !project.draft.completedAt) {
+          await projectStore.checkpoint(projectId, normalizedProject.name, normalizedProject, "completed");
+        }
+      } else {
+        await projectStore.checkpoint(projectId, spec.name, spec, spec.completedAt ? "completed" : "created");
+      }
       if (!cancelled) {
         setStoreSummary(await projectStore.summary());
         setStoreReady(true);
@@ -517,7 +542,7 @@ export default function App() {
     setSpec((current) => ({
       ...current,
       [key]: value,
-      ...(key === "intentConfirmedAt" || key === "printTitle" ? {} : { intentConfirmedAt: undefined }),
+      ...(key === "intentConfirmedAt" || key === "printTitle" || key === "completedAt" ? {} : { intentConfirmedAt: undefined, completedAt: undefined }),
     }));
   }
 
@@ -546,6 +571,7 @@ export default function App() {
       verticalClearance: 0.6,
       printTitle: undefined,
       intentConfirmedAt: undefined,
+      completedAt: undefined,
     }));
     setHandoffState({ status: "idle" });
   }
@@ -725,12 +751,12 @@ export default function App() {
     setProjectId(crypto.randomUUID());
     setSpec(template === "blank"
       ? { ...freshSpec, createdAt: new Date().toISOString() }
-      : { ...starterSpec, ...templates[template], floorThickness: templates[template].wall ?? starterSpec.floorThickness, createdAt: new Date().toISOString(), intentConfirmedAt: undefined, printTitle: undefined });
+      : { ...starterSpec, ...templates[template], floorThickness: templates[template].wall ?? starterSpec.floorThickness, createdAt: new Date().toISOString(), intentConfirmedAt: undefined, completedAt: undefined, printTitle: undefined });
     setActiveStep(template === "blank" ? 0 : 1);
     navigate("workbench");
   }
 
-  async function saveCheckpoint(reason: "step-complete" | "approved" | "handoff") {
+  async function saveCheckpoint(reason: "step-complete" | "approved" | "handoff" | "completed") {
     const summary = await projectStore.checkpoint(projectId, spec.name, spec, reason);
     setStoreSummary(summary);
   }
@@ -743,6 +769,13 @@ export default function App() {
     };
     setSpec(approved);
     void projectStore.checkpoint(projectId, approved.name, approved, "approved").then(setStoreSummary);
+  }
+
+  function completeProject() {
+    const completed = { ...spec, completedAt: spec.completedAt || new Date().toISOString() };
+    setSpec(completed);
+    void projectStore.checkpoint(projectId, completed.name, completed, "completed").then(setStoreSummary);
+    navigate("projects");
   }
 
   function exportSpec() {
@@ -1094,7 +1127,7 @@ export default function App() {
           <button className="new-project-button" onClick={startFresh}><Plus size={18} /> New project</button>
         </div>
         <div className="sidebar-bottom">
-          <div className="roadmap-card"><span><Sparkles size={16} /></span><strong>Building in public</strong><p>This prototype is the first step toward an open design-to-print workflow.</p><button>View roadmap <ChevronRight size={14} /></button></div>
+          <div className="roadmap-card"><span><Sparkles size={16} /></span><strong>Building in public</strong><p>The living roadmap records shipped decisions, next improvements, and deferred work.</p><a href={roadmapUrl} target="_blank" rel="noreferrer">View roadmap <ChevronRight size={14} /></a></div>
           <button className={`settings-link ${currentPage === "settings" ? "active" : ""}`} onClick={() => navigate("settings")}><Settings size={18} /> Machine setup</button>
           <div className="profile"><span>WB</span><div><strong>William</strong><small>Maker workspace</small></div><ChevronRight size={16} /></div>
         </div>
@@ -1131,6 +1164,7 @@ export default function App() {
           orchestrationDetail={route.detail}
           orchestrationAgents={route.agents}
           projectApproved={Boolean(spec.intentConfirmedAt)}
+          projectCompleted={Boolean(spec.completedAt)}
         />
       ) : (
       <main className="workspace">
@@ -1178,7 +1212,7 @@ export default function App() {
               {activeStep < steps.length - 1 ? (
                 <button className="primary-button" onClick={() => { void saveCheckpoint("step-complete"); setActiveStep((step) => Math.min(steps.length - 1, step + 1)); }}>Continue <ChevronRight size={17} /></button>
               ) : (
-                <button className="text-button review-done-button" onClick={() => navigate("projects")}>Done</button>
+                <button className="text-button review-done-button" disabled={!spec.intentConfirmedAt} onClick={completeProject}>{spec.completedAt ? "View completed project" : "Mark design complete"}</button>
               )}
             </div>
           </section>

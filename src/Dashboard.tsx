@@ -84,6 +84,7 @@ type DashboardProps = {
   orchestrationDetail: string;
   orchestrationAgents: number;
   projectApproved: boolean;
+  projectCompleted: boolean;
 };
 
 const plateOptions = [
@@ -95,6 +96,16 @@ const plateOptions = [
 
 const projectCards = [
   {
+    name: "Drawer Gap Tray",
+    kind: "Custom-fit gap solution",
+    status: "Completed",
+    statusClass: "complete",
+    parts: "1 part · 1 plate",
+    next: "Ready to reprint",
+    confidence: 100,
+    cover: "/projects/drawer-gap-tray-aug-2026-cover.png",
+  },
+  {
     name: "Under-desk headphone hanger",
     kind: "Single part",
     status: "In progress",
@@ -102,15 +113,6 @@ const projectCards = [
     parts: "1 part · 1 plate",
     next: "Confirm measurements",
     confidence: 72,
-  },
-  {
-    name: "Custom drawer Gridfinity",
-    kind: "Custom-fit system",
-    status: "Recommended",
-    statusClass: "ready",
-    parts: "2 parts · 1 plate",
-    next: "Enter drawer dimensions",
-    confidence: 65,
   },
   {
     name: "Board game organizer",
@@ -227,9 +229,9 @@ function OverviewPage(props: DashboardProps) {
         <section className="page-card recent-projects">
           <div className="card-heading-row"><div><span className="page-eyebrow">Your projects</span><h2>Pick up where you left off</h2></div><button className="text-link" onClick={() => props.onNavigate("projects")}>View all <ChevronRight size={15} /></button></div>
           <button className="recent-project-row" onClick={props.onOpenProject}>
-            <span className="project-symbol mint"><Wrench size={20} /></span>
-            <div><strong>{props.activeProjectName || "Under-desk headphone hanger"}</strong><small>Measurements · single part</small></div>
-            <span className="progress-ring">72%</span>
+            <span className="project-cover-thumb"><img src="/projects/drawer-gap-tray-aug-2026-cover.png" alt="Rendered Drawer Gap Tray" /></span>
+            <div><strong>Drawer Gap Tray</strong><small>254.4 × 39.4 × 49.4 mm · one part</small></div>
+            <span className="completed-mini"><Check size={12} /> Completed</span>
             <ChevronRight size={17} />
           </button>
           <button className="recent-project-row" onClick={() => props.onUseTemplate("grid-customizer")}>
@@ -261,11 +263,22 @@ function ProjectsPage(props: DashboardProps) {
         description="Single parts stay simple. Compound projects are broken into plates, checkpoints, and assembly steps."
         action={<button className="primary-button page-action" onClick={props.onNewProject}><Plus size={17} /> New project</button>}
       />
-      <div className="project-filter-row"><button className="active">All projects <span>3</span></button><button>In progress <span>1</span></button><button>Ready to print <span>0</span></button><button>Completed <span>0</span></button></div>
+      <section className="completed-project-feature page-card">
+        <div className="completed-project-cover"><img src="/projects/drawer-gap-tray-aug-2026-cover.png" alt="Isometric render of the approved Drawer Gap Tray STL" /></div>
+        <div className="completed-project-copy">
+          <span className="completion-kicker"><BadgeCheck size={15} /> Completed design · Aug 2026</span>
+          <h2>Drawer Gap Tray</h2>
+          <p>One uninterrupted compartment for the narrow leftover zone beside the existing Gridfinity layout. The cover is rendered from the approved watertight STL.</p>
+          <div className="completed-project-facts"><span><strong>254.4 × 39.4 × 49.4 mm</strong><small>printed outside</small></span><span><strong>1 part</strong><small>single P1S plate</small></span><span><strong>0.4 mm</strong><small>nozzle profile</small></span></div>
+          <div className="completed-project-actions"><button className="primary-button" onClick={props.onOpenProject}>Open design <ArrowRight size={16} /></button><button className="secondary-button" onClick={() => props.onNavigate("bridge")}><Smartphone size={16} /> Reprint workflow</button></div>
+        </div>
+      </section>
+
+      <div className="project-filter-row"><button className="active">All projects <span>3</span></button><button>In progress <span>1</span></button><button>Ready to print <span>0</span></button><button>Completed <span>1</span></button></div>
       <div className="project-card-grid">
         {projectCards.map((project, index) => (
-          <button className="project-card" key={project.name} onClick={index === 0 ? props.onOpenProject : index === 1 ? () => props.onUseTemplate("grid-customizer") : undefined}>
-            <div className={`project-art project-art-${index + 1}`}><span>{index === 0 ? <Wrench size={28} /> : index === 1 ? <Grid3X3 size={30} /> : <Component size={30} />}</span><em>{project.kind}</em></div>
+          <button className="project-card" key={project.name} onClick={index === 0 ? props.onOpenProject : undefined}>
+            <div className={`project-art project-art-${index + 1}`}>{project.cover ? <img src={project.cover} alt="Drawer Gap Tray cover" /> : <span>{index === 1 ? <Wrench size={28} /> : <Component size={30} />}</span>}<em>{project.kind}</em></div>
             <div className="project-card-body">
               <div className="project-card-title"><h2>{project.name}</h2><span className={`status-chip ${project.statusClass}`}>{project.status}</span></div>
               <p>{project.parts}</p>
@@ -275,6 +288,15 @@ function ProjectsPage(props: DashboardProps) {
           </button>
         ))}
       </div>
+
+      <section className="next-project-section page-card">
+        <div className="card-heading-row"><div><span className="page-eyebrow">What should we solve next?</span><h2>Three useful steps up from the gap tray</h2><p>Each option reuses the same measure → confirm → generate → handoff loop, with one new design challenge at a time.</p></div></div>
+        <div className="next-project-grid">
+          <button onClick={() => props.onStartIdea("A measured drawer-divider end cap that fills a leftover gap and stops an existing divider from shifting.")}><span><PanelsTopLeft size={20} /></span><div><em>Fastest follow-up</em><strong>Drawer divider end cap</strong><small>One fit surface · one part</small></div><ArrowRight size={16} /></button>
+          <button onClick={() => props.onUseTemplate("token-tray")}><span><Coins size={20} /></span><div><em>Recommended</em><strong>Board-game token tray</strong><small>Add a pour corner and rounded well</small></div><ArrowRight size={16} /></button>
+          <button onClick={() => props.onUseTemplate("card-holder")}><span><CreditCard size={20} /></span><div><em>New measurement skill</em><strong>Sleeved-card holder</strong><small>Fit a deck with finger access</small></div><ArrowRight size={16} /></button>
+        </div>
+      </section>
 
       <section className="page-card assembly-scaffold">
         <div className="assembly-intro"><span className="page-eyebrow">Compound-object scaffold</span><h2>Board game organizer · 6 parts</h2><p>This is how PrintPath will keep a complex build understandable.</p></div>
@@ -403,7 +425,7 @@ function ControlTowerPage(props: DashboardProps) {
       />
       <section className="page-card control-hero">
         <div><span className="control-status"><CircleDot size={14} /> Local source active</span><h2>{props.storageProvider}</h2><p>Drafts and immutable checkpoints live in this browser’s IndexedDB. Cloudflare only hosts the application files.</p></div>
-        <div className="control-metrics"><span><strong>{Math.max(1, props.projectCount)}</strong><small>projects</small></span><span><strong>{props.versionCount}</strong><small>checkpoints</small></span><span><strong>{props.projectApproved ? "Approved" : "Draft"}</strong><small>active state</small></span></div>
+        <div className="control-metrics"><span><strong>{Math.max(1, props.projectCount)}</strong><small>projects</small></span><span><strong>{props.versionCount}</strong><small>checkpoints</small></span><span><strong>{props.projectCompleted ? "Completed" : props.projectApproved ? "Approved" : "Draft"}</strong><small>active state</small></span></div>
       </section>
 
       <div className="control-grid">

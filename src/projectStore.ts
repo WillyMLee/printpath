@@ -2,7 +2,7 @@ export type ProjectCheckpoint<T> = {
   id: string;
   projectId: string;
   version: number;
-  reason: "created" | "step-complete" | "approved" | "handoff";
+  reason: "created" | "step-complete" | "approved" | "handoff" | "completed";
   createdAt: string;
   spec: T;
 };
@@ -12,7 +12,7 @@ export type LocalProject<T> = {
   title: string;
   createdAt: string;
   updatedAt: string;
-  status: "draft" | "approved" | "handed-off";
+  status: "draft" | "approved" | "handed-off" | "completed";
   draft: T;
   checkpoints: ProjectCheckpoint<T>[];
 };
@@ -145,7 +145,7 @@ class IndexedDbProjectStore<T> implements ProjectStore<T> {
       project.title = title || "Untitled project";
       project.updatedAt = now;
       project.draft = spec;
-      project.status = reason === "handoff" ? "handed-off" : reason === "approved" ? "approved" : project.status;
+      project.status = reason === "completed" ? "completed" : reason === "handoff" ? "handed-off" : reason === "approved" ? "approved" : project.status;
       await this.writeProject(database, project);
       return makeSummary(await readAllProjects<T>(database), now);
     } finally {
