@@ -26,7 +26,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Project presentation | Clean actual-STL product renders, readable project typography, and labeled sharing covers | Shipped |
 | Information architecture | Maker-focused navigation, room/use template categories, and one unified process page | Shipped |
 | Branding | PrintPath cube favicon for browser tabs and bookmarks | Shipped |
-| Vase project | Petal Twist v1 plus the wider, seven-fold Leaf Bloom v2; both manifold and downloadable | Design review |
+| Vase project | Visible saved-version history for Petal Twist v1 and Leaf Bloom v2; both manifold and downloadable | Design review |
 | Deployment | GitHub workflow and Cloudflare Workers static hosting | Shipped |
 
 ## Next implementation candidates
@@ -92,4 +92,5 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-13:** Organize the design library by Kitchen, Bathroom, Bedroom, Board Games, Plants, and Desk & Workshop while keeping Gridfinity as a featured system.
 - **2026-08-13:** Keep the water-holding vase seam-free at 245 mm tall; use PETG, a 2.4 mm wall, a 3.2 mm floor, and require a physical leak test.
 - **2026-08-13:** Use text-free actual-STL renders inside the interface and reserve labeled covers for sharing or export.
-- **2026-08-13:** Treat vase redesigns as versions of one project; keep the original artifact available while featuring the stronger botanical direction.
+- **2026-08-13:** Treat vase redesigns as versions of one project; keep every artifact available and let one version be explicitly selected.
+- **2026-08-13:** Never remove a prior design from the visible project record; experiments remain previewable and downloadable even when another version is selected.

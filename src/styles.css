@@ -484,8 +484,25 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .completed-project-actions { display: flex; gap: 8px; }
 .completed-project-actions a { text-decoration: none; }
 .completed-project-actions .primary-button, .completed-project-actions .secondary-button { min-height: 42px; font-size: 11.5px; }
-.original-variant-link { margin-top: 13px; display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; color: #60716b; font-size: 10px; font-weight: 750; text-decoration: none; }
-.original-variant-link:hover { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+.design-history { max-width: 1370px; margin: 18px auto 0; padding: 26px 28px; }
+.design-history .card-heading-row p { max-width: 700px; margin: 7px 0 0; color: #6f7e79; font-size: 11.5px; line-height: 1.55; }
+.version-count { flex: 0 0 auto; padding: 8px 10px; border-radius: 999px; color: #50645d; background: #eef2ee; font-size: 10px; font-weight: 800; }
+.design-version-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.design-version-card { min-width: 0; overflow: hidden; display: grid; grid-template-columns: minmax(150px,.72fr) minmax(0,1.28fr); border: 1px solid #e0e6e1; border-radius: 14px; background: #fbfcfa; }
+.design-version-card.selected { border-color: #a9d9c9; box-shadow: inset 0 0 0 1px #d8efe6; background: #f7fcf9; }
+.design-version-art { min-height: 190px; background: #eef4ef; }
+.design-version-art img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.design-version-copy { padding: 18px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+.design-version-meta { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.design-version-meta > span { color: #7b8984; font-size: 9px; font-weight: 750; text-transform: uppercase; letter-spacing: .055em; }
+.design-version-meta em { display: inline-flex; align-items: center; gap: 4px; padding: 5px 7px; border-radius: 999px; color: #26705c; background: #dff3ea; font-size: 8.5px; font-style: normal; font-weight: 850; }
+.design-version-meta em.experiment { color: #8d5838; background: #fff0e6; }
+.design-version-copy h3 { margin: 11px 0 6px; font-size: 18px; letter-spacing: -.035em; }
+.design-version-copy p { margin: 0; color: #687872; font-size: 11.5px; line-height: 1.5; }
+.design-version-facts { margin: 13px 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.design-version-facts span { padding: 5px 7px; border: 1px solid #e0e6e1; border-radius: 7px; color: #63726d; background: white; font-size: 9px; font-weight: 700; }
+.version-download { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-size: 10px; font-weight: 800; text-decoration: none; }
+.version-download:hover { text-decoration: underline; text-underline-offset: 3px; }
 .project-filter-row { max-width: 1370px; margin: 25px auto 18px; display: flex; gap: 7px; }
 .project-filter-row button { border: 1px solid transparent; background: transparent; border-radius: 9px; padding: 9px 13px; color: #65746f; font-size: 11.5px; font-weight: 750; cursor: pointer; }
 .project-filter-row button span { margin-left: 4px; color: #9ca6a2; }
@@ -816,6 +833,7 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
   .project-card-grid, .template-grid { grid-template-columns: 1fr 1fr; }
   .completed-project-feature { grid-template-columns: minmax(0,1fr) minmax(340px,.86fr); }
   .completed-project-copy { padding: 25px 27px; }
+  .design-version-grid { grid-template-columns: 1fr; }
   .next-project-grid { grid-template-columns: 1fr; }
   .popular-template-row { grid-template-columns: 1fr; }
   .bridge-page-grid { grid-template-columns: 1fr; }
@@ -915,6 +933,10 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
   .completed-project-facts span, .completed-project-facts span:last-child { border-right: 0; border-bottom: 1px solid #e3e8e3; }
   .completed-project-facts span:last-child { border-bottom: 0; }
   .completed-project-actions { align-items: stretch; flex-direction: column; }
+  .design-history { padding: 21px 18px; }
+  .design-history .card-heading-row { align-items: flex-start; flex-direction: column; }
+  .design-version-card { grid-template-columns: 1fr; }
+  .design-version-art { height: 190px; min-height: 0; }
   .next-project-section { padding: 20px 17px; }
   .process-journey { margin-top: 14px; padding: 21px 18px; }
   .process-journey-heading h2 { font-size: 18px; }

@@ -107,14 +107,14 @@ const projectCards = [
     cover: "/projects/drawer-gap-tray-aug-2026-product.png",
   },
   {
-    name: "Leaf Bloom Vase",
-    kind: "Botanical vase",
+    name: "Petal Twist Vase",
+    kind: "Floral vase",
     status: "Design review",
     statusClass: "progress",
     parts: "1 part · 1 plate",
-    next: "Review shape + water test",
+    next: "Approve shape + water test",
     confidence: 86,
-    cover: "/projects/leaf-bloom-vase-aug-2026-product.png",
+    cover: "/projects/petal-twist-vase-aug-2026-product.png",
   },
   {
     name: "Board game organizer",
@@ -231,8 +231,8 @@ function OverviewPage(props: DashboardProps) {
         <section className="page-card recent-projects">
           <div className="card-heading-row"><div><span className="page-eyebrow">Your projects</span><h2>Pick up where you left off</h2></div><button className="text-link" onClick={() => props.onNavigate("projects")}>View all <ChevronRight size={15} /></button></div>
           <button className="recent-project-row" onClick={() => props.onNavigate("projects")}>
-            <span className="project-cover-thumb"><img src="/projects/leaf-bloom-vase-aug-2026-product.png" alt="Rendered Leaf Bloom Vase" /></span>
-            <div><strong>Leaf Bloom Vase</strong><small>245 mm tall · PETG · design v2</small></div>
+            <span className="project-cover-thumb"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Rendered Petal Twist Vase" /></span>
+            <div><strong>Petal Twist Vase</strong><small>245 mm tall · PETG · 2 saved versions</small></div>
             <span className="review-mini">Review draft</span>
             <ChevronRight size={17} />
           </button>
@@ -266,14 +266,42 @@ function ProjectsPage(props: DashboardProps) {
         action={<button className="primary-button page-action" onClick={props.onNewProject}><Plus size={17} /> New project</button>}
       />
       <section className="completed-project-feature design-review-feature page-card">
-        <div className="completed-project-cover"><img src="/projects/leaf-bloom-vase-aug-2026-product.png" alt="Isometric render of the Leaf Bloom Vase draft STL" /></div>
+        <div className="completed-project-cover"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Isometric render of the selected Petal Twist Vase STL" /></div>
         <div className="completed-project-copy">
-          <span className="completion-kicker review"><Sprout size={15} /> Botanical design · Version 2</span>
-          <h2>Leaf Bloom Vase</h2>
-          <p>Designed for fuller greenery: seven leaf-like folds rise into a wider, gently flared opening while the stable one-piece body keeps the same water-capable PETG approach.</p>
-          <div className="completed-project-facts"><span><strong>122.9 × 122.5 × 245 mm</strong><small>P1S-safe size</small></span><span><strong>≈105 mm</strong><small>Average inner opening</small></span><span><strong>PETG</strong><small>One-piece body</small></span></div>
-          <div className="completed-project-actions"><a className="primary-button" href="/projects/leaf-bloom-vase-aug-2026.stl" download><Download size={16} /> Download design v2</a><a className="secondary-button" href="/projects/leaf-bloom-vase-aug-2026-print-guide.md" target="_blank" rel="noreferrer"><ShieldCheck size={16} /> Print approach</a></div>
-          <a className="original-variant-link" href="/projects/petal-twist-vase-aug-2026.stl" download><Flower2 size={14} /> Keep the original Petal Twist STL</a>
+          <span className="completion-kicker review"><Flower2 size={15} /> Selected design · Version 1</span>
+          <h2>Petal Twist Vase</h2>
+          <p>The original eight-flute vase with a stable bulb-shaped base and a soft scalloped rim. It remains the selected direction; newer experiments are preserved below.</p>
+          <div className="completed-project-facts"><span><strong>122.6 × 122.6 × 245 mm</strong><small>P1S-safe size</small></span><span><strong>2.4 mm</strong><small>Continuous wall</small></span><span><strong>PETG</strong><small>One-piece body</small></span></div>
+          <div className="completed-project-actions"><a className="primary-button" href="/projects/petal-twist-vase-aug-2026.stl" download><Download size={16} /> Download selected STL</a><a className="secondary-button" href="/projects/petal-twist-vase-aug-2026-print-guide.md" target="_blank" rel="noreferrer"><ShieldCheck size={16} /> Print approach</a></div>
+        </div>
+      </section>
+
+      <section className="design-history page-card" aria-labelledby="vase-history-title">
+        <div className="card-heading-row">
+          <div><span className="page-eyebrow">Vase project · Design history</span><h2 id="vase-history-title">Every version stays in the record.</h2><p>New directions never replace earlier work. Each version keeps its preview, design notes, and printable STL.</p></div>
+          <span className="version-count">2 saved versions</span>
+        </div>
+        <div className="design-version-grid">
+          <article className="design-version-card selected">
+            <div className="design-version-art"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Petal Twist Vase version 1" /></div>
+            <div className="design-version-copy">
+              <div className="design-version-meta"><span>Version 1 · Aug 2026</span><em><Check size={12} /> Selected</em></div>
+              <h3>Petal Twist Vase</h3>
+              <p>Original eight-flute body with a compact scalloped opening and softly rounded base.</p>
+              <div className="design-version-facts"><span>122.6 × 122.6 × 245 mm</span><span>≈77 mm opening</span></div>
+              <a className="version-download" href="/projects/petal-twist-vase-aug-2026.stl" download><Download size={14} /> Download version 1</a>
+            </div>
+          </article>
+          <article className="design-version-card">
+            <div className="design-version-art"><img src="/projects/leaf-bloom-vase-aug-2026-product.png" alt="Leaf Bloom Vase version 2" /></div>
+            <div className="design-version-copy">
+              <div className="design-version-meta"><span>Version 2 · Aug 2026</span><em className="experiment"><Sprout size={12} /> Experiment</em></div>
+              <h3>Leaf Bloom Vase</h3>
+              <p>Seven twisted botanical folds and a wider flared opening for fuller, leaf-heavy arrangements.</p>
+              <div className="design-version-facts"><span>122.9 × 122.5 × 245 mm</span><span>≈105 mm opening</span></div>
+              <a className="version-download" href="/projects/leaf-bloom-vase-aug-2026.stl" download><Download size={14} /> Download version 2</a>
+            </div>
+          </article>
         </div>
       </section>
 
