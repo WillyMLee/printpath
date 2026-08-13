@@ -105,7 +105,8 @@ function loadProject(): ProjectSpec {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return starterSpec;
     const parsed = JSON.parse(stored) as Partial<Omit<ProjectSpec, "geometryKind" | "gridfinityMode">> & { geometryKind?: string; gridfinityMode?: string };
-    const migrated = parsed.geometryKind === "gridfinity-pitch-strip" ? {
+    const isLegacyStrip = parsed.geometryKind === "gridfinity-pitch-strip" || parsed.name === "Non-standard Gridfinity-pitch drawer strip";
+    const migrated = isLegacyStrip ? {
       ...parsed,
       name: "One-compartment Gridfinity gap tray",
       description: `One continuous custom compartment for the measured gap beside the existing Gridfinity layout. It prints diagonally as a single P1S part and is not a standard baseplate-compatible bin.`,
