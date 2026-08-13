@@ -28,8 +28,8 @@ function quad(triangles, a, b, c, d) {
   triangles.push([a, b, c], [a, c, d]);
 }
 
-function createOpenTrayTriangles({ width, depth, height, wall }) {
-  const base = Math.min(Math.max(wall, 1.2), height - 0.8);
+function createOpenTrayTriangles({ width, depth, height, wall, floorThickness = wall }) {
+  const base = Math.min(Math.max(floorThickness, 1.2), height - 0.8);
   if (width <= wall * 2 + 1 || depth <= wall * 2 + 1 || height <= base) {
     throw new Error("The tray dimensions do not leave enough interior space.");
   }
@@ -81,14 +81,15 @@ export function createOpenTrayStl(dimensions) {
   return trianglesToStl("printpath_open_tray", createOpenTrayTriangles(dimensions).triangles);
 }
 
-export function createGridfinityGapTrayStl({ width, depth, height, wall, clearance = 0.3 }) {
+export function createGridfinityGapTrayStl({ width, depth, height, wall, floorThickness = wall, clearance = 0.3, verticalClearance = 0.6, dimensionIntent = "available-envelope" }) {
   const longAxis = Math.max(width, depth);
   const shortAxis = Math.min(width, depth);
   const standardBinFootprint = 41.5;
   if (shortAxis >= standardBinFootprint) throw new Error("This generator is only for a narrow gap beside a standard Gridfinity layout.");
-  const partLength = Number((longAxis - clearance * 2).toFixed(3));
-  const partWidth = Number((shortAxis - clearance * 2).toFixed(3));
-  const { triangles, base } = createOpenTrayTriangles({ width: partLength, depth: partWidth, height, wall });
+  const partLength = Number((dimensionIntent === "available-envelope" ? longAxis - clearance * 2 : dimensionIntent === "usable-inside" ? longAxis + wall * 2 : longAxis).toFixed(3));
+  const partWidth = Number((dimensionIntent === "available-envelope" ? shortAxis - clearance * 2 : dimensionIntent === "usable-inside" ? shortAxis + wall * 2 : shortAxis).toFixed(3));
+  const partHeight = Number((dimensionIntent === "available-envelope" ? height - verticalClearance : dimensionIntent === "usable-inside" ? height + floorThickness : height).toFixed(3));
+  const { triangles, base } = createOpenTrayTriangles({ width: partLength, depth: partWidth, height: partHeight, wall, floorThickness });
   const angleDegrees = 45;
   const angle = angleDegrees * Math.PI / 180;
   const cosine = Math.cos(angle);
@@ -101,26 +102,28 @@ export function createGridfinityGapTrayStl({ width, depth, height, wall, clearan
   const translate = ([x, y, z]) => [Number((x - minX).toFixed(6)), Number((y - minY).toFixed(6)), z];
   const plateTriangles = rotated.map((triangle) => triangle.map(translate));
   const plateSide = Number(((partLength + partWidth) / Math.sqrt(2)).toFixed(2));
-  if (plateSide > 250 || height > 256) throw new Error("The single compartment does not leave a safe P1S plate margin, even when rotated diagonally.");
+  if (plateSide > 250 || partHeight > 256) throw new Error("The single compartment does not leave a safe P1S plate margin, even when rotated diagonally.");
 
   return {
     plan: {
       standardBinFootprint,
       requestedLength: longAxis,
       requestedWidth: shortAxis,
+      dimensionIntent,
       fitClearancePerSide: clearance,
+      verticalClearance,
       compartmentCount: 1,
       partCount: 1,
       measuredEnvelope: { length: longAxis, width: shortAxis, height },
-      outerDimensions: { length: partLength, width: partWidth, height },
+      outerDimensions: { length: partLength, width: partWidth, height: partHeight },
       interiorDimensions: {
         length: Number((partLength - wall * 2).toFixed(2)),
         width: Number((partWidth - wall * 2).toFixed(2)),
-        height: Number((height - base).toFixed(2)),
+        height: Number((partHeight - base).toFixed(2)),
       },
       plateRotationDegrees: angleDegrees,
-      height,
-      plateBounds: { width: plateSide, depth: plateSide, height },
+      height: partHeight,
+      plateBounds: { width: plateSide, depth: plateSide, height: partHeight },
       compatibility: {
         adjacentToGridfinity: true,
         pitchAligned: false,

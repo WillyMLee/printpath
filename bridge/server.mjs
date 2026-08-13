@@ -8,7 +8,7 @@ import { createGridfinityGapTrayStl, createOpenTrayStl, slugify } from "./stl.mj
 
 const HOST = "127.0.0.1";
 const PORT = Number(process.env.PRINTPATH_BRIDGE_PORT || 32145);
-const VERSION = "0.3.0";
+const VERSION = "0.4.0";
 const MAX_BODY_BYTES = 64 * 1024;
 
 const localDataRoot = process.env.LOCALAPPDATA || join(homedir(), ".printpath");
@@ -106,7 +106,11 @@ function validateProject(project) {
     depth: finiteNumber(project.depth, "Depth", 2, 256),
     height: finiteNumber(project.height, "Height", 2, 256),
     wall: finiteNumber(project.wall, "Wall thickness", 0.4, 20),
+    floorThickness: finiteNumber(project.floorThickness ?? project.wall, "Floor thickness", 0.4, 20),
     clearance: finiteNumber(project.clearance ?? 0.3, "Clearance", 0, 5),
+    verticalClearance: finiteNumber(project.verticalClearance ?? 0.6, "Vertical clearance", 0, 10),
+    dimensionIntent: ["available-envelope", "finished-outside", "usable-inside"].includes(project.dimensionIntent) ? project.dimensionIntent : "available-envelope",
+    printTitle: typeof project.printTitle === "string" ? project.printTitle.trim().slice(0, 64) : name,
     printer: "Bambu Lab P1S",
   };
 }
@@ -144,8 +148,21 @@ async function handleHandoff(request, response, origin) {
     sendJson(response, 422, { ok: false, error: "This design does not have a safe geometry generator yet." }, origin);
     return;
   }
+  if (!project.intentConfirmedAt) {
+    sendJson(response, 422, { ok: false, error: "Approve the design intent in PrintPath before creating a printable artifact." }, origin);
+    return;
+  }
+  if (project.geometryKind === "gridfinity-gap-tray" && (project.objectIntent !== "one-compartment" || project.gridRelationship !== "adjacent-only" || project.partCount !== 1)) {
+    sendJson(response, 422, { ok: false, error: "The gap-tray generator requires one continuous compartment beside Gridfinity and exactly one part." }, origin);
+    return;
+  }
+  const readiness = Array.isArray(payload.readiness) ? payload.readiness : [];
+  if (!readiness.length || readiness.some((check) => check?.ok !== true)) {
+    sendJson(response, 422, { ok: false, error: "Every PrintPath readiness check must pass before handoff." }, origin);
+    return;
+  }
 
-  const slug = slugify(project.name);
+  const slug = slugify(project.printTitle || project.name);
   const projectRoot = join(exportRoot, `${slug}-${new Date().toISOString().replace(/[:.]/g, "-")}`);
   mkdirSync(projectRoot, { recursive: true });
   const manifestPath = join(projectRoot, `${slug}.printpath.json`);
@@ -166,11 +183,14 @@ async function handleHandoff(request, response, origin) {
 
   writeFileSync(manifestPath, JSON.stringify({
     format: "printpath-handoff",
-    version: 1,
+    version: 2,
     createdAt: new Date().toISOString(),
+    projectId: typeof payload.projectId === "string" ? payload.projectId : undefined,
     safety: "Review geometry, orientation, filament, plate, supports, and sliced preview in Bambu Studio before printing.",
     project,
-    readiness: Array.isArray(payload.readiness) ? payload.readiness : [],
+    approval: { confirmedAt: project.intentConfirmedAt, printTitle: project.printTitle },
+    orchestration: payload.orchestration && typeof payload.orchestration === "object" ? payload.orchestration : undefined,
+    readiness,
     generationPlan,
     files,
   }, null, 2), "utf8");
@@ -207,7 +227,7 @@ const server = createServer(async (request, response) => {
       service: "PrintPath Bridge",
       version: VERSION,
       paired: request.headers["x-printpath-token"] === pairingToken,
-      capabilities: ["open-tray-stl", "gridfinity-gap-tray-stl", "diagonal-p1s-layout", "bambu-studio-handoff"],
+      capabilities: ["open-tray-stl", "gridfinity-gap-tray-stl", "diagonal-p1s-layout", "approved-design-gate", "versioned-manifest", "bambu-studio-handoff"],
       bambuStudio: {
         detected: Boolean(findBambuStudio()),
         launchMethod: findBambuStudio() ? "direct" : "windows-file-association",

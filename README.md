@@ -19,6 +19,10 @@ PrintPath is an open-source, visual workflow for turning an everyday 3D-printing
 - Multi-part plate, checkpoint, and assembly planning
 - Build-volume, wall-thickness, and clearance checks
 - Automatic local saving
+- Structured intent, dimension-meaning, fit, Gridfinity-relationship, and one-part gates
+- IndexedDB control tower with immutable design checkpoints and a future Convex adapter boundary
+- Cost-aware orchestration routes for deterministic, guided, and independently reviewed designs
+- Explicit design approval and date-based print titles before artifact generation
 - Portable JSON project-spec export
 - Responsive interface ready for Cloudflare Workers static assets
 
@@ -34,9 +38,14 @@ The local bridge keeps Bambu authentication inside Bambu Studio and never starts
 2. Double-click `bridge/start-bridge.cmd` (or run `npm run bridge` from a repository clone).
 3. Keep the bridge window open and copy its one-time pairing code into PrintPath.
 4. Open the **Exact-fit open tray** or **Custom drawer grid** template, review its dimensions, and choose the Bambu handoff action.
-5. Inspect the model, plate, filament, orientation, supports, and sliced preview in Bambu Studio before pressing Print.
+5. Approve the frozen intent statement and short print title.
+6. Inspect the model, plate, filament, orientation, supports, and sliced preview in Bambu Studio before pressing Print.
 
 The bridge listens only on `127.0.0.1`, restricts web origins, and stores generated files under `Documents/PrintPath Exports`. See [bridge/README.md](bridge/README.md) for the security boundary and current limitations.
+
+## Data strategy
+
+PrintPath uses one storage interface. IndexedDB is the active local-first implementation; a future Convex adapter can become the shared source of truth for projects, versions, profiles, approvals, and artifact metadata. Cloudflare currently hosts static application assets only and does not hold a second project database.
 
 ## Run locally
 

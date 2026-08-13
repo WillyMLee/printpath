@@ -6,7 +6,8 @@ PrintPath Bridge is a deliberately small local service that moves reviewed Print
 
 - Listens only on `127.0.0.1:32145`.
 - Accepts the hosted PrintPath origin and local development origins only.
-- Requires a locally generated pairing code for file creation.
+- Requires a locally generated pairing code for file creation. The website keeps it in browser session storage by default.
+- Requires a frozen PrintPath intent approval and passing readiness checks.
 - Writes files to `Documents/PrintPath Exports`.
 - Opens the model in Bambu Studio, but never slices or starts a print automatically.
 - Does not read Bambu Studio sessions, passwords, cookies, or printer access codes.
@@ -25,12 +26,12 @@ If Bambu Studio uses a nonstandard installation folder, set `PRINTPATH_BAMBU_STU
 
 ## Current geometry support
 
-Version 0.3 includes two local, parametric generators:
+Version 0.4 includes two local, parametric generators:
 
 - `open-tray` creates one exact-dimension, square-corner tray STL.
 - `gridfinity-gap-tray` creates one watertight, uninterrupted compartment for a narrow leftover zone beside an existing Gridfinity layout.
 
-For a 255 × 40 × 50 mm drawer space, the gap-tray generator creates one part with one compartment. With the default 0.3 mm-per-side fit allowance, its printed outside is 254.4 × 39.4 × 50 mm and its interior is 249.6 × 34.6 × 47.6 mm with 2.4 mm walls and floor.
+For a 255 × 40 × 50 mm maximum drawer envelope, the gap-tray generator creates one part with one compartment. With the default 0.3 mm-per-side and 0.6 mm top allowances, its printed outside is 254.4 × 39.4 × 49.4 mm and its interior is 249.6 × 34.6 × 47 mm with 2.4 mm walls and floor.
 
 The STL is pre-rotated 45 degrees, giving it an approximately 207.75 × 207.75 mm plate footprint instead of placing the long edge against the P1S boundary. It is deliberately described as a custom companion to Gridfinity, not a standard baseplate-compatible bin. A standard bin footprint is approximately 41.5 mm wide, so it cannot fit inside the measured 40 mm zone.
 

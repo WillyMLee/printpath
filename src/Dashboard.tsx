@@ -13,6 +13,7 @@ import {
   Coins,
   Component,
   CreditCard,
+  Database,
   Download,
   Droplets,
   ExternalLink,
@@ -21,6 +22,7 @@ import {
   Gamepad2,
   Gem,
   Grid3X3,
+  GitBranch,
   HardDrive,
   KeyRound,
   Layers3,
@@ -34,14 +36,16 @@ import {
   Ruler,
   ShieldCheck,
   Sparkles,
+  Smartphone,
   Sprout,
   WandSparkles,
   Wifi,
   WifiOff,
   Wrench,
+  Workflow,
 } from "lucide-react";
 
-export type AppPage = "overview" | "projects" | "library" | "workbench" | "settings" | "bridge";
+export type AppPage = "overview" | "projects" | "library" | "workbench" | "settings" | "bridge" | "control";
 
 export type StarterTemplate =
   | "grid-fit-tile" | "loose-tray" | "drawer-strip" | "grid-customizer" | "grid-edge-filler" | "grid-fractional-bin"
@@ -70,6 +74,16 @@ type DashboardProps = {
   pairingCode: string;
   onPairingCodeChange: (value: string) => void;
   onCheckBridge: () => void;
+  projectId: string;
+  projectCount: number;
+  versionCount: number;
+  storageProvider: string;
+  syncTarget: string;
+  lastSavedAt?: string;
+  orchestrationLabel: string;
+  orchestrationDetail: string;
+  orchestrationAgents: number;
+  projectApproved: boolean;
 };
 
 const plateOptions = [
@@ -378,6 +392,44 @@ function SettingsPage(props: DashboardProps) {
   );
 }
 
+function ControlTowerPage(props: DashboardProps) {
+  return (
+    <>
+      <PageHeader
+        eyebrow="Control tower"
+        title="One design record, wherever it runs."
+        description="PrintPath keeps projects local today and exposes one storage boundary for a future Convex workspace—without creating a second application database."
+        action={<button className="primary-button page-action" onClick={props.onOpenProject}><Wrench size={17} /> Open active design</button>}
+      />
+      <section className="page-card control-hero">
+        <div><span className="control-status"><CircleDot size={14} /> Local source active</span><h2>{props.storageProvider}</h2><p>Drafts and immutable checkpoints live in this browser’s IndexedDB. Cloudflare only hosts the application files.</p></div>
+        <div className="control-metrics"><span><strong>{Math.max(1, props.projectCount)}</strong><small>projects</small></span><span><strong>{props.versionCount}</strong><small>checkpoints</small></span><span><strong>{props.projectApproved ? "Approved" : "Draft"}</strong><small>active state</small></span></div>
+      </section>
+
+      <div className="control-grid">
+        <section className="page-card control-card">
+          <div className="control-card-heading"><span><Database size={19} /></span><div><small>DATA ROUTING</small><strong>Convex is the planned shared store</strong></div></div>
+          <div className="data-route"><span className="active"><HardDrive size={16} /><strong>IndexedDB</strong><small>Active · offline-first</small></span><i /><span><Database size={16} /><strong>Convex</strong><small>{props.syncTarget} · not connected</small></span></div>
+          <p>When enabled, the Convex adapter will own projects, versions, profiles, approvals, and artifact metadata. The local store becomes an offline cache and outbox.</p>
+          <div className="control-note"><ShieldCheck size={16} /><span><strong>No database sprawl</strong><small>No D1 project database and no Bambu credentials in either store.</small></span></div>
+        </section>
+
+        <section className="page-card control-card">
+          <div className="control-card-heading"><span><Workflow size={19} /></span><div><small>ORCHESTRATION</small><strong>{props.orchestrationLabel}</strong></div></div>
+          <p>{props.orchestrationDetail}. The selected route is recorded in the design packet so expensive reasoning only runs when it adds value.</p>
+          <div className="routing-lanes"><span className={props.orchestrationAgents === 0 ? "active" : ""}><strong>0 agents</strong><small>Known template</small></span><span className={props.orchestrationAgents === 1 ? "active" : ""}><strong>1 agent</strong><small>Ambiguous intent</small></span><span className={props.orchestrationAgents >= 2 ? "active" : ""}><strong>2 agents</strong><small>Plan + review</small></span></div>
+        </section>
+
+        <section className="page-card control-card wide">
+          <div className="control-card-heading"><span><GitBranch size={19} /></span><div><small>CANONICAL DESIGN PACKET</small><strong>What the website now gives a modeling workflow</strong></div></div>
+          <div className="packet-grid"><span><Check size={15} /> Object intent</span><span><Check size={15} /> Dimension meaning</span><span><Check size={15} /> Grid relationship</span><span><Check size={15} /> Fit and allowances</span><span><Check size={15} /> Printer profile</span><span><Check size={15} /> Orchestration route</span><span><Check size={15} /> Approval state</span><span><Check size={15} /> Artifact handoff</span></div>
+          <div className="project-identity"><span>Active project</span><code>{props.projectId}</code><small>{props.lastSavedAt ? `Last local save ${new Date(props.lastSavedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}` : "Waiting for first local save"}</small></div>
+        </section>
+      </div>
+    </>
+  );
+}
+
 function BridgePage(props: DashboardProps) {
   const connected = props.bridgeStatus === "online";
   return (
@@ -421,6 +473,13 @@ function BridgePage(props: DashboardProps) {
       </div>
 
       {props.bridgePaired && <section className="page-card bridge-ready-banner"><CircleDot size={18} /><div><strong>Ready for a supported design.</strong><p>Try the Exact-fit open tray, then use its Review step to create and open the STL.</p></div><button className="primary-button" onClick={() => props.onUseTemplate("loose-tray")}>Open starter template <ArrowRight size={15} /></button></section>}
+      <section className="page-card print-runbook">
+        <div className="runbook-heading"><span><PackageCheck size={20} /></span><div><small>SAFE PRINT RUNBOOK</small><h2>From approval to your P1S</h2><p>The bridge performs the file handoff. Bambu Studio remains the final safety stop.</p></div></div>
+        <div className="runbook-columns">
+          <div><strong>First print from this computer</strong><ol><li>Approve the intent statement in PrintPath.</li><li>Create the model and let it open in Bambu Studio.</li><li>Confirm P1S, 0.4 mm nozzle, Textured PEI Plate, and your loaded filament.</li><li>Click <b>Slice Plate</b>; inspect every layer for a continuous floor, walls, and no out-of-bounds warning.</li><li>Click <b>Print Plate</b>, select the P1S, and review the final confirmation.</li></ol></div>
+          <div><strong><Smartphone size={16} /> Reprint from your phone</strong><ol><li>Keep the P1S bound to the same Bambu account used by Studio.</li><li>After the first cloud print, open Bambu Handy and look in your print history.</li><li>Select the approved job and use the app’s reprint flow, checking filament and plate again.</li></ol><p className="runbook-caution">PrintPath does not upload arbitrary files into Bambu Handy or store your Bambu login.</p></div>
+        </div>
+      </section>
     </>
   );
 }
@@ -433,6 +492,7 @@ export default function Dashboard(props: DashboardProps) {
       {props.page === "library" && <LibraryPage {...props} />}
       {props.page === "settings" && <SettingsPage {...props} />}
       {props.page === "bridge" && <BridgePage {...props} />}
+      {props.page === "control" && <ControlTowerPage {...props} />}
     </main>
   );
 }

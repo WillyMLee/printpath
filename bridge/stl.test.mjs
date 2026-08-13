@@ -45,14 +45,14 @@ test("creates one watertight gap tray with fit clearance and a diagonal P1S orie
   assert.equal(result.plan.compartmentCount, 1);
   assert.equal(result.plan.partCount, 1);
   assert.deepEqual(result.plan.measuredEnvelope, { length: 255, width: 40, height: 50 });
-  assert.deepEqual(result.plan.outerDimensions, { length: 254.4, width: 39.4, height: 50 });
-  assert.deepEqual(result.plan.interiorDimensions, { length: 249.6, width: 34.6, height: 47.6 });
+  assert.deepEqual(result.plan.outerDimensions, { length: 254.4, width: 39.4, height: 49.4 });
+  assert.deepEqual(result.plan.interiorDimensions, { length: 249.6, width: 34.6, height: 47 });
   assert.equal(result.plan.plateRotationDegrees, 45);
-  assert.deepEqual(result.plan.plateBounds, { width: 207.75, depth: 207.75, height: 50 });
+  assert.deepEqual(result.plan.plateBounds, { width: 207.75, depth: 207.75, height: 49.4 });
   const bounds = stlBounds(result.model);
   assert.ok(Math.abs(bounds[0][0]) < 0.000001 && Math.abs(bounds[0][1] - 207.747972) < 0.000001);
   assert.ok(Math.abs(bounds[1][0]) < 0.000001 && Math.abs(bounds[1][1] - 207.747972) < 0.000001);
-  assert.deepEqual(bounds[2], [0, 50]);
+  assert.deepEqual(bounds[2], [0, 49.4]);
   assertWatertight(result.model);
 });
 

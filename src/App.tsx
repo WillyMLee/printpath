@@ -5,6 +5,7 @@ import {
   ChevronRight,
   CircleCheck,
   Clock3,
+  Database,
   Download,
   ExternalLink,
   FileJson,
@@ -29,6 +30,7 @@ import {
   X,
 } from "lucide-react";
 import Dashboard, { type AppPage, type StarterTemplate } from "./Dashboard";
+import { createProjectStore, type ProjectStoreSummary } from "./projectStore";
 
 type ProjectSpec = {
   name: string;
@@ -51,13 +53,29 @@ type ProjectSpec = {
   designSystem: "custom" | "gridfinity";
   gridfinityMode?: "full-grid" | "fractional" | "gap-tray";
   geometryKind: "brief-only" | "open-tray" | "gridfinity-gap-tray";
+  objectIntent: "one-compartment" | "multiple-compartments" | "spacer" | "base" | "holder" | "other";
+  dimensionIntent: "available-envelope" | "finished-outside" | "usable-inside";
+  fitPreference: "loose" | "sliding" | "snug" | "press-fit";
+  gridRelationship: "connects" | "aligned" | "adjacent-only" | "none";
+  onePartRequired: boolean;
+  obstacles: string;
+  floorThickness: number;
+  verticalClearance: number;
+  supportsAllowed: boolean;
+  brimAllowed: boolean;
+  orchestrationPreference: "auto" | "lean" | "reviewed";
+  intentConfirmedAt?: string;
+  printTitle?: string;
+  createdAt: string;
 };
 
-type NumberKey = "width" | "depth" | "height" | "wall" | "clearance" | "cornerRadius" | "nozzle" | "layerHeight" | "partCount";
+type NumberKey = "width" | "depth" | "height" | "wall" | "floorThickness" | "clearance" | "verticalClearance" | "cornerRadius" | "nozzle" | "layerHeight" | "partCount";
 
 const STORAGE_KEY = "printpath-project-v1";
 const BRIDGE_PAIRING_KEY = "printpath-bridge-pairing-v1";
+const ACTIVE_PROJECT_KEY = "printpath-active-project-v1";
 const BRIDGE_URL = "http://127.0.0.1:32145";
+const projectStore = createProjectStore<ProjectSpec>();
 
 const starterSpec: ProjectSpec = {
   name: "Under-desk headphone hanger",
@@ -79,6 +97,18 @@ const starterSpec: ProjectSpec = {
   assemblyMethod: "Single print",
   designSystem: "custom",
   geometryKind: "brief-only",
+  objectIntent: "holder",
+  dimensionIntent: "available-envelope",
+  fitPreference: "sliding",
+  gridRelationship: "none",
+  onePartRequired: true,
+  obstacles: "",
+  floorThickness: 3.2,
+  verticalClearance: 0.6,
+  supportsAllowed: false,
+  brimAllowed: true,
+  orchestrationPreference: "auto",
+  createdAt: new Date().toISOString(),
 };
 
 const freshSpec: ProjectSpec = {
@@ -108,21 +138,75 @@ function loadProject(): ProjectSpec {
     const isLegacyStrip = parsed.geometryKind === "gridfinity-pitch-strip" || parsed.name === "Non-standard Gridfinity-pitch drawer strip";
     const migrated = isLegacyStrip ? {
       ...parsed,
-      name: "One-compartment Gridfinity gap tray",
+      name: "One-compartment drawer gap tray",
       description: `One continuous custom compartment for the measured gap beside the existing Gridfinity layout. It prints diagonally as a single P1S part and is not a standard baseplate-compatible bin.`,
       partCount: 1,
       assemblyMethod: "Single print",
       gridfinityMode: "gap-tray",
       geometryKind: "gridfinity-gap-tray",
     } : parsed;
-    return { ...starterSpec, ...migrated, printer: "Bambu Lab P1S" } as ProjectSpec;
+    const normalized = { ...starterSpec, ...migrated, printer: "Bambu Lab P1S" } as ProjectSpec;
+    if (normalized.geometryKind === "gridfinity-gap-tray") {
+      return {
+        ...normalized,
+        name: normalized.name === "One-compartment Gridfinity gap tray" ? "One-compartment drawer gap tray" : normalized.name,
+        objectIntent: "one-compartment",
+        dimensionIntent: "available-envelope",
+        fitPreference: "sliding",
+        gridRelationship: "adjacent-only",
+        onePartRequired: true,
+        floorThickness: typeof parsed.floorThickness === "number" ? parsed.floorThickness : normalized.wall,
+        verticalClearance: normalized.verticalClearance ?? 0.6,
+      };
+    }
+    return normalized;
   } catch {
     return starterSpec;
   }
 }
 
+function suggestedPrintTitle(spec: ProjectSpec) {
+  const created = new Date(spec.createdAt || Date.now());
+  const month = created.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  const base = spec.geometryKind === "gridfinity-gap-tray"
+    ? "Drawer Gap Tray"
+    : spec.geometryKind === "open-tray"
+      ? "Exact-Fit Tray"
+      : spec.name || "PrintPath Design";
+  return `${base} · ${month}`;
+}
+
+function printedDimensions(spec: ProjectSpec) {
+  if (spec.dimensionIntent === "usable-inside") {
+    return {
+      width: spec.width + spec.wall * 2,
+      depth: spec.depth + spec.wall * 2,
+      height: spec.height + spec.floorThickness,
+    };
+  }
+  if (spec.dimensionIntent === "finished-outside") {
+    return { width: spec.width, depth: spec.depth, height: spec.height };
+  }
+  return {
+    width: Math.max(1, spec.width - spec.clearance * 2),
+    depth: Math.max(1, spec.depth - spec.clearance * 2),
+    height: Math.max(1, spec.height - spec.verticalClearance),
+  };
+}
+
+function orchestrationRoute(spec: ProjectSpec) {
+  if (spec.orchestrationPreference === "lean" || (spec.geometryKind !== "brief-only" && spec.partCount === 1 && spec.orchestrationPreference === "auto")) {
+    return { label: "Deterministic fast path", detail: "Known generator · automated checks · no agent fan-out", agents: 0 };
+  }
+  if (spec.partCount > 1 || spec.orchestrationPreference === "reviewed") {
+    return { label: "Plan + independent review", detail: "Geometry planner · printability reviewer", agents: 2 };
+  }
+  return { label: "Guided specification", detail: "One planning pass after required answers", agents: 1 };
+}
+
 function PartPreview({ spec }: { spec: ProjectSpec }) {
   const [flipped, setFlipped] = useState(false);
+  const displayOuter = printedDimensions(spec);
 
   if (spec.geometryKind === "gridfinity-gap-tray") {
     return (
@@ -138,7 +222,7 @@ function PartPreview({ spec }: { spec: ProjectSpec }) {
         </div>
         <div className="preview-canvas">
           <div className="grid-floor" />
-          <svg viewBox="0 0 680 430" role="img" aria-label={`One printable ${Math.max(spec.width, spec.depth)} by ${Math.min(spec.width, spec.depth)} by ${spec.height} millimeter drawer compartment`}>
+          <svg viewBox="0 0 680 430" role="img" aria-label={`One printable ${Math.max(displayOuter.width, displayOuter.depth)} by ${Math.min(displayOuter.width, displayOuter.depth)} by ${displayOuter.height} millimeter drawer compartment`}>
             <defs>
               <linearGradient id="stripTop" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stopColor="#78d4b7" /><stop offset="1" stopColor="#c9f2e5" /></linearGradient>
               <linearGradient id="stripSide" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#43a487" /><stop offset="1" stopColor="#27725e" /></linearGradient>
@@ -154,12 +238,12 @@ function PartPreview({ spec }: { spec: ProjectSpec }) {
             </g>
             <g className="strip-dimension">
               <line x1="75" y1="338" x2="568" y2="338" /><line x1="75" y1="330" x2="75" y2="346" /><line x1="568" y1="330" x2="568" y2="346" />
-              <rect x="278" y="324" width="86" height="28" rx="14" /><text x="321" y="343">{Math.max(spec.width, spec.depth)} mm</text>
+              <rect x="278" y="324" width="86" height="28" rx="14" /><text x="321" y="343">{Number(Math.max(displayOuter.width, displayOuter.depth).toFixed(1))} mm</text>
               <line x1="625" y1="178" x2="625" y2="280" /><line x1="617" y1="178" x2="633" y2="178" /><line x1="617" y1="280" x2="633" y2="280" />
-              <rect x="591" y="215" width="68" height="28" rx="14" /><text x="625" y="234">{spec.height} mm</text>
+              <rect x="591" y="215" width="68" height="28" rx="14" /><text x="625" y="234">{Number(displayOuter.height.toFixed(1))} mm</text>
             </g>
           </svg>
-          <span className="preview-note">Printed {Number((Math.max(spec.width, spec.depth) - spec.clearance * 2).toFixed(1))} × {Number((Math.min(spec.width, spec.depth) - spec.clearance * 2).toFixed(1))} mm · 45° on one P1S plate</span>
+          <span className="preview-note">Printed {Number(Math.max(displayOuter.width, displayOuter.depth).toFixed(1))} × {Number(Math.min(displayOuter.width, displayOuter.depth).toFixed(1))} × {Number(displayOuter.height.toFixed(1))} mm · 45° on one P1S plate</span>
         </div>
       </div>
     );
@@ -299,22 +383,45 @@ function Metric({ label, value, detail, icon: Icon }: { label: string; value: st
 
 export default function App() {
   const [spec, setSpec] = useState<ProjectSpec>(loadProject);
+  const [projectId, setProjectId] = useState(() => localStorage.getItem(ACTIVE_PROJECT_KEY) || crypto.randomUUID());
+  const [storeReady, setStoreReady] = useState(false);
+  const [storeSummary, setStoreSummary] = useState<ProjectStoreSummary>({ projectCount: 0, versionCount: 0, provider: "Local control tower", syncTarget: "Convex-ready" });
   const [currentPage, setCurrentPage] = useState<AppPage>("overview");
   const [activeStep, setActiveStep] = useState(1);
   const [mobileNav, setMobileNav] = useState(false);
   const [saveState, setSaveState] = useState<"saved" | "saving">("saved");
-  const [pairingCode, setPairingCode] = useState(() => localStorage.getItem(BRIDGE_PAIRING_KEY) || "");
+  const [pairingCode, setPairingCode] = useState(() => sessionStorage.getItem(BRIDGE_PAIRING_KEY) || localStorage.getItem(BRIDGE_PAIRING_KEY) || "");
   const [bridgeState, setBridgeState] = useState<{ status: "checking" | "online" | "offline"; paired: boolean; version?: string; bambuStudioDetected?: boolean }>({ status: "checking", paired: false });
   const [handoffState, setHandoffState] = useState<{ status: "idle" | "sending" | "success" | "error"; message?: string }>({ status: "idle" });
 
   useEffect(() => {
+    let cancelled = false;
+    setStoreReady(false);
+    localStorage.setItem(ACTIVE_PROJECT_KEY, projectId);
+    void projectStore.load(projectId).then(async (project) => {
+      if (cancelled) return;
+      if (project) setSpec(project.draft);
+      else await projectStore.checkpoint(projectId, spec.name, spec, "created");
+      if (!cancelled) {
+        setStoreSummary(await projectStore.summary());
+        setStoreReady(true);
+      }
+    }).catch(() => setStoreReady(true));
+    return () => { cancelled = true; };
+  }, [projectId]);
+
+  useEffect(() => {
+    if (!storeReady) return;
     setSaveState("saving");
     const timeout = window.setTimeout(() => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(spec));
-      setSaveState("saved");
-    }, 450);
+      void projectStore.saveDraft(projectId, spec.name, spec).then((summary) => {
+        setStoreSummary(summary);
+        setSaveState("saved");
+      }).catch(() => setSaveState("saved"));
+    }, 650);
     return () => window.clearTimeout(timeout);
-  }, [spec]);
+  }, [projectId, spec, storeReady]);
 
   useEffect(() => {
     void checkBridge(pairingCode);
@@ -325,19 +432,21 @@ export default function App() {
     const shortestGridSide = Math.min(spec.width, spec.depth);
     const longGridSide = Math.max(spec.width, spec.depth);
     const isGapTray = spec.geometryKind === "gridfinity-gap-tray";
-    const printedLongSide = longGridSide - spec.clearance * 2;
-    const printedShortSide = shortestGridSide - spec.clearance * 2;
+    const calculatedOuter = printedDimensions(spec);
+    const printedLongSide = Math.max(calculatedOuter.width, calculatedOuter.depth);
+    const printedShortSide = Math.min(calculatedOuter.width, calculatedOuter.depth);
+    const printedHeight = calculatedOuter.height;
     const diagonalPlateSide = Number(((printedLongSide + printedShortSide) / Math.sqrt(2)).toFixed(1));
     const printableLongestSide = isGapTray ? diagonalPlateSide : longGridSide;
     const baseChecks = [
       {
         label: "Build volume",
-        detail: isGapTray ? `${diagonalPlateSide} × ${diagonalPlateSide} × ${spec.height} mm at 45° · P1S` : `${P1S_BUILD_VOLUME[0]} × ${P1S_BUILD_VOLUME[1]} × ${P1S_BUILD_VOLUME[2]} mm · P1S`,
-        ok: printableLongestSide <= P1S_BUILD_VOLUME[0] && (isGapTray || shortestGridSide <= P1S_BUILD_VOLUME[1]) && spec.height <= P1S_BUILD_VOLUME[2],
+        detail: isGapTray ? `${diagonalPlateSide} × ${diagonalPlateSide} × ${Number(printedHeight.toFixed(1))} mm at 45° · P1S` : `${P1S_BUILD_VOLUME[0]} × ${P1S_BUILD_VOLUME[1]} × ${P1S_BUILD_VOLUME[2]} mm · P1S`,
+        ok: printableLongestSide <= P1S_BUILD_VOLUME[0] && (isGapTray || shortestGridSide <= P1S_BUILD_VOLUME[1]) && printedHeight <= P1S_BUILD_VOLUME[2],
       },
       {
         label: "Plate margin",
-        detail: isGapTray ? `${diagonalPlateSide} mm diagonal footprint · over ${Number((256 - diagonalPlateSide).toFixed(1))} mm edge room` : `${printableLongestSide} mm longest printed side · 6 mm breathing room recommended`,
+        detail: isGapTray ? `${diagonalPlateSide} mm diagonal footprint · ${Number(((256 - diagonalPlateSide) / 2).toFixed(1))} mm centered edge margin` : `${printableLongestSide} mm longest printed side · 6 mm breathing room recommended`,
         ok: printableLongestSide <= 250,
       },
       {
@@ -347,8 +456,8 @@ export default function App() {
       },
       {
         label: isGapTray ? "Drawer fit" : "Fit allowance",
-        detail: isGapTray ? `${Number(printedLongSide.toFixed(1))} × ${Number(printedShortSide.toFixed(1))} mm printed outside · ${spec.clearance} mm per side` : `${spec.clearance} mm clearance`,
-        ok: spec.clearance >= 0.2,
+        detail: isGapTray ? `${Number(printedLongSide.toFixed(1))} × ${Number(printedShortSide.toFixed(1))} × ${Number(printedHeight.toFixed(1))} mm · ${spec.clearance} mm side / ${spec.verticalClearance} mm top allowance` : `${spec.clearance} mm clearance`,
+        ok: spec.dimensionIntent !== "available-envelope" || (spec.clearance >= 0.2 && spec.verticalClearance >= 0.2),
       },
       {
         label: "Plate & nozzle",
@@ -371,6 +480,13 @@ export default function App() {
         ok: isGapTray || shortestGridSide >= 41.5,
       });
     }
+    if (spec.geometryKind !== "brief-only") {
+      relevantChecks.push({
+        label: "Design approval",
+        detail: spec.intentConfirmedAt ? `${spec.printTitle || suggestedPrintTitle(spec)} · intent frozen` : "Confirm the intent statement before handoff",
+        ok: Boolean(spec.intentConfirmedAt),
+      });
+    }
     return relevantChecks;
   }, [spec]);
 
@@ -390,12 +506,19 @@ export default function App() {
   }, [spec.designSystem, spec.gridfinityMode, spec.width, spec.depth, spec.wall, spec.clearance]);
 
   const readyCount = checks.filter((check) => check.ok).length;
+  const preApprovalReady = checks.filter((check) => check.label !== "Design approval").every((check) => check.ok);
   const hasPrintableGeometry = spec.geometryKind !== "brief-only";
+  const outer = printedDimensions(spec);
+  const route = orchestrationRoute(spec);
   const estimatedGrams = Math.max(4, Math.round((spec.width * spec.depth * spec.height * 0.2 * 1.24) / 1000));
   const estimatedHours = Math.max(0.4, estimatedGrams / 13).toFixed(1);
 
   function updateField<K extends keyof ProjectSpec>(key: K, value: ProjectSpec[K]) {
-    setSpec((current) => ({ ...current, [key]: value }));
+    setSpec((current) => ({
+      ...current,
+      [key]: value,
+      ...(key === "intentConfirmedAt" || key === "printTitle" ? {} : { intentConfirmedAt: undefined }),
+    }));
   }
 
   function updateNumber(key: NumberKey, raw: string) {
@@ -407,26 +530,39 @@ export default function App() {
     if (!gridfinityPlan?.canGenerateGapTray) return;
     setSpec((current) => ({
       ...current,
-      name: "One-compartment Gridfinity gap tray",
+      name: "One-compartment drawer gap tray",
       description: `One continuous ${Math.max(current.width, current.depth)} × ${Math.min(current.width, current.depth)} × ${current.height} mm compartment for the narrow zone beside the existing Gridfinity layout. It prints diagonally as one P1S part and intentionally does not claim standard baseplate compatibility.`,
       cornerRadius: 0,
       partCount: 1,
       assemblyMethod: "Single print",
       gridfinityMode: "gap-tray",
       geometryKind: "gridfinity-gap-tray",
+      objectIntent: "one-compartment",
+      dimensionIntent: "available-envelope",
+      fitPreference: "sliding",
+      gridRelationship: "adjacent-only",
+      onePartRequired: true,
+      floorThickness: current.wall,
+      verticalClearance: 0.6,
+      printTitle: undefined,
+      intentConfirmedAt: undefined,
     }));
     setHandoffState({ status: "idle" });
   }
 
   function startFresh() {
-    setSpec(freshSpec);
+    setStoreReady(false);
+    setProjectId(crypto.randomUUID());
+    setSpec({ ...freshSpec, createdAt: new Date().toISOString() });
     setActiveStep(0);
     setCurrentPage("workbench");
     setMobileNav(false);
   }
 
   function startIdea(idea: string) {
-    setSpec({ ...freshSpec, description: idea });
+    setStoreReady(false);
+    setProjectId(crypto.randomUUID());
+    setSpec({ ...freshSpec, description: idea, createdAt: new Date().toISOString() });
     setActiveStep(0);
     navigate("workbench");
   }
@@ -585,20 +721,42 @@ export default function App() {
         strength: "Strong",
       },
     };
-    setSpec(template === "blank" ? freshSpec : { ...starterSpec, ...templates[template] });
+    setStoreReady(false);
+    setProjectId(crypto.randomUUID());
+    setSpec(template === "blank"
+      ? { ...freshSpec, createdAt: new Date().toISOString() }
+      : { ...starterSpec, ...templates[template], floorThickness: templates[template].wall ?? starterSpec.floorThickness, createdAt: new Date().toISOString(), intentConfirmedAt: undefined, printTitle: undefined });
     setActiveStep(template === "blank" ? 0 : 1);
     navigate("workbench");
+  }
+
+  async function saveCheckpoint(reason: "step-complete" | "approved" | "handoff") {
+    const summary = await projectStore.checkpoint(projectId, spec.name, spec, reason);
+    setStoreSummary(summary);
+  }
+
+  function approveDesign() {
+    const approved = {
+      ...spec,
+      printTitle: spec.printTitle || suggestedPrintTitle(spec),
+      intentConfirmedAt: new Date().toISOString(),
+    };
+    setSpec(approved);
+    void projectStore.checkpoint(projectId, approved.name, approved, "approved").then(setStoreSummary);
   }
 
   function exportSpec() {
     const payload = {
       format: "printpath-project",
-      version: 1,
+      version: 2,
       units: "millimeters",
       exportedAt: new Date().toISOString(),
+      projectId,
       project: spec,
+      printedOutside: printedDimensions(spec),
+      orchestration: route,
       readiness: checks,
-      nextStep: "Generate parametric CAD from this reviewed specification.",
+      nextStep: spec.intentConfirmedAt ? "Generate the approved artifact and review its slice in Bambu Studio." : "Confirm the design intent before generating an artifact.",
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -626,7 +784,8 @@ export default function App() {
       if (result.paired && token) {
         const normalized = token.trim().toUpperCase();
         setPairingCode(normalized);
-        localStorage.setItem(BRIDGE_PAIRING_KEY, normalized);
+        sessionStorage.setItem(BRIDGE_PAIRING_KEY, normalized);
+        localStorage.removeItem(BRIDGE_PAIRING_KEY);
       }
     } catch {
       setBridgeState({ status: "offline", paired: false });
@@ -645,7 +804,7 @@ export default function App() {
           "Content-Type": "application/json",
           "X-PrintPath-Token": pairingCode,
         },
-        body: JSON.stringify({ project: spec, readiness: checks }),
+        body: JSON.stringify({ projectId, project: spec, readiness: checks, orchestration: route }),
         targetAddressSpace: "loopback",
       } as RequestInit & { targetAddressSpace: "loopback" });
       const result = await response.json() as { ok?: boolean; fileName?: string; openedWith?: string; files?: Array<{ role?: string }>; error?: string };
@@ -655,6 +814,7 @@ export default function App() {
         : `${result.fileName} was saved and sent to Windows. Choose Bambu Studio if Windows asks which app to use.`;
       const savedParts = result.files && result.files.length > 1 ? " Parts A and B were saved beside it." : "";
       setHandoffState({ status: "success", message: `${launchMessage}${savedParts} Review the sliced preview before printing.` });
+      void saveCheckpoint("handoff");
     } catch (error) {
       setHandoffState({ status: "error", message: error instanceof Error ? error.message : "The handoff failed." });
       void checkBridge(pairingCode);
@@ -683,12 +843,33 @@ export default function App() {
           <option>Holder or mount</option><option>Replacement part</option><option>Container or organizer</option><option>Adapter or spacer</option><option>Prototype</option><option>Something else</option>
         </select>
       </label>
+      <div className="prompt-block">
+        <div><span className="step-kicker">Intent gate</span><strong>Answer these before dimensions</strong><p>These choices prevent a correct measurement from becoming the wrong object.</p></div>
+        <div className="prompt-grid">
+          <label className="field"><span>What are we making?</span><select value={spec.objectIntent} onChange={(event) => updateField("objectIntent", event.target.value as ProjectSpec["objectIntent"])}><option value="one-compartment">One continuous compartment</option><option value="multiple-compartments">Multiple compartments</option><option value="spacer">Spacer or filler</option><option value="base">Baseplate or foundation</option><option value="holder">Holder or mount</option><option value="other">Something else</option></select></label>
+          <label className="field"><span>Relationship to Gridfinity</span><select value={spec.gridRelationship} onChange={(event) => updateField("gridRelationship", event.target.value as ProjectSpec["gridRelationship"])}><option value="adjacent-only">Sits beside it</option><option value="connects">Mechanically connects</option><option value="aligned">Aligns to the 42 mm pitch</option><option value="none">No relationship</option></select></label>
+        </div>
+        <label className="toggle-row"><input type="checkbox" checked={spec.onePartRequired} onChange={(event) => updateField("onePartRequired", event.target.checked)} /><span><strong>Must be one physical part</strong><small>If disabled, PrintPath may plan multiple plates or assembly.</small></span></label>
+      </div>
+      <div className="orchestration-picker">
+        <div><span className="step-kicker">Work routing</span><strong>How much reasoning should this design use?</strong></div>
+        <div className="segmented">
+          {([['auto','Auto'],['lean','Lean'],['reviewed','Reviewed']] as const).map(([value, label]) => <button key={value} className={spec.orchestrationPreference === value ? "active" : ""} type="button" onClick={() => updateField("orchestrationPreference", value)}>{label}</button>)}
+        </div>
+        <p><strong>{route.label}</strong> · {route.detail}</p>
+      </div>
     </section>,
     <section className="form-section" key="measure">
       <div className="section-heading">
         <span className="step-kicker">Step 2 of 4</span>
         <h2>Let’s capture the fit</h2>
-        <p>Start with the outside size. Every change updates the concept preview.</p>
+        <p>First identify what the numbers mean, then enter the measurements.</p>
+      </div>
+      <div className="meaning-picker">
+        <span>These dimensions describe</span>
+        <div className="choice-card-row">
+          {([['available-envelope','Maximum available space','PrintPath subtracts fit clearance.'],['finished-outside','Exact finished outside','No dimensional allowance is applied.'],['usable-inside','Required usable inside','Walls and floor are added outside.']] as const).map(([value, title, detail]) => <button type="button" key={value} className={spec.dimensionIntent === value ? "active" : ""} onClick={() => updateField("dimensionIntent", value)}><strong>{title}</strong><small>{detail}</small></button>)}
+        </div>
       </div>
       <div className="measurement-grid">
         {(["width", "depth", "height"] as NumberKey[]).map((key) => (
@@ -711,6 +892,11 @@ export default function App() {
           <div className="input-unit"><input type="number" min="0.4" step="0.1" value={spec.wall} onChange={(event) => updateNumber("wall", event.target.value)} /><em>mm</em></div>
           <small>2.4–3 mm is a sturdy start for a small organizer.</small>
         </label>
+        <label className="field dimension-field">
+          <span>Floor thickness</span>
+          <div className="input-unit"><input type="number" min="0.4" step="0.1" value={spec.floorThickness} onChange={(event) => updateNumber("floorThickness", event.target.value)} /><em>mm</em></div>
+          <small>Independent from wall thickness.</small>
+        </label>
         {spec.geometryKind !== "open-tray" && (
           <label className="field dimension-field">
             <span>Fit clearance</span>
@@ -718,12 +904,22 @@ export default function App() {
             <small>Space between fitted parts.</small>
           </label>
         )}
+        {spec.dimensionIntent === "available-envelope" && <label className="field dimension-field">
+          <span>Top clearance</span>
+          <div className="input-unit"><input type="number" min="0" step="0.1" value={spec.verticalClearance} onChange={(event) => updateNumber("verticalClearance", event.target.value)} /><em>mm</em></div>
+          <small>Keeps the tray below the measured maximum height.</small>
+        </label>}
         <label className="field dimension-field">
           <span>Corner radius</span>
           <div className="input-unit"><input type="number" min="0" step="0.5" value={spec.cornerRadius} onChange={(event) => updateNumber("cornerRadius", event.target.value)} /><em>mm</em></div>
           <small>Softens edges and stress points.</small>
         </label>
       </div>
+      <div className="fit-preference">
+        <span>Desired fit</span>
+        <div className="segmented">{([['loose','Loose'],['sliding','Sliding'],['snug','Snug'],['press-fit','Press fit']] as const).map(([value,label]) => <button type="button" key={value} className={spec.fitPreference === value ? "active" : ""} onClick={() => updateField("fitPreference", value)}>{label}</button>)}</div>
+      </div>
+      <label className="field field-wide obstacles-field"><span>Obstacles, rails, lips, or taper</span><textarea rows={3} value={spec.obstacles} onChange={(event) => updateField("obstacles", event.target.value)} placeholder="None, or describe anything that reduces the opening at an edge or corner…" /><small>For a long drawer gap, measure both ends if the sides may not be parallel.</small></label>
       <button className="helper-card" type="button">
         <span className="helper-icon"><PencilRuler size={20} /></span>
         <span><strong>Not sure what to measure?</strong><small>A photo-guided measurement helper is next on our roadmap.</small></span>
@@ -768,6 +964,10 @@ export default function App() {
           {["Light", "Balanced", "Strong"].map((strength) => <button key={strength} className={spec.strength === strength ? "active" : ""} onClick={() => updateField("strength", strength)} type="button">{strength}</button>)}
         </div>
       </div>
+      <div className="print-permission-row">
+        <label className="toggle-row"><input type="checkbox" checked={spec.supportsAllowed} onChange={(event) => updateField("supportsAllowed", event.target.checked)} /><span><strong>Supports are acceptable</strong><small>Leave off for this open tray.</small></span></label>
+        <label className="toggle-row"><input type="checkbox" checked={spec.brimAllowed} onChange={(event) => updateField("brimAllowed", event.target.checked)} /><span><strong>Brim is acceptable</strong><small>Bambu Studio may recommend it for adhesion.</small></span></label>
+      </div>
     </section>,
     <section className="form-section review-section" key="review">
       <div className="section-heading review-heading">
@@ -781,6 +981,18 @@ export default function App() {
         <span className={readyCount === checks.length ? "review-check-count ready" : "review-check-count warning"}>{readyCount}/{checks.length} checks</span>
       </div>
 
+      <section className={`intent-confirmation ${spec.intentConfirmedAt ? "approved" : ""}`}>
+        <div className="intent-confirmation-heading"><span><ShieldCheck size={18} /></span><div><small>INTENT CHECKPOINT</small><strong>{spec.intentConfirmedAt ? "Approved and frozen" : "Confirm the object before generating it"}</strong></div><em>{route.agents} agent{route.agents === 1 ? "" : "s"}</em></div>
+        <p>
+          {spec.objectIntent === "one-compartment" ? "One continuous open compartment" : spec.objectIntent.replaceAll("-", " ")}; {spec.gridRelationship === "adjacent-only" ? "sits beside Gridfinity without connecting" : spec.gridRelationship.replaceAll("-", " ")}; {spec.onePartRequired ? "one physical part" : `${spec.partCount} planned parts`}. Printed outside: {Number(outer.width.toFixed(1))} × {Number(outer.depth.toFixed(1))} × {Number(outer.height.toFixed(1))} mm{spec.geometryKind === "gridfinity-gap-tray" ? ", positioned at 45° on the P1S plate" : ""}.
+        </p>
+        <div className="intent-facts"><span><small>Measurement meaning</small><strong>{spec.dimensionIntent.replaceAll("-", " ")}</strong></span><span><small>Fit</small><strong>{spec.fitPreference}</strong></span><span><small>Workflow</small><strong>{route.label}</strong></span></div>
+        <label className="field print-title-field"><span>Short print title</span><input value={spec.printTitle || suggestedPrintTitle(spec)} onChange={(event) => updateField("printTitle", event.target.value)} /></label>
+        {!spec.intentConfirmedAt
+          ? <button className="primary-button" type="button" disabled={!preApprovalReady} onClick={approveDesign}><Check size={17} /> Approve this design</button>
+          : <button className="secondary-button" type="button" onClick={() => updateField("intentConfirmedAt", undefined)}><RotateCcw size={16} /> Reopen design</button>}
+      </section>
+
       {gridfinityPlan && (
         <section className={`grid-fit-review ${gridfinityPlan.fullGridFits ? "fits" : "does-not-fit"} ${spec.geometryKind === "gridfinity-gap-tray" ? "selected" : ""}`}>
           <div className="grid-fit-heading">
@@ -791,8 +1003,8 @@ export default function App() {
           <div className="grid-fit-stats">
             {spec.geometryKind === "gridfinity-gap-tray" ? <>
               <span><small>Measured zone</small><strong>{spec.width} × {spec.depth} × {spec.height} mm</strong><em>drawer opening</em></span>
-              <span><small>Printed outside</small><strong>{Number((spec.width - spec.clearance * 2).toFixed(1))} × {Number((spec.depth - spec.clearance * 2).toFixed(1))} mm</strong><em>{spec.clearance} mm clearance per side</em></span>
-              <span><small>Usable interior</small><strong>{Number((spec.width - spec.clearance * 2 - spec.wall * 2).toFixed(1))} × {Number((spec.depth - spec.clearance * 2 - spec.wall * 2).toFixed(1))} mm</strong><em>one uninterrupted compartment</em></span>
+              <span><small>Printed outside</small><strong>{Number(outer.width.toFixed(1))} × {Number(outer.depth.toFixed(1))} × {Number(outer.height.toFixed(1))} mm</strong><em>{spec.clearance} mm side · {spec.verticalClearance} mm top allowance</em></span>
+              <span><small>Usable interior</small><strong>{Number((outer.width - spec.wall * 2).toFixed(1))} × {Number((outer.depth - spec.wall * 2).toFixed(1))} × {Number((outer.height - spec.floorThickness).toFixed(1))} mm</strong><em>one uninterrupted compartment</em></span>
             </> : <>
               <span><small>Along {spec.width} mm</small><strong>{gridfinityPlan.columns} cells</strong><em>{gridfinityPlan.columns * gridfinityPlan.pitch} mm used</em></span>
               <span><small>Across {spec.depth} mm</small><strong>{gridfinityPlan.rows} cells</strong><em>{gridfinityPlan.rows * gridfinityPlan.pitch} mm used</em></span>
@@ -813,8 +1025,8 @@ export default function App() {
 
       <dl className="spec-list">
         <div><dt>Envelope</dt><dd>{spec.width} × {spec.depth} × {spec.height} mm</dd></div>
-        {spec.geometryKind === "gridfinity-gap-tray" && <div><dt>Printed outside</dt><dd>{Number((spec.width - spec.clearance * 2).toFixed(1))} × {Number((spec.depth - spec.clearance * 2).toFixed(1))} × {spec.height} mm</dd></div>}
-        <div><dt>Construction</dt><dd>{spec.wall} mm walls · {spec.cornerRadius} mm corners</dd></div>
+        {spec.geometryKind === "gridfinity-gap-tray" && <div><dt>Printed outside</dt><dd>{Number(outer.width.toFixed(1))} × {Number(outer.depth.toFixed(1))} × {Number(outer.height.toFixed(1))} mm</dd></div>}
+        <div><dt>Construction</dt><dd>{spec.wall} mm walls · {spec.floorThickness} mm floor · {spec.cornerRadius} mm corners</dd></div>
         <div><dt>Print profile</dt><dd>P1S · {spec.nozzle} mm · {spec.plate}</dd></div>
         <div><dt>Part plan</dt><dd>{spec.partCount} {spec.partCount === 1 ? "part" : "parts"} · {spec.assemblyMethod}</dd></div>
       </dl>
@@ -873,7 +1085,8 @@ export default function App() {
           <button className="icon-button close-nav" onClick={() => setMobileNav(false)} aria-label="Close navigation"><X size={20} /></button>
           <nav className="main-nav" aria-label="Main navigation">
             <button className={currentPage === "overview" ? "active" : ""} onClick={() => navigate("overview")}><Home size={18} /><span>Overview</span></button>
-            <button className={currentPage === "projects" ? "active" : ""} onClick={() => navigate("projects")}><Layers3 size={18} /><span>My projects</span><em>3</em></button>
+            <button className={currentPage === "projects" ? "active" : ""} onClick={() => navigate("projects")}><Layers3 size={18} /><span>My projects</span><em>{Math.max(1, storeSummary.projectCount)}</em></button>
+            <button className={currentPage === "control" ? "active" : ""} onClick={() => navigate("control")}><Database size={18} /><span>Control tower</span></button>
             <button className={currentPage === "library" ? "active" : ""} onClick={() => navigate("library")}><Sparkles size={18} /><span>Design library</span></button>
             <button className={currentPage === "bridge" ? "active" : ""} onClick={() => navigate("bridge")}><Link2 size={18} /><span>Bambu handoff</span></button>
             {currentPage === "workbench" && <button className="active" onClick={() => navigate("workbench")}><PencilRuler size={18} /><span>Active workbench</span></button>}
@@ -908,6 +1121,16 @@ export default function App() {
           pairingCode={pairingCode}
           onPairingCodeChange={setPairingCode}
           onCheckBridge={() => void checkBridge(pairingCode)}
+          projectId={projectId}
+          projectCount={storeSummary.projectCount}
+          versionCount={storeSummary.versionCount}
+          storageProvider={storeSummary.provider}
+          syncTarget={storeSummary.syncTarget}
+          lastSavedAt={storeSummary.lastSavedAt}
+          orchestrationLabel={route.label}
+          orchestrationDetail={route.detail}
+          orchestrationAgents={route.agents}
+          projectApproved={Boolean(spec.intentConfirmedAt)}
         />
       ) : (
       <main className="workspace">
@@ -953,7 +1176,7 @@ export default function App() {
               <button className="text-button" disabled={activeStep === 0} onClick={() => setActiveStep((step) => Math.max(0, step - 1))}>Back</button>
               <span>{activeStep + 1} / {steps.length}</span>
               {activeStep < steps.length - 1 ? (
-                <button className="primary-button" onClick={() => setActiveStep((step) => Math.min(steps.length - 1, step + 1))}>Continue <ChevronRight size={17} /></button>
+                <button className="primary-button" onClick={() => { void saveCheckpoint("step-complete"); setActiveStep((step) => Math.min(steps.length - 1, step + 1)); }}>Continue <ChevronRight size={17} /></button>
               ) : (
                 <button className="text-button review-done-button" onClick={() => navigate("projects")}>Done</button>
               )}

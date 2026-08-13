@@ -48,7 +48,9 @@ test("bridge writes the one-compartment Gridfinity gap-tray handoff", async () =
       depth: 40,
       height: 50,
       wall: 2.4,
+      floorThickness: 2.4,
       clearance: 0.35,
+      verticalClearance: 0.6,
       cornerRadius: 0,
       printer: "Bambu Lab P1S",
       plate: "Textured PEI Plate",
@@ -61,11 +63,17 @@ test("bridge writes the one-compartment Gridfinity gap-tray handoff", async () =
       designSystem: "gridfinity",
       gridfinityMode: "gap-tray",
       geometryKind: "gridfinity-gap-tray",
+      objectIntent: "one-compartment",
+      dimensionIntent: "available-envelope",
+      gridRelationship: "adjacent-only",
+      onePartRequired: true,
+      intentConfirmedAt: "2026-08-13T12:00:00.000Z",
+      printTitle: "Drawer Gap Tray · Aug 2026",
     };
     const response = await fetch(`http://127.0.0.1:${port}/handoff`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-PrintPath-Token": token },
-      body: JSON.stringify({ project, readiness: [] }),
+      body: JSON.stringify({ projectId: "test-project", project, readiness: [{ label: "Design approval", ok: true }] }),
     });
     assert.equal(response.status, 200, serverOutput);
     const result = await response.json();
@@ -74,14 +82,16 @@ test("bridge writes the one-compartment Gridfinity gap-tray handoff", async () =
     assert.equal(result.generationPlan.compartmentCount, 1);
     assert.equal(result.generationPlan.partCount, 1);
     assert.equal(result.generationPlan.plateRotationDegrees, 45);
-    assert.deepEqual(result.generationPlan.outerDimensions, { length: 254.3, width: 39.3, height: 50 });
-    assert.deepEqual(result.generationPlan.plateBounds, { width: 207.61, depth: 207.61, height: 50 });
+    assert.deepEqual(result.generationPlan.outerDimensions, { length: 254.3, width: 39.3, height: 49.4 });
+    assert.deepEqual(result.generationPlan.plateBounds, { width: 207.61, depth: 207.61, height: 49.4 });
     assert.deepEqual(result.files.map((file) => file.name), [
-      "255mm-one-compartment-gridfinity-gap-tray-p1s-diagonal.stl",
+      "drawer-gap-tray-aug-2026-p1s-diagonal.stl",
     ]);
     for (const file of result.files) assert.equal(existsSync(join(result.outputDirectory, file.name)), true);
-    const manifest = JSON.parse(readFileSync(join(result.outputDirectory, "255mm-one-compartment-gridfinity-gap-tray.printpath.json"), "utf8"));
+    const manifest = JSON.parse(readFileSync(join(result.outputDirectory, "drawer-gap-tray-aug-2026.printpath.json"), "utf8"));
     assert.equal(manifest.project.geometryKind, "gridfinity-gap-tray");
+    assert.equal(manifest.projectId, "test-project");
+    assert.equal(manifest.approval.printTitle, "Drawer Gap Tray · Aug 2026");
     assert.equal(manifest.generationPlan.compartmentCount, 1);
     assert.equal(manifest.generationPlan.compatibility.standardBaseplateCompatible, false);
   } finally {
