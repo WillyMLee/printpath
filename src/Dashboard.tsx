@@ -393,8 +393,8 @@ function BridgePage(props: DashboardProps) {
             {connected ? <Wifi size={15} /> : <WifiOff size={15} />}
             {props.bridgeStatus === "checking" ? "Checking this computer" : connected ? `Bridge ${props.bridgeVersion || "online"}` : "Not connected yet"}
           </span>
-          <h2>{props.bridgePaired ? "This browser is paired." : connected ? "Bridge found. Enter its pairing code." : "Install the local bridge once."}</h2>
-          <p>{props.bridgePaired ? "PrintPath can now save supported models locally and open them in Bambu Studio for your review." : "The helper only listens to this computer and never talks to your Bambu account."}</p>
+          <h2>{props.bridgePaired ? "This browser is paired." : connected ? "Bridge found. Enter its pairing code." : "Start the bridge and allow local access."}</h2>
+          <p>{props.bridgePaired ? "PrintPath can now save supported models locally and open them in Bambu Studio for your review." : connected ? "The helper only listens to this computer and never talks to your Bambu account." : "If the helper is already open, allow PrintPath to access local devices when your browser asks, then check again."}</p>
         </div>
         <div className="bridge-flow-visual" aria-hidden="true"><span><WandSparkles size={21} /></span><i /><span><HardDrive size={21} /></span><i /><span><Printer size={21} /></span></div>
       </section>
@@ -404,7 +404,7 @@ function BridgePage(props: DashboardProps) {
           <span className="page-eyebrow">One-time setup</span>
           <div className="install-step"><span>1</span><div><strong>Download the Windows bridge</strong><p>A small open-source ZIP containing the local helper and setup instructions.</p><a className="primary-button" href="/downloads/printpath-bridge-windows.zip" download><Download size={16} /> Download bridge</a></div></div>
           <div className="install-step"><span>2</span><div><strong>Extract it and start the helper</strong><p>Double-click <code>bridge/start-bridge.cmd</code>. Keep that window open while designing.</p></div></div>
-          <div className="install-step"><span>3</span><div><strong>Pair this browser</strong><p>Copy the code shown by the helper. It is local—not a Bambu password.</p><div className="page-pairing"><input value={props.pairingCode} onChange={(event) => props.onPairingCodeChange(event.target.value.toUpperCase())} placeholder="PP-XXXX-XXXX-XXXX" aria-label="PrintPath Bridge pairing code" /><button className="secondary-button" disabled={!props.pairingCode.trim()} onClick={props.onCheckBridge}><KeyRound size={15} /> {props.bridgePaired ? "Recheck" : "Pair"}</button></div></div></div>
+          <div className="install-step"><span>3</span><div><strong>Allow local access, then pair</strong><p>Approve the browser’s local-device prompt and copy the helper code. It is local—not a Bambu password.</p><div className="page-pairing"><input value={props.pairingCode} onChange={(event) => props.onPairingCodeChange(event.target.value.toUpperCase())} placeholder="PP-XXXX-XXXX-XXXX" aria-label="PrintPath Bridge pairing code" /><button className="secondary-button" disabled={props.bridgeStatus === "checking"} onClick={props.onCheckBridge}><KeyRound size={15} /> {!connected ? "Check connection" : props.bridgePaired ? "Recheck" : "Pair"}</button></div></div></div>
         </section>
 
         <aside className="page-card bridge-trust-card">
@@ -415,7 +415,7 @@ function BridgePage(props: DashboardProps) {
             <div><HardDrive size={17} /><span><strong>Local files only</strong><small>Models stay under Documents/PrintPath Exports.</small></span></div>
             <div><Printer size={17} /><span><strong>No automatic print</strong><small>You inspect the sliced preview and press Print.</small></span></div>
           </div>
-          <div className="studio-detection"><span className={props.bambuStudioDetected ? "detected" : "fallback"} /><div><strong>{props.bambuStudioDetected ? "Bambu Studio detected" : "Windows association fallback"}</strong><p>{props.bambuStudioDetected ? "The bridge can launch it directly." : "The bridge will ask Windows to open the STL with its registered app."}</p></div></div>
+          <div className="studio-detection"><span className={!connected ? "pending" : props.bambuStudioDetected ? "detected" : "fallback"} /><div><strong>{!connected ? "Bambu detection pending" : props.bambuStudioDetected ? "Bambu Studio detected" : "Windows association fallback"}</strong><p>{!connected ? "Connect the helper before PrintPath checks this computer." : props.bambuStudioDetected ? "The bridge can launch it directly." : "The bridge will ask Windows to open the STL with its registered app."}</p></div></div>
           <a className="text-link bridge-source-link" href="https://github.com/WillyMLee/printpath/tree/codex/p1s-confidence-workflow/bridge" target="_blank" rel="noreferrer">Inspect the bridge source <ExternalLink size={14} /></a>
         </aside>
       </div>
