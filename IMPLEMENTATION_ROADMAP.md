@@ -30,6 +30,8 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Project controls | Working status filters and persistent version selection | Shipped |
 | 7 Wonders Duel organizer | Official inventory research, sleeve-aware four-module concept, and measurement gate | Research brief |
 | Deployment | GitHub workflow and Cloudflare Workers static hosting | Shipped |
+| Public access | Browse-only showcase with protected project authoring | Shipped |
+| AI cost boundary | Signed Maker Mode sessions, server-only OpenAI key, body/token caps, and rate limits | Shipped |
 
 ## Next implementation candidates
 
@@ -44,7 +46,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 
 - Implement one Convex adapter for projects, versions, approvals, printer profiles, and artifact metadata.
 - Keep IndexedDB as the offline cache/outbox after Convex becomes authoritative.
-- Add authentication only when cross-device sync is enabled.
+- Reuse Maker Mode identity when cross-device sync is enabled; do not create a second login system.
 - Do not create a parallel Cloudflare project database.
 
 ### Modeling accuracy
@@ -98,3 +100,5 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-13:** Never remove a prior design from the visible project record; experiments remain previewable and downloadable even when another version is selected.
 - **2026-08-13:** Project filters must change the visible project set, and selecting a saved version must update the active preview and artifact links.
 - **2026-08-13:** Start the 7 Wonders Duel organizer with four lift-out modules; require actual box, sleeve, expansion, and storage-orientation answers before CAD.
+- **2026-08-13:** Keep the showcase public while requiring Maker Mode for project authoring and every paid AI request.
+- **2026-08-13:** Keep OpenAI credentials server-only; cap, rate-limit, and fail closed on all AI intake requests.

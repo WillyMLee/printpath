@@ -28,6 +28,7 @@ import {
   Layers3,
   LayoutGrid,
   Link2,
+  LockKeyhole,
   PackageCheck,
   PackageOpen,
   PanelsTopLeft,
@@ -86,6 +87,10 @@ type DashboardProps = {
   orchestrationAgents: number;
   projectApproved: boolean;
   projectCompleted: boolean;
+  accessMode: "checking" | "public" | "maker";
+  aiConfigured: boolean;
+  onRequestAccess: () => void;
+  onAskAi: (idea: string) => Promise<string>;
 };
 
 const plateOptions = [
@@ -212,7 +217,28 @@ function GridTileGraphic() {
 
 function OverviewPage(props: DashboardProps) {
   const [idea, setIdea] = useState("");
+  const [aiBrief, setAiBrief] = useState("");
+  const [aiError, setAiError] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
   const suggestions = ["A holder for…", "An organizer that fits…", "A replacement for…"];
+
+  async function askAi() {
+    if (props.accessMode !== "maker") {
+      props.onRequestAccess();
+      return;
+    }
+    setAiLoading(true);
+    setAiBrief("");
+    setAiError("");
+    try {
+      setAiBrief(await props.onAskAi(idea.trim()));
+    } catch (error) {
+      setAiError(error instanceof Error ? error.message : "PrintPath AI could not complete that request.");
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
   return (
     <>
       <PageHeader
@@ -233,8 +259,21 @@ function OverviewPage(props: DashboardProps) {
               <textarea value={idea} onChange={(event) => setIdea(event.target.value)} rows={3} placeholder="Example: A narrow tray for the bathroom drawer that fits between the sink pipes…" />
               <div className="idea-composer-footer">
                 <div className="idea-suggestions">{suggestions.map((suggestion) => <button key={suggestion} onClick={() => setIdea(suggestion)}>{suggestion}</button>)}</div>
-                <button className="primary-button" disabled={!idea.trim()} onClick={() => props.onStartIdea(idea.trim())}>Start designing <ArrowRight size={16} /></button>
+                <div className="idea-actions">
+                  <button className="guided-design-button" disabled={!idea.trim()} onClick={() => props.onStartIdea(idea.trim())}>Guided setup</button>
+                  <button className="primary-button" disabled={!idea.trim() || aiLoading || props.accessMode === "checking"} onClick={() => void askAi()}>
+                    {props.accessMode === "maker" ? <WandSparkles size={16} /> : <LockKeyhole size={15} />}
+                    {aiLoading ? "Thinking…" : props.accessMode === "maker" ? "Ask PrintPath AI" : "Unlock AI"}
+                  </button>
+                </div>
               </div>
+              <div className={`ai-access-note ${props.accessMode}`}>
+                {props.accessMode === "maker"
+                  ? <><ShieldCheck size={14} /><span>{props.aiConfigured ? "Protected Maker Mode · AI requests are authenticated and rate-limited." : "Maker Mode is unlocked · add an OpenAI key to activate AI briefs."}</span></>
+                  : <><LockKeyhole size={14} /><span>Public preview · browsing is free; AI requests require Maker Mode.</span></>}
+              </div>
+              {aiError && <p className="ai-response-error" role="alert">{aiError}</p>}
+              {aiBrief && <div className="ai-brief"><span>AI DESIGN INTAKE</span><p>{aiBrief}</p><button onClick={() => props.onStartIdea(`${idea.trim()}\n\nPrintPath AI intake:\n${aiBrief}`)}>Continue with this brief <ArrowRight size={14} /></button></div>}
             </div>
           </div>
           <div className="design-orbit" aria-hidden="true">

@@ -8,6 +8,8 @@ PrintPath is an open-source, visual workflow for turning an everyday 3D-printing
 
 - Guided four-step design intake
 - Plain-language “Make a Design” starting point
+- Public read-only showcase with a protected Maker Mode for authoring
+- Server-side OpenAI Responses API intake with signed sessions and per-user/IP rate limits
 - P1S-specific 256 × 256 × 256 mm machine profile
 - Explicit build-plate and nozzle awareness
 - Live dimension visualization
@@ -24,7 +26,7 @@ PrintPath is an open-source, visual workflow for turning an everyday 3D-printing
 - Cost-aware orchestration routes for deterministic, guided, and independently reviewed designs
 - Explicit design approval and date-based print titles before artifact generation
 - Portable JSON project-spec export
-- Responsive interface ready for Cloudflare Workers static assets
+- Responsive interface on Cloudflare Workers with selective `/api/*` Worker routing
 
 Most visual previews are intentionally labeled as concepts and do not yet produce printable geometry.
 
@@ -45,7 +47,28 @@ The bridge listens only on `127.0.0.1`, restricts web origins, and stores genera
 
 ## Data strategy
 
-PrintPath uses one storage interface. IndexedDB is the active local-first implementation; a future Convex adapter can become the shared source of truth for projects, versions, profiles, approvals, and artifact metadata. Cloudflare currently hosts static application assets only and does not hold a second project database.
+PrintPath uses one storage interface. IndexedDB is the active local-first implementation; a future Convex adapter can become the shared source of truth for projects, versions, profiles, approvals, and artifact metadata. Cloudflare hosts the application assets and stateless authentication/AI boundary, but does not hold a second project database.
+
+## Maker Mode and AI safety
+
+The public site can browse projects, versions, templates, the process, and downloadable showcase artifacts. Starting or editing a project opens Maker Mode sign-in. The AI design-intake button is additionally protected at the Worker endpoint, so changing browser code cannot bypass authentication.
+
+- Credentials and the OpenAI key are Cloudflare secrets, never Vite variables or committed files.
+- Sessions are signed, expire after eight hours, and use an `HttpOnly; Secure; SameSite=Strict` cookie.
+- Login attempts are limited to 8 per minute per IP; AI intake is limited to 6 per minute per signed-in maker/IP.
+- Each AI request is capped at 2,000 input characters and 700 output tokens, uses `store: false`, and fails closed when no API key is installed.
+- The existing measurement, geometry, project, download, and Bambu handoff flows remain deterministic and do not call OpenAI.
+
+Configure production secrets through interactive prompts so values do not enter shell history:
+
+```powershell
+npx wrangler secret put AUTH_USERNAME
+npx wrangler secret put AUTH_PASSWORD
+npx wrangler secret put SESSION_SECRET
+npx wrangler secret put OPENAI_API_KEY
+```
+
+The OpenAI key is optional. Without it, Maker Mode can still unlock protected project tools and the AI endpoint returns a safe “not configured” response. For local development, copy `.dev.vars.example` to `.dev.vars` and use non-production values; `.dev.vars` is ignored by Git.
 
 ## Run locally
 
@@ -62,7 +85,7 @@ npm run deploy:dry
 npm run deploy
 ```
 
-Deployment uses Cloudflare Workers static assets as configured in `wrangler.jsonc`.
+Run `npm run typegen` after changing Worker bindings. Deployment uses selective Worker-first routing for `/api/*`; hashed assets remain on Cloudflare’s static-asset path.
 
 ## Roadmap
 

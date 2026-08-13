@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   Box,
   Check,
@@ -14,6 +14,9 @@ import {
   Layers3,
   Lightbulb,
   Link2,
+  LockKeyhole,
+  LogIn,
+  LogOut,
   Menu,
   PackageCheck,
   PencilRuler,
@@ -71,6 +74,15 @@ type ProjectSpec = {
 };
 
 type NumberKey = "width" | "depth" | "height" | "wall" | "floorThickness" | "clearance" | "verticalClearance" | "cornerRadius" | "nozzle" | "layerHeight" | "partCount";
+
+type AccessMode = "checking" | "public" | "maker";
+
+type SessionResponse = {
+  authenticated?: boolean;
+  displayName?: string;
+  aiConfigured?: boolean;
+  error?: string;
+};
 
 const STORAGE_KEY = "printpath-project-v1";
 const BRIDGE_PAIRING_KEY = "printpath-bridge-pairing-v1";
@@ -411,6 +423,31 @@ export default function App() {
   const [pairingCode, setPairingCode] = useState(() => sessionStorage.getItem(BRIDGE_PAIRING_KEY) || localStorage.getItem(BRIDGE_PAIRING_KEY) || "");
   const [bridgeState, setBridgeState] = useState<{ status: "checking" | "online" | "offline"; paired: boolean; version?: string; bambuStudioDetected?: boolean }>({ status: "checking", paired: false });
   const [handoffState, setHandoffState] = useState<{ status: "idle" | "sending" | "success" | "error"; message?: string }>({ status: "idle" });
+  const [accessMode, setAccessMode] = useState<AccessMode>("checking");
+  const [makerName, setMakerName] = useState("");
+  const [aiConfigured, setAiConfigured] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [loginUsername, setLoginUsername] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loginSubmitting, setLoginSubmitting] = useState(false);
+  const pendingMakerAction = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetch("/api/auth/session", { credentials: "same-origin", cache: "no-store" })
+      .then(async (response) => response.ok ? response.json() as Promise<SessionResponse> : undefined)
+      .then((session) => {
+        if (cancelled) return;
+        setAccessMode(session?.authenticated ? "maker" : "public");
+        setMakerName(session?.displayName || "");
+        setAiConfigured(Boolean(session?.aiConfigured));
+      })
+      .catch(() => {
+        if (!cancelled) setAccessMode("public");
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -574,6 +611,77 @@ export default function App() {
       completedAt: undefined,
     }));
     setHandoffState({ status: "idle" });
+  }
+
+  function requestMakerAccess(action?: () => void) {
+    pendingMakerAction.current = action || null;
+    setLoginError("");
+    setLoginPassword("");
+    setLoginOpen(true);
+  }
+
+  function requireMaker(action: () => void) {
+    if (accessMode === "maker") {
+      action();
+      return;
+    }
+    requestMakerAccess(action);
+  }
+
+  async function signIn(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoginSubmitting(true);
+    setLoginError("");
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: loginUsername, password: loginPassword }),
+      });
+      const result = await response.json() as SessionResponse;
+      if (!response.ok || !result.authenticated) throw new Error(result.error || "Sign-in failed.");
+      setAccessMode("maker");
+      setMakerName(result.displayName || loginUsername);
+      setAiConfigured(Boolean(result.aiConfigured));
+      setLoginPassword("");
+      setLoginOpen(false);
+      const action = pendingMakerAction.current;
+      pendingMakerAction.current = null;
+      action?.();
+    } catch (error) {
+      setLoginError(error instanceof Error ? error.message : "Sign-in failed.");
+    } finally {
+      setLoginSubmitting(false);
+    }
+  }
+
+  async function signOut() {
+    try {
+      await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+    } finally {
+      setAccessMode("public");
+      setMakerName("");
+      setLoginPassword("");
+      pendingMakerAction.current = null;
+      navigate("overview");
+    }
+  }
+
+  async function askPrintPathAi(idea: string): Promise<string> {
+    const response = await fetch("/api/ai/design", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idea }),
+    });
+    const result = await response.json() as { brief?: string; error?: string };
+    if (response.status === 401) {
+      setAccessMode("public");
+      requestMakerAccess();
+    }
+    if (!response.ok || !result.brief) throw new Error(result.error || "PrintPath AI could not complete that request.");
+    return result.brief;
   }
 
   function startFresh() {
@@ -1151,12 +1259,20 @@ export default function App() {
             <button className={currentPage === "process" ? "active" : ""} onClick={() => navigate("process")}><Link2 size={18} /><span>How it works</span></button>
             {currentPage === "workbench" && <button className="active" onClick={() => navigate("workbench")}><PencilRuler size={18} /><span>Active workbench</span></button>}
           </nav>
-          <button className="new-project-button" onClick={startFresh}><Plus size={18} /> New project</button>
+          <button className="new-project-button" onClick={() => requireMaker(startFresh)}>{accessMode === "maker" ? <Plus size={18} /> : <LockKeyhole size={17} />} New project</button>
         </div>
         <div className="sidebar-bottom">
           <div className="roadmap-card"><span><Sparkles size={16} /></span><strong>Building in public</strong><p>The living roadmap records shipped decisions, next improvements, and deferred work.</p><a href={roadmapUrl} target="_blank" rel="noreferrer">View roadmap <ChevronRight size={14} /></a></div>
           <button className={`settings-link ${currentPage === "settings" ? "active" : ""}`} onClick={() => navigate("settings")}><Settings size={18} /> Machine setup</button>
-          <div className="profile"><span>WB</span><div><strong>William</strong><small>Maker workspace</small></div><ChevronRight size={16} /></div>
+          {accessMode === "maker" ? (
+            <button className="profile access-profile" onClick={() => void signOut()} aria-label="Sign out of Maker Mode">
+              <span>NY</span><div><strong>{makerName || "Maker Mode"}</strong><small>Protected · sign out</small></div><LogOut size={16} />
+            </button>
+          ) : (
+            <button className="profile access-profile public" onClick={() => requestMakerAccess()}>
+              <span><LockKeyhole size={14} /></span><div><strong>Public showcase</strong><small>Sign in for Maker Mode</small></div><LogIn size={16} />
+            </button>
+          )}
         </div>
       </aside>
       {mobileNav && <button className="nav-backdrop" onClick={() => setMobileNav(false)} aria-label="Close navigation" />}
@@ -1168,10 +1284,10 @@ export default function App() {
           nozzle={spec.nozzle}
           plate={spec.plate}
           onNavigate={navigate}
-          onOpenProject={() => navigate("workbench")}
-          onNewProject={startFresh}
-          onStartIdea={startIdea}
-          onUseTemplate={useTemplate}
+          onOpenProject={() => requireMaker(() => navigate("workbench"))}
+          onNewProject={() => requireMaker(startFresh)}
+          onStartIdea={(idea) => requireMaker(() => startIdea(idea))}
+          onUseTemplate={(template) => requireMaker(() => useTemplate(template))}
           onNozzleChange={(value) => updateField("nozzle", value)}
           onPlateChange={(value) => updateField("plate", value)}
           bridgeStatus={bridgeState.status}
@@ -1192,6 +1308,10 @@ export default function App() {
           orchestrationAgents={route.agents}
           projectApproved={Boolean(spec.intentConfirmedAt)}
           projectCompleted={Boolean(spec.completedAt)}
+          accessMode={accessMode}
+          aiConfigured={aiConfigured}
+          onRequestAccess={() => requestMakerAccess()}
+          onAskAi={askPrintPathAi}
         />
       ) : (
       <main className="workspace">
@@ -1266,6 +1386,29 @@ export default function App() {
           </section>
         </div>
       </main>
+      )}
+      {loginOpen && (
+        <div className="access-modal-backdrop" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget && !loginSubmitting) {
+            pendingMakerAction.current = null;
+            setLoginOpen(false);
+          }
+        }}>
+          <section className="access-modal" role="dialog" aria-modal="true" aria-labelledby="maker-access-title">
+            <button className="access-modal-close" onClick={() => { pendingMakerAction.current = null; setLoginOpen(false); }} aria-label="Close Maker Mode sign-in"><X size={18} /></button>
+            <span className="access-modal-icon"><LockKeyhole size={22} /></span>
+            <span className="page-eyebrow">Protected workspace</span>
+            <h2 id="maker-access-title">Enter Maker Mode</h2>
+            <p>The public site can browse projects and the design library. Signing in unlocks project editing and the rate-limited AI design intake.</p>
+            <form onSubmit={(event) => void signIn(event)}>
+              <label><span>Username</span><input autoFocus autoComplete="username" value={loginUsername} onChange={(event) => setLoginUsername(event.target.value)} required /></label>
+              <label><span>Password</span><input type="password" autoComplete="current-password" value={loginPassword} onChange={(event) => setLoginPassword(event.target.value)} required /></label>
+              {loginError && <p className="access-modal-error" role="alert">{loginError}</p>}
+              <button className="primary-button" type="submit" disabled={loginSubmitting}>{loginSubmitting ? "Checking…" : <><LogIn size={16} /> Unlock Maker Mode</>}</button>
+            </form>
+            <small><ShieldCheck size={13} /> Credentials go only to the Cloudflare Worker and are never stored in browser code.</small>
+          </section>
+        </div>
       )}
     </div>
   );
