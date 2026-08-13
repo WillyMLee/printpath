@@ -24,6 +24,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Bambu handoff | Pairing-protected local bridge, approved-design gate, STL generation, and Studio launch | Shipped |
 | Gridfinity gap tray | One 254.4 × 39.4 × 49.4 mm part for a 255 × 40 × 50 mm envelope | Completed |
 | Project presentation | Actual-STL cover render and completed-project card | Shipped |
+| Information architecture | Maker-focused navigation, room/use template categories, and one unified process page | Shipped |
 | Deployment | GitHub workflow and Cloudflare Workers static hosting | Shipped |
 
 ## Next implementation candidates
@@ -85,3 +86,5 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-13:** Apply 0.3 mm clearance per horizontal side and 0.6 mm top clearance to the drawer gap tray.
 - **2026-08-13:** Describe the tray as adjacent to Gridfinity, not Gridfinity-compatible.
 - **2026-08-13:** Use the generated STL as the source for the project cover render.
+- **2026-08-13:** Remove Control Tower and Bambu Handoff from primary navigation; explain both as project memory and print handoff within one process page.
+- **2026-08-13:** Organize the design library by Kitchen, Bathroom, Bedroom, Board Games, Plants, and Desk & Workshop while keeping Gridfinity as a featured system.

@@ -5,7 +5,6 @@ import {
   ChevronRight,
   CircleCheck,
   Clock3,
-  Database,
   Download,
   ExternalLink,
   FileJson,
@@ -626,6 +625,34 @@ export default function App() {
         cornerRadius: 0,
         geometryKind: "open-tray",
       },
+      "utensil-tray": {
+        name: "Custom kitchen utensil tray",
+        description: "A measured set of long compartments for everyday utensils, with the number and width of lanes chosen from the actual drawer contents.",
+        category: "Container or organizer",
+        width: 280, depth: 180, height: 45, wall: 2.4, clearance: 0.5, cornerRadius: 7,
+        partCount: 2, assemblyMethod: "Placed side by side",
+        objectIntent: "multiple-compartments",
+        dimensionIntent: "available-envelope",
+        gridRelationship: "none",
+      },
+      "sink-caddy": {
+        name: "Ventilated kitchen sink caddy",
+        description: "A water-safe holder for a sponge, dish brush, and cloth with drainage, airflow, and removable wet-zone pieces for cleaning.",
+        category: "Holder or mount",
+        width: 150, depth: 75, height: 90, wall: 2.6, clearance: 0.7, cornerRadius: 9,
+        material: "PETG", partCount: 2, assemblyMethod: "Slides together",
+        objectIntent: "holder",
+        gridRelationship: "none",
+      },
+      "bag-clip": {
+        name: "Reusable kitchen bag clip set",
+        description: "A small batch of flexible snap clips sized to seal folded snack, coffee, and freezer bags without sharp corners.",
+        category: "Replacement part",
+        width: 85, depth: 14, height: 8, wall: 2.4, clearance: 0.4, cornerRadius: 4,
+        material: "PETG", partCount: 6,
+        objectIntent: "holder",
+        gridRelationship: "none",
+      },
       "drawer-strip": {
         name: "Custom drawer base strip",
         description: "A measured single-row strip used to verify drawer fit before producing a complete multi-plate base.",
@@ -1075,7 +1102,7 @@ export default function App() {
         </div>
         <div className="bridge-safety"><ShieldCheck size={16} /><p>PrintPath creates the local file. You still choose the filament, slice it, inspect the preview, and press Print in Bambu Studio.</p></div>
         {bridgeState.status === "offline" ? (
-          <div className="bridge-setup"><p>Install and start the local bridge on this computer, then retry.</p><div><button className="secondary-button" type="button" onClick={() => navigate("bridge")}>Bridge setup <ExternalLink size={14} /></button><button className="secondary-button" type="button" onClick={() => void checkBridge()}>Retry connection</button></div></div>
+          <div className="bridge-setup"><p>Install and start the local helper on this computer, then retry.</p><div><button className="secondary-button" type="button" onClick={() => navigate("process")}>View print process <ExternalLink size={14} /></button><button className="secondary-button" type="button" onClick={() => void checkBridge()}>Retry connection</button></div></div>
         ) : !bridgeState.paired ? (
           <div className="bridge-pairing">
             <label><span>Pairing code from the Bridge window</span><input value={pairingCode} onChange={(event) => setPairingCode(event.target.value.toUpperCase())} placeholder="PP-XXXX-XXXX-XXXX" /></label>
@@ -1119,9 +1146,8 @@ export default function App() {
           <nav className="main-nav" aria-label="Main navigation">
             <button className={currentPage === "overview" ? "active" : ""} onClick={() => navigate("overview")}><Home size={18} /><span>Overview</span></button>
             <button className={currentPage === "projects" ? "active" : ""} onClick={() => navigate("projects")}><Layers3 size={18} /><span>My projects</span><em>{Math.max(1, storeSummary.projectCount)}</em></button>
-            <button className={currentPage === "control" ? "active" : ""} onClick={() => navigate("control")}><Database size={18} /><span>Control tower</span></button>
             <button className={currentPage === "library" ? "active" : ""} onClick={() => navigate("library")}><Sparkles size={18} /><span>Design library</span></button>
-            <button className={currentPage === "bridge" ? "active" : ""} onClick={() => navigate("bridge")}><Link2 size={18} /><span>Bambu handoff</span></button>
+            <button className={currentPage === "process" ? "active" : ""} onClick={() => navigate("process")}><Link2 size={18} /><span>How it works</span></button>
             {currentPage === "workbench" && <button className="active" onClick={() => navigate("workbench")}><PencilRuler size={18} /><span>Active workbench</span></button>}
           </nav>
           <button className="new-project-button" onClick={startFresh}><Plus size={18} /> New project</button>

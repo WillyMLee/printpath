@@ -45,7 +45,7 @@ import {
   Workflow,
 } from "lucide-react";
 
-export type AppPage = "overview" | "projects" | "library" | "workbench" | "settings" | "bridge" | "control";
+export type AppPage = "overview" | "projects" | "library" | "process" | "workbench" | "settings";
 
 export type StarterTemplate =
   | "grid-fit-tile" | "loose-tray" | "drawer-strip" | "grid-customizer" | "grid-edge-filler" | "grid-fractional-bin"
@@ -53,6 +53,7 @@ export type StarterTemplate =
   | "vanity-organizer" | "toothbrush-dock"
   | "nightstand-dock" | "jewelry-tray"
   | "plant-drip-tray" | "trellis-clips" | "propagation-stand"
+  | "utensil-tray" | "sink-caddy" | "bag-clip"
   | "cable-guide" | "wall-hook" | "blank";
 
 type DashboardProps = {
@@ -270,7 +271,7 @@ function ProjectsPage(props: DashboardProps) {
           <h2>Drawer Gap Tray</h2>
           <p>One uninterrupted compartment for the narrow leftover zone beside the existing Gridfinity layout. The cover is rendered from the approved watertight STL.</p>
           <div className="completed-project-facts"><span><strong>254.4 × 39.4 × 49.4 mm</strong><small>printed outside</small></span><span><strong>1 part</strong><small>single P1S plate</small></span><span><strong>0.4 mm</strong><small>nozzle profile</small></span></div>
-          <div className="completed-project-actions"><button className="primary-button" onClick={props.onOpenProject}>Open design <ArrowRight size={16} /></button><button className="secondary-button" onClick={() => props.onNavigate("bridge")}><Smartphone size={16} /> Reprint workflow</button></div>
+          <div className="completed-project-actions"><button className="primary-button" onClick={props.onOpenProject}>Open design <ArrowRight size={16} /></button><button className="secondary-button" onClick={() => props.onNavigate("process")}><Smartphone size={16} /> Reprint workflow</button></div>
         </div>
       </section>
 
@@ -316,9 +317,9 @@ function ProjectsPage(props: DashboardProps) {
   );
 }
 
-type CatalogCategory = "Gridfinity" | "Board games" | "Bathroom" | "Bedroom" | "Plants" | "Everyday";
+type CatalogCategory = "Kitchen" | "Bathroom" | "Bedroom" | "Board Games" | "Plants" | "Desk & Workshop";
 
-const catalogCategories: Array<"Popular" | CatalogCategory> = ["Popular", "Gridfinity", "Board games", "Bathroom", "Bedroom", "Plants", "Everyday"];
+const catalogCategories: Array<"Popular" | CatalogCategory> = ["Popular", "Kitchen", "Bathroom", "Bedroom", "Board Games", "Plants", "Desk & Workshop"];
 
 const catalogTemplates: Array<{
   id: StarterTemplate;
@@ -332,13 +333,16 @@ const catalogTemplates: Array<{
   tone: string;
   popular?: boolean;
 }> = [
-  { id: "loose-tray", title: "Exact-fit open tray", category: "Everyday", description: "A production-ready first generator for a measured, square-corner tray with uniform walls.", time: "~1.5 hr", parts: "1 part", input: "Outer W × D × H", icon: Box, tone: "slate", popular: true },
-  { id: "grid-customizer", title: "Custom drawer grid", category: "Gridfinity", description: "Centers full 42 mm cells and turns the leftover width into intentional edge space.", time: "~2–6 hr", parts: "2–6 parts", input: "Drawer W × D", icon: LayoutGrid, tone: "mint", popular: true },
-  { id: "grid-edge-filler", title: "Edge & corner fillers", category: "Gridfinity", description: "Measured strips and corners that lock a standard grid into an awkward drawer.", time: "~45 min", parts: "1–4 parts", input: "Remaining gap", icon: PanelsTopLeft, tone: "mint" },
-  { id: "grid-fractional-bin", title: "Fractional-width bins", category: "Gridfinity", description: "Half- and quarter-width storage when a full cell wastes too much room.", time: "~1.2 hr", parts: "1 part", input: "Object width", icon: Grid3X3, tone: "mint", popular: true },
-  { id: "token-tray", title: "Pourable token tray", category: "Board games", description: "Rounded token wells with a low pouring corner for fast setup and cleanup.", time: "~1.4 hr", parts: "1 part", input: "Token count + size", icon: Coins, tone: "coral", popular: true },
-  { id: "card-holder", title: "Sleeved card holder", category: "Board games", description: "A leaning card well sized for sleeved or unsleeved decks with finger access.", time: "~1.8 hr", parts: "1–2 parts", input: "Deck W × D × H", icon: CreditCard, tone: "coral" },
-  { id: "board-game-insert", title: "Full box organizer", category: "Board games", description: "Maps cards, boards, tokens, and player pieces into labeled printable modules.", time: "~8–16 hr", parts: "4–8 parts", input: "Box + components", icon: Gamepad2, tone: "coral" },
+  { id: "utensil-tray", title: "Custom utensil tray", category: "Kitchen", description: "Measured lanes for the utensils you actually use, sized around the drawer and its awkward edges.", time: "~3 hr", parts: "1–2 parts", input: "Drawer + utensil groups", icon: PanelsTopLeft, tone: "sand", popular: true },
+  { id: "sink-caddy", title: "Ventilated sink caddy", category: "Kitchen", description: "Drainable storage for a sponge, brush, and cloth with removable wet-zone pieces.", time: "~2.4 hr", parts: "2 parts", input: "Sink edge + tools", icon: Droplets, tone: "aqua" },
+  { id: "bag-clip", title: "Reusable bag clips", category: "Kitchen", description: "A small batch of flexible clips matched to common snack, coffee, and freezer bags.", time: "~28 min", parts: "6 clips", input: "Bag fold thickness", icon: PackageCheck, tone: "sand" },
+  { id: "loose-tray", title: "Exact-fit pantry tray", category: "Kitchen", description: "A production-ready measured tray for packets, small jars, or other loose pantry items.", time: "~1.5 hr", parts: "1 part", input: "Outer W × D × H", icon: Box, tone: "sand", popular: true },
+  { id: "grid-customizer", title: "Custom drawer grid", category: "Desk & Workshop", description: "Centers full 42 mm cells and turns the leftover width into intentional edge space.", time: "~2–6 hr", parts: "2–6 parts", input: "Drawer W × D", icon: LayoutGrid, tone: "mint", popular: true },
+  { id: "grid-edge-filler", title: "Edge & corner fillers", category: "Desk & Workshop", description: "Measured strips and corners that lock a standard grid into an awkward drawer.", time: "~45 min", parts: "1–4 parts", input: "Remaining gap", icon: PanelsTopLeft, tone: "mint" },
+  { id: "grid-fractional-bin", title: "Fractional-width bins", category: "Desk & Workshop", description: "Half- and quarter-width storage when a full cell wastes too much room.", time: "~1.2 hr", parts: "1 part", input: "Object width", icon: Grid3X3, tone: "mint", popular: true },
+  { id: "token-tray", title: "Pourable token tray", category: "Board Games", description: "Rounded token wells with a low pouring corner for fast setup and cleanup.", time: "~1.4 hr", parts: "1 part", input: "Token count + size", icon: Coins, tone: "coral", popular: true },
+  { id: "card-holder", title: "Sleeved card holder", category: "Board Games", description: "A leaning card well sized for sleeved or unsleeved decks with finger access.", time: "~1.8 hr", parts: "1–2 parts", input: "Deck W × D × H", icon: CreditCard, tone: "coral" },
+  { id: "board-game-insert", title: "Full box organizer", category: "Board Games", description: "Maps cards, boards, tokens, and player pieces into labeled printable modules.", time: "~8–16 hr", parts: "4–8 parts", input: "Box + components", icon: Gamepad2, tone: "coral" },
   { id: "vanity-organizer", title: "Vanity drawer organizer", category: "Bathroom", description: "Custom compartments around pipes, drawer rails, cosmetics, and daily tools.", time: "~3.5 hr", parts: "1–3 parts", input: "Drawer + obstacles", icon: Bath, tone: "aqua", popular: true },
   { id: "toothbrush-dock", title: "Toothbrush & razor dock", category: "Bathroom", description: "Ventilated upright storage with removable drip cups for easier cleaning.", time: "~2.1 hr", parts: "2 parts", input: "Handle diameters", icon: Droplets, tone: "aqua" },
   { id: "nightstand-dock", title: "Nightstand charging dock", category: "Bedroom", description: "A phone rest with routed charging cable, watch space, and pocket tray.", time: "~2.8 hr", parts: "1–2 parts", input: "Phone + cable", icon: BedDouble, tone: "violet", popular: true },
@@ -346,8 +350,8 @@ const catalogTemplates: Array<{
   { id: "plant-drip-tray", title: "Exact-fit drip tray", category: "Plants", description: "A low-profile waterproof saucer matched to a planter’s actual base shape.", time: "~1.7 hr", parts: "1 part", input: "Pot base + runoff", icon: Flower2, tone: "leaf", popular: true },
   { id: "trellis-clips", title: "Plant & trellis clips", category: "Plants", description: "Reusable clips tuned to a stem and trellis diameter without pinching growth.", time: "~22 min", parts: "6–12 clips", input: "Stem + rod diameter", icon: Sprout, tone: "leaf" },
   { id: "propagation-stand", title: "Propagation tube stand", category: "Plants", description: "Stable modular holder for glass tubes with a broad water-safe footprint.", time: "~2.2 hr", parts: "1–2 parts", input: "Tube diameter", icon: Flower2, tone: "leaf" },
-  { id: "cable-guide", title: "Measured cable guide", category: "Everyday", description: "Snap-in routing matched to cable thickness and the edge it mounts beneath.", time: "~30 min", parts: "2–8 clips", input: "Cable + edge", icon: Cable, tone: "slate" },
-  { id: "wall-hook", title: "Purpose-fit wall hook", category: "Everyday", description: "A load-aware hook shaped around the exact object and mounting method.", time: "~1.1 hr", parts: "1 part", input: "Object + fastener", icon: Wrench, tone: "slate" },
+  { id: "cable-guide", title: "Measured cable guide", category: "Desk & Workshop", description: "Snap-in routing matched to cable thickness and the edge it mounts beneath.", time: "~30 min", parts: "2–8 clips", input: "Cable + edge", icon: Cable, tone: "slate" },
+  { id: "wall-hook", title: "Purpose-fit wall hook", category: "Desk & Workshop", description: "A load-aware hook shaped around the exact object and mounting method.", time: "~1.1 hr", parts: "1 part", input: "Object + fastener", icon: Wrench, tone: "slate" },
 ];
 
 function LibraryPage(props: DashboardProps) {
@@ -380,6 +384,62 @@ function LibraryPage(props: DashboardProps) {
   );
 }
 
+function ProcessPage(props: DashboardProps) {
+  const connected = props.bridgeStatus === "online";
+  const processSteps = [
+    { icon: Sparkles, label: "Describe", detail: "Start with the problem, object, and where it needs to fit." },
+    { icon: Ruler, label: "Measure", detail: "Capture the available space, fit preference, and obstacles." },
+    { icon: ShieldCheck, label: "Confirm", detail: "Review the exact outside size, printer limits, and design intent." },
+    { icon: Printer, label: "Print", detail: "Create the file, inspect the slice in Bambu Studio, then send it." },
+  ];
+  return (
+    <>
+      <PageHeader
+        eyebrow="How PrintPath works"
+        title="From a rough idea to a confident print."
+        description="One repeatable path keeps measurements, design decisions, and the final P1S handoff understandable."
+        action={<button className="primary-button page-action" onClick={props.onNewProject}><Plus size={17} /> Start a design</button>}
+      />
+
+      <section className="page-card process-journey">
+        <div className="process-journey-heading"><span className="page-eyebrow">The core loop</span><h2>Four clear stops, with a human check before printing.</h2></div>
+        <div className="process-step-grid">
+          {processSteps.map((step, index) => {
+            const Icon = step.icon;
+            return <div className="process-step" key={step.label}><span><Icon size={19} /></span><em>0{index + 1}</em><strong>{step.label}</strong><p>{step.detail}</p>{index < processSteps.length - 1 && <i><ChevronRight size={16} /></i>}</div>;
+          })}
+        </div>
+      </section>
+
+      <div className="process-detail-grid">
+        <section className="page-card process-detail-card handoff-card">
+          <div className="process-card-heading"><span><Printer size={20} /></span><div><small>PRINT ON YOUR P1S</small><h2>Bambu Studio stays as the final checkpoint.</h2></div></div>
+          <p>PrintPath creates the supported STL locally and opens it on this computer. Your Bambu login remains inside Bambu Studio, where you inspect the sliced plate and press Print.</p>
+          <div className={`process-connection ${props.bridgeStatus}`}>
+            {connected ? <Wifi size={17} /> : <WifiOff size={17} />}
+            <span><strong>{props.bridgePaired ? "Ready on this computer" : connected ? "Helper found · pairing needed" : "Local helper not connected"}</strong><small>{props.bambuStudioDetected ? "Bambu Studio detected" : "Bambu Studio can be installed or opened separately"}</small></span>
+          </div>
+          {!props.bridgePaired && <div className="process-pairing"><input value={props.pairingCode} onChange={(event) => props.onPairingCodeChange(event.target.value.toUpperCase())} placeholder="PP-XXXX-XXXX-XXXX" aria-label="PrintPath Bridge pairing code" /><button className="secondary-button" onClick={props.onCheckBridge}>{connected ? "Pair" : "Check"}</button></div>}
+          <div className="process-actions"><a className="secondary-button" href="/downloads/printpath-bridge-windows.zip" download><Download size={16} /> Get local helper</a><button className="text-link" onClick={props.onOpenProject}>Open active design <ArrowRight size={15} /></button></div>
+        </section>
+
+        <section className="page-card process-detail-card memory-card">
+          <div className="process-card-heading"><span><HardDrive size={20} /></span><div><small>PROJECT MEMORY</small><h2>Your design history is saved automatically.</h2></div></div>
+          <p>Drafts, approved versions, and completed designs stay in this browser today. A single shared sync layer can be added later without changing how you make things.</p>
+          <div className="process-memory-facts"><span><strong>{Math.max(1, props.projectCount)}</strong><small>saved projects</small></span><span><strong>{props.versionCount}</strong><small>design checkpoints</small></span><span><strong>{props.projectCompleted ? "Completed" : props.projectApproved ? "Approved" : "Draft"}</strong><small>active design</small></span></div>
+          <div className="process-note"><ShieldCheck size={16} /><span><strong>No Bambu credentials stored</strong><small>Account access and printing remain outside the website.</small></span></div>
+        </section>
+      </div>
+
+      <section className="page-card process-guardrails">
+        <div><span><Box size={18} /></span><strong>Fit first</strong><p>Every supported design shows finished outside dimensions and clearances.</p></div>
+        <div><span><Layers3 size={18} /></span><strong>Plate aware</strong><p>The P1S build volume, nozzle, plate, and multi-part plan stay visible.</p></div>
+        <div><span><Check size={18} /></span><strong>Review before print</strong><p>No automatic printing: Bambu Studio remains the final safety boundary.</p></div>
+      </section>
+    </>
+  );
+}
+
 function SettingsPage(props: DashboardProps) {
   const nozzleNotes: Record<number, string> = {
     0.2: "Fine detail, slower prints, thinner minimum features",
@@ -407,7 +467,7 @@ function SettingsPage(props: DashboardProps) {
             <div><span><Layers3 size={18} /></span><div><strong>Plate awareness</strong><p>Shows the selected surface at review and export.</p></div></div>
             <div><span><ShieldCheck size={18} /></span><div><strong>Human slice review</strong><p>Bambu Studio remains the final authority before printing.</p></div></div>
           </div>
-          <button className="secondary-button setup-handoff-link" onClick={() => props.onNavigate("bridge")}><Link2 size={16} /> Set up Bambu handoff <ChevronRight size={15} /></button>
+          <button className="secondary-button setup-handoff-link" onClick={() => props.onNavigate("process")}><Workflow size={16} /> View print process <ChevronRight size={15} /></button>
         </section>
       </div>
     </>
@@ -512,9 +572,8 @@ export default function Dashboard(props: DashboardProps) {
       {props.page === "overview" && <OverviewPage {...props} />}
       {props.page === "projects" && <ProjectsPage {...props} />}
       {props.page === "library" && <LibraryPage {...props} />}
+      {props.page === "process" && <ProcessPage {...props} />}
       {props.page === "settings" && <SettingsPage {...props} />}
-      {props.page === "bridge" && <BridgePage {...props} />}
-      {props.page === "control" && <ControlTowerPage {...props} />}
     </main>
   );
 }
