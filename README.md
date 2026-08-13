@@ -15,7 +15,7 @@ PrintPath is an open-source, visual workflow for turning an everyday 3D-printing
 - Filterable templates for board games, bathrooms, bedrooms, plants, and everyday objects
 - Prefilled dimensions, materials, part counts, and assembly assumptions for every template
 - Local, pairing-code-protected handoff into Bambu Studio without sharing Bambu credentials
-- Printable generators for an exact-dimension open tray and a two-part, non-standard Gridfinity-pitch drawer strip
+- Printable generators for an exact-dimension open tray and a one-compartment Gridfinity gap tray
 - Multi-part plate, checkpoint, and assembly planning
 - Build-volume, wall-thickness, and clearance checks
 - Automatic local saving
@@ -24,7 +24,7 @@ PrintPath is an open-source, visual workflow for turning an everyday 3D-printing
 
 Most visual previews are intentionally labeled as concepts and do not yet produce printable geometry.
 
-The **Exact-fit open tray** and **Custom drawer grid** workflows are exceptions. PrintPath Bridge can generate their STLs locally and open them in Bambu Studio for human slicing and print review. The drawer workflow can produce a two-module, pitch-aligned organizer for spaces that are narrower than a standard Gridfinity bin; it does not falsely claim standard baseplate compatibility.
+The **Exact-fit open tray** and **Custom drawer grid** workflows are exceptions. PrintPath Bridge can generate their STLs locally and open them in Bambu Studio for human slicing and print review. The drawer workflow can produce one continuous gap-filler compartment beside an existing Gridfinity layout. It rotates long parts diagonally for P1S plate margin and does not falsely claim standard baseplate compatibility.
 
 ## Safe Bambu Studio handoff
 

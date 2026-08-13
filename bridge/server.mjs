@@ -4,11 +4,11 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
-import { createGridfinityPitchStripStls, createOpenTrayStl, slugify } from "./stl.mjs";
+import { createGridfinityGapTrayStl, createOpenTrayStl, slugify } from "./stl.mjs";
 
 const HOST = "127.0.0.1";
 const PORT = Number(process.env.PRINTPATH_BRIDGE_PORT || 32145);
-const VERSION = "0.2.0";
+const VERSION = "0.3.0";
 const MAX_BODY_BYTES = 64 * 1024;
 
 const localDataRoot = process.env.LOCALAPPDATA || join(homedir(), ".printpath");
@@ -106,6 +106,7 @@ function validateProject(project) {
     depth: finiteNumber(project.depth, "Depth", 2, 256),
     height: finiteNumber(project.height, "Height", 2, 256),
     wall: finiteNumber(project.wall, "Wall thickness", 0.4, 20),
+    clearance: finiteNumber(project.clearance ?? 0.3, "Clearance", 0, 5),
     printer: "Bambu Lab P1S",
   };
 }
@@ -139,7 +140,7 @@ async function handleHandoff(request, response, origin) {
 
   const payload = await readJson(request);
   const project = validateProject(payload.project);
-  if (!["open-tray", "gridfinity-pitch-strip"].includes(project.geometryKind)) {
+  if (!["open-tray", "gridfinity-gap-tray", "gridfinity-pitch-strip"].includes(project.geometryKind)) {
     sendJson(response, 422, { ok: false, error: "This design does not have a safe geometry generator yet." }, origin);
     return;
   }
@@ -156,15 +157,10 @@ async function handleHandoff(request, response, origin) {
     writeFileSync(modelPath, createOpenTrayStl(project), "utf8");
     files = [{ type: "model/stl", name: `${slug}.stl`, role: "print" }];
   } else {
-    const generated = createGridfinityPitchStripStls(project);
-    modelPath = join(projectRoot, `${slug}-all-parts.stl`);
-    writeFileSync(modelPath, generated.assembly, "utf8");
-    files = [{ type: "model/stl", name: `${slug}-all-parts.stl`, role: "one-plate layout" }];
-    generated.parts.forEach((part, index) => {
-      const name = `${slug}-part-${String.fromCharCode(97 + index)}.stl`;
-      writeFileSync(join(projectRoot, name), part, "utf8");
-      files.push({ type: "model/stl", name, role: `module ${index + 1}` });
-    });
+    const generated = createGridfinityGapTrayStl(project);
+    modelPath = join(projectRoot, `${slug}-p1s-diagonal.stl`);
+    writeFileSync(modelPath, generated.model, "utf8");
+    files = [{ type: "model/stl", name: `${slug}-p1s-diagonal.stl`, role: "single compartment · 45 degree P1S orientation" }];
     generationPlan = generated.plan;
   }
 
@@ -211,7 +207,7 @@ const server = createServer(async (request, response) => {
       service: "PrintPath Bridge",
       version: VERSION,
       paired: request.headers["x-printpath-token"] === pairingToken,
-      capabilities: ["open-tray-stl", "gridfinity-pitch-strip-stl", "multi-part-one-plate-layout", "bambu-studio-handoff"],
+      capabilities: ["open-tray-stl", "gridfinity-gap-tray-stl", "diagonal-p1s-layout", "bambu-studio-handoff"],
       bambuStudio: {
         detected: Boolean(findBambuStudio()),
         launchMethod: findBambuStudio() ? "direct" : "windows-file-association",

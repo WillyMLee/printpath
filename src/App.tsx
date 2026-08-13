@@ -49,8 +49,8 @@ type ProjectSpec = {
   partCount: number;
   assemblyMethod: string;
   designSystem: "custom" | "gridfinity";
-  gridfinityMode?: "full-grid" | "fractional" | "pitch-strip";
-  geometryKind: "brief-only" | "open-tray" | "gridfinity-pitch-strip";
+  gridfinityMode?: "full-grid" | "fractional" | "gap-tray";
+  geometryKind: "brief-only" | "open-tray" | "gridfinity-gap-tray";
 };
 
 type NumberKey = "width" | "depth" | "height" | "wall" | "clearance" | "cornerRadius" | "nozzle" | "layerHeight" | "partCount";
@@ -103,7 +103,18 @@ function clamp(value: number, min: number, max: number) {
 function loadProject(): ProjectSpec {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? { ...starterSpec, ...JSON.parse(stored), printer: "Bambu Lab P1S" } : starterSpec;
+    if (!stored) return starterSpec;
+    const parsed = JSON.parse(stored) as Partial<Omit<ProjectSpec, "geometryKind" | "gridfinityMode">> & { geometryKind?: string; gridfinityMode?: string };
+    const migrated = parsed.geometryKind === "gridfinity-pitch-strip" ? {
+      ...parsed,
+      name: "One-compartment Gridfinity gap tray",
+      description: `One continuous custom compartment for the measured gap beside the existing Gridfinity layout. It prints diagonally as a single P1S part and is not a standard baseplate-compatible bin.`,
+      partCount: 1,
+      assemblyMethod: "Single print",
+      gridfinityMode: "gap-tray",
+      geometryKind: "gridfinity-gap-tray",
+    } : parsed;
+    return { ...starterSpec, ...migrated, printer: "Bambu Lab P1S" } as ProjectSpec;
   } catch {
     return starterSpec;
   }
@@ -112,13 +123,13 @@ function loadProject(): ProjectSpec {
 function PartPreview({ spec }: { spec: ProjectSpec }) {
   const [flipped, setFlipped] = useState(false);
 
-  if (spec.geometryKind === "gridfinity-pitch-strip") {
+  if (spec.geometryKind === "gridfinity-gap-tray") {
     return (
       <div className="preview-shell grid-strip-preview">
         <div className="preview-toolbar">
           <div>
-            <span className="eyebrow">Printable set</span>
-            <strong>Two-module drawer strip</strong>
+            <span className="eyebrow">Printable part</span>
+            <strong>One continuous compartment</strong>
           </div>
           <button className="icon-button" onClick={() => setFlipped((value) => !value)} aria-label="Rotate preview">
             <RotateCcw size={17} />
@@ -126,34 +137,28 @@ function PartPreview({ spec }: { spec: ProjectSpec }) {
         </div>
         <div className="preview-canvas">
           <div className="grid-floor" />
-          <svg viewBox="0 0 680 430" role="img" aria-label="Two printable 126 by 40 by 50 millimeter organizer modules">
+          <svg viewBox="0 0 680 430" role="img" aria-label={`One printable ${Math.max(spec.width, spec.depth)} by ${Math.min(spec.width, spec.depth)} by ${spec.height} millimeter drawer compartment`}>
             <defs>
               <linearGradient id="stripTop" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stopColor="#78d4b7" /><stop offset="1" stopColor="#c9f2e5" /></linearGradient>
               <linearGradient id="stripSide" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#43a487" /><stop offset="1" stopColor="#27725e" /></linearGradient>
               <filter id="stripShadow" x="-30%" y="-40%" width="160%" height="190%"><feDropShadow dx="0" dy="14" stdDeviation="12" floodColor="#163a32" floodOpacity="0.2" /></filter>
             </defs>
-            <ellipse cx="340" cy="335" rx="270" ry="27" fill="#24483e" opacity="0.1" />
+            <ellipse cx="340" cy="329" rx="260" ry="27" fill="#24483e" opacity="0.1" />
             <g className="strip-part-group" style={{ transformOrigin: "340px 225px", transform: flipped ? "scaleX(-1)" : "scaleX(1)" }} filter="url(#stripShadow)">
-              {[70, 370].map((partX, partIndex) => (
-                <g key={partX}>
-                  <path d={`M ${partX} 167 L ${partX + 27} 148 L ${partX + 247} 148 L ${partX + 220} 167 Z`} fill="url(#stripTop)" stroke="#277b65" strokeWidth="2" />
-                  <path d={`M ${partX + 220} 167 L ${partX + 247} 148 L ${partX + 247} 253 L ${partX + 220} 272 Z`} fill="url(#stripSide)" stroke="#236b59" strokeWidth="2" />
-                  <rect x={partX} y="167" width="220" height="105" fill="#61c3a4" stroke="#277b65" strokeWidth="2" />
-                  {[0, 1, 2].map((cell) => (
-                    <path key={cell} d={`M ${partX + 10 + cell * 70} 175 L ${partX + 30 + cell * 70} 161 L ${partX + 75 + cell * 70} 161 L ${partX + 61 + cell * 70} 175 L ${partX + 61 + cell * 70} 254 L ${partX + 10 + cell * 70} 254 Z`} fill="#eff8f3" stroke="#318d73" strokeWidth="2" />
-                  ))}
-                  <text x={partX + 110} y="302" textAnchor="middle" className="strip-part-label">PART {partIndex === 0 ? "A" : "B"} · 3 PITCHES</text>
-                </g>
-              ))}
+              <path d="M 75 178 L 112 151 L 605 151 L 568 178 Z" fill="url(#stripTop)" stroke="#277b65" strokeWidth="2" />
+              <path d="M 568 178 L 605 151 L 605 253 L 568 280 Z" fill="url(#stripSide)" stroke="#236b59" strokeWidth="2" />
+              <rect x="75" y="178" width="493" height="102" fill="#61c3a4" stroke="#277b65" strokeWidth="2" />
+              <path d="M 91 188 L 120 167 L 581 167 L 552 188 L 552 260 L 91 260 Z" fill="#eff8f3" stroke="#318d73" strokeWidth="2" />
+              <text x="340" y="307" textAnchor="middle" className="strip-part-label">ONE OPEN COMPARTMENT · SINGLE PART</text>
             </g>
             <g className="strip-dimension">
-              <line x1="70" y1="332" x2="290" y2="332" /><line x1="70" y1="324" x2="70" y2="340" /><line x1="290" y1="324" x2="290" y2="340" />
-              <rect x="137" y="318" width="86" height="28" rx="14" /><text x="180" y="337">126 mm</text>
-              <line x1="320" y1="167" x2="320" y2="272" /><line x1="312" y1="167" x2="328" y2="167" /><line x1="312" y1="272" x2="328" y2="272" />
-              <rect x="306" y="206" width="68" height="28" rx="14" /><text x="340" y="225">50 mm</text>
+              <line x1="75" y1="338" x2="568" y2="338" /><line x1="75" y1="330" x2="75" y2="346" /><line x1="568" y1="330" x2="568" y2="346" />
+              <rect x="278" y="324" width="86" height="28" rx="14" /><text x="321" y="343">{Math.max(spec.width, spec.depth)} mm</text>
+              <line x1="625" y1="178" x2="625" y2="280" /><line x1="617" y1="178" x2="633" y2="178" /><line x1="617" y1="280" x2="633" y2="280" />
+              <rect x="591" y="215" width="68" height="28" rx="14" /><text x="625" y="234">{spec.height} mm</text>
             </g>
           </svg>
-          <span className="preview-note">2 × 126 × 40 × 50 mm · arranged on one P1S plate</span>
+          <span className="preview-note">Printed {Number((Math.max(spec.width, spec.depth) - spec.clearance * 2).toFixed(1))} × {Number((Math.min(spec.width, spec.depth) - spec.clearance * 2).toFixed(1))} mm · 45° on one P1S plate</span>
         </div>
       </div>
     );
@@ -318,18 +323,20 @@ export default function App() {
     const isGridfinity = spec.designSystem === "gridfinity";
     const shortestGridSide = Math.min(spec.width, spec.depth);
     const longGridSide = Math.max(spec.width, spec.depth);
-    const stripCells = Math.floor(longGridSide / 42);
-    const stripModuleLength = (longGridSide > 250 ? Math.ceil(stripCells / 2) : stripCells) * 42;
-    const printableLongestSide = spec.geometryKind === "gridfinity-pitch-strip" ? Math.max(stripModuleLength, shortestGridSide) : longGridSide;
+    const isGapTray = spec.geometryKind === "gridfinity-gap-tray";
+    const printedLongSide = longGridSide - spec.clearance * 2;
+    const printedShortSide = shortestGridSide - spec.clearance * 2;
+    const diagonalPlateSide = Number(((printedLongSide + printedShortSide) / Math.sqrt(2)).toFixed(1));
+    const printableLongestSide = isGapTray ? diagonalPlateSide : longGridSide;
     const baseChecks = [
       {
         label: "Build volume",
-        detail: spec.geometryKind === "gridfinity-pitch-strip" ? `${stripModuleLength} × ${shortestGridSide} × ${spec.height} mm per module · P1S` : `${P1S_BUILD_VOLUME[0]} × ${P1S_BUILD_VOLUME[1]} × ${P1S_BUILD_VOLUME[2]} mm · P1S`,
-        ok: printableLongestSide <= P1S_BUILD_VOLUME[0] && shortestGridSide <= P1S_BUILD_VOLUME[1] && spec.height <= P1S_BUILD_VOLUME[2],
+        detail: isGapTray ? `${diagonalPlateSide} × ${diagonalPlateSide} × ${spec.height} mm at 45° · P1S` : `${P1S_BUILD_VOLUME[0]} × ${P1S_BUILD_VOLUME[1]} × ${P1S_BUILD_VOLUME[2]} mm · P1S`,
+        ok: printableLongestSide <= P1S_BUILD_VOLUME[0] && (isGapTray || shortestGridSide <= P1S_BUILD_VOLUME[1]) && spec.height <= P1S_BUILD_VOLUME[2],
       },
       {
         label: "Plate margin",
-        detail: `${printableLongestSide} mm longest printed side · 6 mm breathing room recommended`,
+        detail: isGapTray ? `${diagonalPlateSide} mm diagonal footprint · over ${Number((256 - diagonalPlateSide).toFixed(1))} mm edge room` : `${printableLongestSide} mm longest printed side · 6 mm breathing room recommended`,
         ok: printableLongestSide <= 250,
       },
       {
@@ -338,8 +345,8 @@ export default function App() {
         ok: spec.wall >= spec.nozzle * 2,
       },
       {
-        label: "Fit allowance",
-        detail: `${spec.clearance} mm clearance`,
+        label: isGapTray ? "Drawer fit" : "Fit allowance",
+        detail: isGapTray ? `${Number(printedLongSide.toFixed(1))} × ${Number(printedShortSide.toFixed(1))} mm printed outside · ${spec.clearance} mm per side` : `${spec.clearance} mm clearance`,
         ok: spec.clearance >= 0.2,
       },
       {
@@ -348,7 +355,7 @@ export default function App() {
         ok: Boolean(spec.plate) && [0.2, 0.4, 0.6, 0.8].includes(spec.nozzle),
       },
     ];
-    const relevantChecks = spec.geometryKind !== "brief-only" ? baseChecks.filter((check) => check.label !== "Fit allowance") : baseChecks;
+    const relevantChecks = spec.geometryKind === "open-tray" ? baseChecks.filter((check) => check.label !== "Fit allowance") : baseChecks;
     if (spec.partCount > 1) {
       relevantChecks.push({
         label: "Assembly plan",
@@ -358,9 +365,9 @@ export default function App() {
     }
     if (isGridfinity && spec.gridfinityMode !== "fractional") {
       relevantChecks.push({
-        label: spec.geometryKind === "gridfinity-pitch-strip" ? "Non-standard Gridfinity strategy" : "Gridfinity bin footprint",
-        detail: spec.geometryKind === "gridfinity-pitch-strip" ? `${shortestGridSide} mm custom width · 42 mm pitch aligned, not baseplate compatible` : shortestGridSide >= 41.5 ? `${shortestGridSide} mm shortest side · a 41.5 mm standard bin fits` : `${shortestGridSide} mm shortest side · needs at least 41.5 mm`,
-        ok: spec.geometryKind === "gridfinity-pitch-strip" || shortestGridSide >= 41.5,
+        label: isGapTray ? "Gridfinity gap strategy" : "Gridfinity bin footprint",
+        detail: isGapTray ? `One custom compartment beside the grid · not a baseplate part` : shortestGridSide >= 41.5 ? `${shortestGridSide} mm shortest side · a 41.5 mm standard bin fits` : `${shortestGridSide} mm shortest side · needs at least 41.5 mm`,
+        ok: isGapTray || shortestGridSide >= 41.5,
       });
     }
     return relevantChecks;
@@ -375,12 +382,11 @@ export default function App() {
     const widthRemainder = Number((spec.width - columns * pitch).toFixed(1));
     const depthRemainder = Number((spec.depth - rows * pitch).toFixed(1));
     const fullGridFits = columns > 0 && rows > 0 && Math.min(spec.width, spec.depth) >= standardBinFootprint;
-    const splitRecommended = Math.max(spec.width, spec.depth) > 250;
     const longAxisCells = spec.width >= spec.depth ? columns : rows;
-    const splitModuleLength = Math.ceil(longAxisCells / 2) * pitch;
-    const canGenerateNarrowStrip = Math.min(spec.width, spec.depth) < standardBinFootprint && Math.min(spec.width, spec.depth) >= spec.wall * 2 + 8 && longAxisCells >= 2;
-    return { pitch, standardBinFootprint, columns, rows, widthRemainder, depthRemainder, fullGridFits, splitRecommended, splitModuleLength, canGenerateNarrowStrip };
-  }, [spec.designSystem, spec.gridfinityMode, spec.width, spec.depth, spec.wall]);
+    const diagonalPlateSide = Number(((Math.max(spec.width, spec.depth) + Math.min(spec.width, spec.depth) - spec.clearance * 4) / Math.sqrt(2)).toFixed(1));
+    const canGenerateGapTray = Math.min(spec.width, spec.depth) < standardBinFootprint && Math.min(spec.width, spec.depth) >= spec.wall * 2 + 1 && longAxisCells >= 1 && diagonalPlateSide <= 250;
+    return { pitch, standardBinFootprint, columns, rows, widthRemainder, depthRemainder, fullGridFits, diagonalPlateSide, canGenerateGapTray };
+  }, [spec.designSystem, spec.gridfinityMode, spec.width, spec.depth, spec.wall, spec.clearance]);
 
   const readyCount = checks.filter((check) => check.ok).length;
   const hasPrintableGeometry = spec.geometryKind !== "brief-only";
@@ -396,17 +402,17 @@ export default function App() {
     if (Number.isFinite(value)) updateField(key, value);
   }
 
-  function enableGridfinityPitchStrip() {
-    if (!gridfinityPlan?.canGenerateNarrowStrip) return;
+  function enableGridfinityGapTray() {
+    if (!gridfinityPlan?.canGenerateGapTray) return;
     setSpec((current) => ({
       ...current,
-      name: "Non-standard Gridfinity-pitch drawer strip",
-      description: `A custom ${Math.min(current.width, current.depth)} mm-wide organizer split into ${gridfinityPlan.splitRecommended ? "two" : "one"} printable module${gridfinityPlan.splitRecommended ? "s" : ""}, with compartments aligned to the 42 mm Gridfinity pitch. It intentionally does not claim standard baseplate compatibility.`,
+      name: "One-compartment Gridfinity gap tray",
+      description: `One continuous ${Math.max(current.width, current.depth)} × ${Math.min(current.width, current.depth)} × ${current.height} mm compartment for the narrow zone beside the existing Gridfinity layout. It prints diagonally as one P1S part and intentionally does not claim standard baseplate compatibility.`,
       cornerRadius: 0,
-      partCount: gridfinityPlan.splitRecommended ? 2 : 1,
-      assemblyMethod: gridfinityPlan.splitRecommended ? "Placed end to end" : "Single print",
-      gridfinityMode: "pitch-strip",
-      geometryKind: "gridfinity-pitch-strip",
+      partCount: 1,
+      assemblyMethod: "Single print",
+      gridfinityMode: "gap-tray",
+      geometryKind: "gridfinity-gap-tray",
     }));
     setHandoffState({ status: "idle" });
   }
@@ -694,7 +700,7 @@ export default function App() {
       {gridfinityPlan && (
         <div className={`grid-measure-note ${gridfinityPlan.fullGridFits ? "fits" : "does-not-fit"}`}>
           <Grid3X3 size={18} />
-          <div><strong>{gridfinityPlan.fullGridFits ? "A standard Gridfinity bin fits." : "A standard 41.5 mm bin footprint does not fit across the short side."}</strong><p>The system still uses a 42 mm pitch. PrintPath will show the exact count, leftover space, and a printable non-standard option at Review.</p></div>
+          <div><strong>{gridfinityPlan.fullGridFits ? "A standard Gridfinity bin fits." : "A standard 41.5 mm bin footprint does not fit across the short side."}</strong><p>{spec.geometryKind === "gridfinity-gap-tray" ? "This measured zone stays independent from the grid and becomes one continuous compartment with drawer-fit clearance." : "PrintPath will show the exact grid count, leftover space, and a printable custom-gap option at Review."}</p></div>
         </div>
       )}
       <div className="form-divider" />
@@ -775,32 +781,38 @@ export default function App() {
       </div>
 
       {gridfinityPlan && (
-        <section className={`grid-fit-review ${gridfinityPlan.fullGridFits ? "fits" : "does-not-fit"} ${spec.geometryKind === "gridfinity-pitch-strip" ? "selected" : ""}`}>
+        <section className={`grid-fit-review ${gridfinityPlan.fullGridFits ? "fits" : "does-not-fit"} ${spec.geometryKind === "gridfinity-gap-tray" ? "selected" : ""}`}>
           <div className="grid-fit-heading">
             <span><Grid3X3 size={19} /></span>
-            <div><small>42 MM GRID CHECK</small><strong>{gridfinityPlan.fullGridFits ? "Standard cells fit this footprint" : "This strip is too narrow for a standard bin"}</strong></div>
-            <em>{spec.geometryKind === "gridfinity-pitch-strip" ? "Printable plan" : gridfinityPlan.fullGridFits ? "Compatible" : "Adjust plan"}</em>
+            <div><small>{spec.geometryKind === "gridfinity-gap-tray" ? "GRIDFINITY GAP PLAN" : "42 MM GRID CHECK"}</small><strong>{spec.geometryKind === "gridfinity-gap-tray" ? "One custom zone beside the existing grid" : gridfinityPlan.fullGridFits ? "Standard cells fit this footprint" : "This strip is too narrow for a standard bin"}</strong></div>
+            <em>{spec.geometryKind === "gridfinity-gap-tray" ? "Printable plan" : gridfinityPlan.fullGridFits ? "Compatible" : "Adjust plan"}</em>
           </div>
           <div className="grid-fit-stats">
-            <span><small>Along {spec.width} mm</small><strong>{gridfinityPlan.columns} cells</strong><em>{gridfinityPlan.columns * gridfinityPlan.pitch} mm used</em></span>
-            <span><small>Across {spec.depth} mm</small><strong>{gridfinityPlan.rows} cells</strong><em>{gridfinityPlan.rows * gridfinityPlan.pitch} mm used</em></span>
-            <span><small>Left over</small><strong>{gridfinityPlan.widthRemainder} × {gridfinityPlan.depthRemainder} mm</strong><em>width × depth</em></span>
+            {spec.geometryKind === "gridfinity-gap-tray" ? <>
+              <span><small>Measured zone</small><strong>{spec.width} × {spec.depth} × {spec.height} mm</strong><em>drawer opening</em></span>
+              <span><small>Printed outside</small><strong>{Number((spec.width - spec.clearance * 2).toFixed(1))} × {Number((spec.depth - spec.clearance * 2).toFixed(1))} mm</strong><em>{spec.clearance} mm clearance per side</em></span>
+              <span><small>Usable interior</small><strong>{Number((spec.width - spec.clearance * 2 - spec.wall * 2).toFixed(1))} × {Number((spec.depth - spec.clearance * 2 - spec.wall * 2).toFixed(1))} mm</strong><em>one uninterrupted compartment</em></span>
+            </> : <>
+              <span><small>Along {spec.width} mm</small><strong>{gridfinityPlan.columns} cells</strong><em>{gridfinityPlan.columns * gridfinityPlan.pitch} mm used</em></span>
+              <span><small>Across {spec.depth} mm</small><strong>{gridfinityPlan.rows} cells</strong><em>{gridfinityPlan.rows * gridfinityPlan.pitch} mm used</em></span>
+              <span><small>Left over</small><strong>{gridfinityPlan.widthRemainder} × {gridfinityPlan.depthRemainder} mm</strong><em>width × depth</em></span>
+            </>}
           </div>
           <p className="grid-fit-guidance">
             {gridfinityPlan.fullGridFits
               ? `Center the full cells and distribute the ${gridfinityPlan.widthRemainder} mm × ${gridfinityPlan.depthRemainder} mm remainder as intentional edge space.`
-              : `${Math.min(spec.width, spec.depth)} mm is ${Number((gridfinityPlan.standardBinFootprint - Math.min(spec.width, spec.depth)).toFixed(1))} mm narrower than a standard 41.5 mm bin footprint. This design keeps the 42 mm compartment rhythm without claiming standard baseplate compatibility.`}
-            {gridfinityPlan.splitRecommended ? ` The ${Math.max(spec.width, spec.depth)} mm side also leaves almost no P1S plate margin, so use two ${gridfinityPlan.splitModuleLength} mm modules instead of one long print.` : ""}
+              : `${Math.min(spec.width, spec.depth)} mm is ${Number((gridfinityPlan.standardBinFootprint - Math.min(spec.width, spec.depth)).toFixed(1))} mm narrower than a standard 41.5 mm bin footprint. Treat this measured zone as one custom gap-filler compartment beside the existing grid. Rotated 45°, its plate footprint is approximately ${gridfinityPlan.diagonalPlateSide} × ${gridfinityPlan.diagonalPlateSide} mm.`}
           </p>
-          {gridfinityPlan.canGenerateNarrowStrip && spec.geometryKind !== "gridfinity-pitch-strip" && (
-            <button className="grid-strip-action" type="button" onClick={enableGridfinityPitchStrip}><Grid3X3 size={17} /><span><strong>Build two printable modules</strong><small>2 × {gridfinityPlan.splitModuleLength} × {Math.min(spec.width, spec.depth)} × {spec.height} mm · one P1S plate</small></span><ChevronRight size={17} /></button>
+          {gridfinityPlan.canGenerateGapTray && spec.geometryKind !== "gridfinity-gap-tray" && (
+            <button className="grid-strip-action" type="button" onClick={enableGridfinityGapTray}><Grid3X3 size={17} /><span><strong>Build one continuous compartment</strong><small>Fits the {Math.max(spec.width, spec.depth)} × {Math.min(spec.width, spec.depth)} × {spec.height} mm zone · one diagonal P1S part</small></span><ChevronRight size={17} /></button>
           )}
-          {spec.geometryKind === "gridfinity-pitch-strip" && <div className="grid-strip-selected"><CircleCheck size={16} /><span>Two-module printable geometry selected</span></div>}
+          {spec.geometryKind === "gridfinity-gap-tray" && <div className="grid-strip-selected"><CircleCheck size={16} /><span>One-compartment printable geometry selected</span></div>}
         </section>
       )}
 
       <dl className="spec-list">
         <div><dt>Envelope</dt><dd>{spec.width} × {spec.depth} × {spec.height} mm</dd></div>
+        {spec.geometryKind === "gridfinity-gap-tray" && <div><dt>Printed outside</dt><dd>{Number((spec.width - spec.clearance * 2).toFixed(1))} × {Number((spec.depth - spec.clearance * 2).toFixed(1))} × {spec.height} mm</dd></div>}
         <div><dt>Construction</dt><dd>{spec.wall} mm walls · {spec.cornerRadius} mm corners</dd></div>
         <div><dt>Print profile</dt><dd>P1S · {spec.nozzle} mm · {spec.plate}</dd></div>
         <div><dt>Part plan</dt><dd>{spec.partCount} {spec.partCount === 1 ? "part" : "parts"} · {spec.assemblyMethod}</dd></div>
@@ -830,10 +842,10 @@ export default function App() {
           <div className={`studio-availability ${bridgeState.bambuStudioDetected ? "detected" : "not-detected"}`}><span /><p>{bridgeState.bambuStudioDetected ? "Bambu Studio detected on this computer." : "Bambu Studio was not detected. Restart the helper after installing it, or choose Bambu Studio if Windows asks."}</p></div>
         )}
         <div className="geometry-readiness supported">
-          <div><strong>{spec.geometryKind === "gridfinity-pitch-strip" ? "Two printable modules ready" : "Exact tray geometry available"}</strong><p>{spec.geometryKind === "gridfinity-pitch-strip" ? "Creates part A, part B, and one all-parts STL arranged for a single P1S plate." : "Creates a square-corner STL from these outer dimensions and wall thickness."}</p></div>
+          <div><strong>{spec.geometryKind === "gridfinity-gap-tray" ? "One continuous compartment ready" : "Exact tray geometry available"}</strong><p>{spec.geometryKind === "gridfinity-gap-tray" ? "Creates one STL already rotated 45° for a safe single-part P1S plate layout." : "Creates a square-corner STL from these outer dimensions and wall thickness."}</p></div>
         </div>
         <button className="primary-button large" type="button" disabled={!bridgeState.paired || !hasPrintableGeometry || readyCount !== checks.length || handoffState.status === "sending"} onClick={() => void handoffToBambu()}>
-          <ExternalLink size={18} /> {handoffState.status === "sending" ? "Creating local model…" : spec.geometryKind === "gridfinity-pitch-strip" ? "Create parts and open one P1S plate" : "Create STL and open in Bambu Studio"}
+          <ExternalLink size={18} /> {handoffState.status === "sending" ? "Creating local model…" : spec.geometryKind === "gridfinity-gap-tray" ? "Create one compartment and open in Bambu Studio" : "Create STL and open in Bambu Studio"}
         </button>
         {handoffState.message && <p className={`handoff-message ${handoffState.status}`}>{handoffState.message}</p>}
       </section> : (

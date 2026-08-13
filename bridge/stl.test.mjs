@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createGridfinityPitchStripStls, createOpenTrayStl, slugify } from "./stl.mjs";
+import { createGridfinityGapTrayStl, createOpenTrayStl, slugify } from "./stl.mjs";
 
 function stlVertices(stl) {
   return [...stl.matchAll(/vertex\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)/g)].map((match) => match.slice(1).map(Number));
@@ -40,24 +40,26 @@ test("rejects a tray without usable interior space", () => {
   );
 });
 
-test("creates two watertight 126 x 40 x 50 mm Gridfinity-pitch strip modules", () => {
-  const result = createGridfinityPitchStripStls({ width: 255, depth: 40, height: 50, wall: 2.4 });
-  assert.deepEqual(result.plan.partLengths, [126, 126]);
-  assert.equal(result.plan.usedLength, 252);
-  assert.equal(result.plan.leftoverLength, 3);
-  assert.equal(result.parts.length, 2);
-  for (const part of result.parts) {
-    assert.deepEqual(stlBounds(part), [[0, 126], [0, 40], [0, 50]]);
-    assertWatertight(part);
-  }
-  assert.deepEqual(stlBounds(result.assembly), [[0, 126], [0, 90], [0, 50]]);
-  assertWatertight(result.assembly);
+test("creates one watertight gap tray with fit clearance and a diagonal P1S orientation", () => {
+  const result = createGridfinityGapTrayStl({ width: 255, depth: 40, height: 50, wall: 2.4, clearance: 0.3 });
+  assert.equal(result.plan.compartmentCount, 1);
+  assert.equal(result.plan.partCount, 1);
+  assert.deepEqual(result.plan.measuredEnvelope, { length: 255, width: 40, height: 50 });
+  assert.deepEqual(result.plan.outerDimensions, { length: 254.4, width: 39.4, height: 50 });
+  assert.deepEqual(result.plan.interiorDimensions, { length: 249.6, width: 34.6, height: 47.6 });
+  assert.equal(result.plan.plateRotationDegrees, 45);
+  assert.deepEqual(result.plan.plateBounds, { width: 207.75, depth: 207.75, height: 50 });
+  const bounds = stlBounds(result.model);
+  assert.ok(Math.abs(bounds[0][0]) < 0.000001 && Math.abs(bounds[0][1] - 207.747972) < 0.000001);
+  assert.ok(Math.abs(bounds[1][0]) < 0.000001 && Math.abs(bounds[1][1] - 207.747972) < 0.000001);
+  assert.deepEqual(bounds[2], [0, 50]);
+  assertWatertight(result.model);
 });
 
-test("rejects the narrow-strip generator when a standard Gridfinity bin already fits", () => {
+test("rejects the gap-tray generator when a standard Gridfinity bin already fits", () => {
   assert.throws(
-    () => createGridfinityPitchStripStls({ width: 255, depth: 42, height: 50, wall: 2.4 }),
-    /only for drawer strips narrower/,
+    () => createGridfinityGapTrayStl({ width: 255, depth: 42, height: 50, wall: 2.4 }),
+    /only for a narrow gap/,
   );
 });
 

@@ -25,15 +25,15 @@ If Bambu Studio uses a nonstandard installation folder, set `PRINTPATH_BAMBU_STU
 
 ## Current geometry support
 
-Version 0.2 includes two local, parametric generators:
+Version 0.3 includes two local, parametric generators:
 
 - `open-tray` creates one exact-dimension, square-corner tray STL.
-- `gridfinity-pitch-strip` creates two watertight organizer modules, their individual STL files, and an all-parts STL arranged for one P1S plate.
+- `gridfinity-gap-tray` creates one watertight, uninterrupted compartment for a narrow leftover zone beside an existing Gridfinity layout.
 
-For a 255 × 40 × 50 mm drawer space, the strip generator creates two 126 × 40 × 50 mm modules. Each module has three compartments aligned to the 42 mm Gridfinity pitch, so the pair uses 252 mm and leaves 3 mm of drawer clearance.
+For a 255 × 40 × 50 mm drawer space, the gap-tray generator creates one part with one compartment. With the default 0.3 mm-per-side fit allowance, its printed outside is 254.4 × 39.4 × 50 mm and its interior is 249.6 × 34.6 × 47.6 mm with 2.4 mm walls and floor.
 
-The strip is deliberately described as Gridfinity-pitch-aligned, not standard baseplate-compatible. A standard bin footprint is approximately 41.5 mm wide, so it cannot fit inside a measured 40 mm strip.
+The STL is pre-rotated 45 degrees, giving it an approximately 207.75 × 207.75 mm plate footprint instead of placing the long edge against the P1S boundary. It is deliberately described as a custom companion to Gridfinity, not a standard baseplate-compatible bin. A standard bin footprint is approximately 41.5 mm wide, so it cannot fit inside the measured 40 mm zone.
 
 ## What to inspect in Bambu Studio
 
-The bridge opens the all-parts STL. Before printing, confirm that both modules are flat on the plate, the plate and filament profiles match the P1S setup, the sliced preview has continuous walls and floors, and the estimated material is acceptable. The bridge never presses Print.
+The bridge opens the diagonally arranged STL. Before printing, confirm that the part is flat on the plate, its full footprint is inside the printable boundary, the plate and filament profiles match the P1S setup, the sliced preview has continuous walls and floor, and the estimated material is acceptable. The bridge never presses Print.

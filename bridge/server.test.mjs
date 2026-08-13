@@ -16,7 +16,7 @@ async function waitForFile(path, attempts = 100) {
   throw new Error(`Timed out waiting for ${path}`);
 }
 
-test("bridge writes the complete non-standard Gridfinity strip handoff", async () => {
+test("bridge writes the one-compartment Gridfinity gap-tray handoff", async () => {
   const testRoot = mkdtempSync(join(tmpdir(), "printpath-bridge-"));
   const dataRoot = join(testRoot, "data");
   const exportRoot = join(testRoot, "exports");
@@ -42,8 +42,8 @@ test("bridge writes the complete non-standard Gridfinity strip handoff", async (
     await waitForFile(tokenPath);
     const token = readFileSync(tokenPath, "utf8").trim();
     const project = {
-      name: "255mm non-standard Gridfinity drawer strip",
-      description: "Two pitch-aligned modules for a 255 by 40 by 50 millimeter drawer space.",
+      name: "255mm one-compartment Gridfinity gap tray",
+      description: "One continuous compartment for a 255 by 40 by 50 millimeter gap beside an existing Gridfinity layout.",
       width: 255,
       depth: 40,
       height: 50,
@@ -56,11 +56,11 @@ test("bridge writes the complete non-standard Gridfinity strip handoff", async (
       material: "PLA",
       layerHeight: 0.2,
       strength: "Balanced",
-      partCount: 2,
-      assemblyMethod: "Placed end to end",
+      partCount: 1,
+      assemblyMethod: "Single print",
       designSystem: "gridfinity",
-      gridfinityMode: "pitch-strip",
-      geometryKind: "gridfinity-pitch-strip",
+      gridfinityMode: "gap-tray",
+      geometryKind: "gridfinity-gap-tray",
     };
     const response = await fetch(`http://127.0.0.1:${port}/handoff`, {
       method: "POST",
@@ -71,18 +71,18 @@ test("bridge writes the complete non-standard Gridfinity strip handoff", async (
     const result = await response.json();
     assert.equal(result.ok, true);
     assert.equal(result.openedWith, "test mode (saved only)");
-    assert.deepEqual(result.generationPlan.partLengths, [126, 126]);
-    assert.equal(result.generationPlan.usedLength, 252);
-    assert.equal(result.generationPlan.leftoverLength, 3);
-    assert.deepEqual(result.generationPlan.assemblyBounds, { width: 126, depth: 90, height: 50 });
+    assert.equal(result.generationPlan.compartmentCount, 1);
+    assert.equal(result.generationPlan.partCount, 1);
+    assert.equal(result.generationPlan.plateRotationDegrees, 45);
+    assert.deepEqual(result.generationPlan.outerDimensions, { length: 254.3, width: 39.3, height: 50 });
+    assert.deepEqual(result.generationPlan.plateBounds, { width: 207.61, depth: 207.61, height: 50 });
     assert.deepEqual(result.files.map((file) => file.name), [
-      "255mm-non-standard-gridfinity-drawer-strip-all-parts.stl",
-      "255mm-non-standard-gridfinity-drawer-strip-part-a.stl",
-      "255mm-non-standard-gridfinity-drawer-strip-part-b.stl",
+      "255mm-one-compartment-gridfinity-gap-tray-p1s-diagonal.stl",
     ]);
     for (const file of result.files) assert.equal(existsSync(join(result.outputDirectory, file.name)), true);
-    const manifest = JSON.parse(readFileSync(join(result.outputDirectory, "255mm-non-standard-gridfinity-drawer-strip.printpath.json"), "utf8"));
-    assert.equal(manifest.project.geometryKind, "gridfinity-pitch-strip");
+    const manifest = JSON.parse(readFileSync(join(result.outputDirectory, "255mm-one-compartment-gridfinity-gap-tray.printpath.json"), "utf8"));
+    assert.equal(manifest.project.geometryKind, "gridfinity-gap-tray");
+    assert.equal(manifest.generationPlan.compartmentCount, 1);
     assert.equal(manifest.generationPlan.compatibility.standardBaseplateCompatible, false);
   } finally {
     child.kill();

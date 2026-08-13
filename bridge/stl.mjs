@@ -28,7 +28,7 @@ function quad(triangles, a, b, c, d) {
   triangles.push([a, b, c], [a, c, d]);
 }
 
-export function createOpenTrayStl({ width, depth, height, wall }) {
+function createOpenTrayTriangles({ width, depth, height, wall }) {
   const base = Math.min(Math.max(wall, 1.2), height - 0.8);
   if (width <= wall * 2 + 1 || depth <= wall * 2 + 1 || height <= base) {
     throw new Error("The tray dimensions do not leave enough interior space.");
@@ -70,117 +70,70 @@ export function createOpenTrayStl({ width, depth, height, wall }) {
   quad(triangles, d, h, e, a);
   quad(triangles, a, b, c, d);
 
-  return `solid printpath_open_tray\n${triangles.map(([v1, v2, v3]) => facet(v1, v2, v3)).join("\n")}\nendsolid printpath_open_tray\n`;
+  return { triangles, base };
 }
 
-function uniqueSorted(values) {
-  return [...new Set(values.map((value) => Number(value.toFixed(6))))].sort((a, b) => a - b);
-}
-
-function createBoxUnionStl(name, boxes) {
-  const xs = uniqueSorted(boxes.flatMap((box) => [box.x0, box.x1]));
-  const ys = uniqueSorted(boxes.flatMap((box) => [box.y0, box.y1]));
-  const zs = uniqueSorted(boxes.flatMap((box) => [box.z0, box.z1]));
-  const occupied = new Set();
-
-  for (let ix = 0; ix < xs.length - 1; ix += 1) {
-    for (let iy = 0; iy < ys.length - 1; iy += 1) {
-      for (let iz = 0; iz < zs.length - 1; iz += 1) {
-        const x = (xs[ix] + xs[ix + 1]) / 2;
-        const y = (ys[iy] + ys[iy + 1]) / 2;
-        const z = (zs[iz] + zs[iz + 1]) / 2;
-        if (boxes.some((box) => x > box.x0 && x < box.x1 && y > box.y0 && y < box.y1 && z > box.z0 && z < box.z1)) {
-          occupied.add(`${ix},${iy},${iz}`);
-        }
-      }
-    }
-  }
-
-  const triangles = [];
-  const has = (ix, iy, iz) => occupied.has(`${ix},${iy},${iz}`);
-  for (const key of occupied) {
-    const [ix, iy, iz] = key.split(",").map(Number);
-    const [x0, x1] = [xs[ix], xs[ix + 1]];
-    const [y0, y1] = [ys[iy], ys[iy + 1]];
-    const [z0, z1] = [zs[iz], zs[iz + 1]];
-    if (!has(ix - 1, iy, iz)) quad(triangles, [x0, y0, z0], [x0, y0, z1], [x0, y1, z1], [x0, y1, z0]);
-    if (!has(ix + 1, iy, iz)) quad(triangles, [x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]);
-    if (!has(ix, iy - 1, iz)) quad(triangles, [x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]);
-    if (!has(ix, iy + 1, iz)) quad(triangles, [x0, y1, z0], [x0, y1, z1], [x1, y1, z1], [x1, y1, z0]);
-    if (!has(ix, iy, iz - 1)) quad(triangles, [x0, y0, z0], [x0, y1, z0], [x1, y1, z0], [x1, y0, z0]);
-    if (!has(ix, iy, iz + 1)) quad(triangles, [x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]);
-  }
-
+function trianglesToStl(name, triangles) {
   return `solid ${name}\n${triangles.map(([v1, v2, v3]) => facet(v1, v2, v3)).join("\n")}\nendsolid ${name}\n`;
 }
 
-function moduleBoxes({ length, width, height, wall, cells, x = 0, y = 0 }) {
-  const floor = Math.max(2.4, wall);
-  const boxes = [
-    { x0: x, x1: x + length, y0: y, y1: y + width, z0: 0, z1: floor },
-    { x0: x, x1: x + length, y0: y, y1: y + wall, z0: 0, z1: height },
-    { x0: x, x1: x + length, y0: y + width - wall, y1: y + width, z0: 0, z1: height },
-    { x0: x, x1: x + wall, y0: y, y1: y + width, z0: 0, z1: height },
-    { x0: x + length - wall, x1: x + length, y0: y, y1: y + width, z0: 0, z1: height },
-  ];
-  for (let cell = 1; cell < cells; cell += 1) {
-    const divider = x + cell * 42;
-    boxes.push({ x0: divider - wall / 2, x1: divider + wall / 2, y0: y, y1: y + width, z0: 0, z1: height });
-  }
-  return boxes;
+export function createOpenTrayStl(dimensions) {
+  return trianglesToStl("printpath_open_tray", createOpenTrayTriangles(dimensions).triangles);
 }
 
-export function createGridfinityPitchStripStls({ width, depth, height, wall }) {
+export function createGridfinityGapTrayStl({ width, depth, height, wall, clearance = 0.3 }) {
   const longAxis = Math.max(width, depth);
   const shortAxis = Math.min(width, depth);
-  const pitch = 42;
   const standardBinFootprint = 41.5;
-  const cells = Math.floor(longAxis / pitch);
-  if (shortAxis >= standardBinFootprint) throw new Error("This generator is only for drawer strips narrower than a standard Gridfinity bin.");
-  if (shortAxis < wall * 2 + 8 || height <= Math.max(2.4, wall) + 5) throw new Error("The strip dimensions do not leave enough usable interior space.");
-  if (cells < 2) throw new Error("The strip needs room for at least two 42 mm pitches.");
-
-  const moduleCount = longAxis > 250 ? 2 : 1;
-  const firstCells = Math.ceil(cells / moduleCount);
-  const partCellCounts = moduleCount === 1 ? [cells] : [firstCells, cells - firstCells];
-  const partLengths = partCellCounts.map((count) => count * pitch);
-  const partBoxes = partLengths.map((length, index) => moduleBoxes({ length, width: shortAxis, height, wall, cells: partCellCounts[index] }));
-  const assemblyBoxes = partLengths.flatMap((length, index) => moduleBoxes({
-    length,
-    width: shortAxis,
-    height,
-    wall,
-    cells: partCellCounts[index],
-    y: index * (shortAxis + 10),
-  }));
+  if (shortAxis >= standardBinFootprint) throw new Error("This generator is only for a narrow gap beside a standard Gridfinity layout.");
+  const partLength = Number((longAxis - clearance * 2).toFixed(3));
+  const partWidth = Number((shortAxis - clearance * 2).toFixed(3));
+  const { triangles, base } = createOpenTrayTriangles({ width: partLength, depth: partWidth, height, wall });
+  const angleDegrees = 45;
+  const angle = angleDegrees * Math.PI / 180;
+  const cosine = Math.cos(angle);
+  const sine = Math.sin(angle);
+  const rotate = ([x, y, z]) => [x * cosine - y * sine, x * sine + y * cosine, z];
+  const rotated = triangles.map((triangle) => triangle.map(rotate));
+  const allVertices = rotated.flat();
+  const minX = Math.min(...allVertices.map((vertex) => vertex[0]));
+  const minY = Math.min(...allVertices.map((vertex) => vertex[1]));
+  const translate = ([x, y, z]) => [Number((x - minX).toFixed(6)), Number((y - minY).toFixed(6)), z];
+  const plateTriangles = rotated.map((triangle) => triangle.map(translate));
+  const plateSide = Number(((partLength + partWidth) / Math.sqrt(2)).toFixed(2));
+  if (plateSide > 250 || height > 256) throw new Error("The single compartment does not leave a safe P1S plate margin, even when rotated diagonally.");
 
   return {
     plan: {
-      pitch,
       standardBinFootprint,
       requestedLength: longAxis,
       requestedWidth: shortAxis,
-      usedLength: cells * pitch,
-      leftoverLength: Number((longAxis - cells * pitch).toFixed(2)),
-      moduleCount,
-      partCellCounts,
-      partLengths,
-      height,
-      assemblyBounds: {
-        width: Math.max(...partLengths),
-        depth: moduleCount * shortAxis + (moduleCount - 1) * 10,
-        height,
+      fitClearancePerSide: clearance,
+      compartmentCount: 1,
+      partCount: 1,
+      measuredEnvelope: { length: longAxis, width: shortAxis, height },
+      outerDimensions: { length: partLength, width: partWidth, height },
+      interiorDimensions: {
+        length: Number((partLength - wall * 2).toFixed(2)),
+        width: Number((partWidth - wall * 2).toFixed(2)),
+        height: Number((height - base).toFixed(2)),
       },
+      plateRotationDegrees: angleDegrees,
+      height,
+      plateBounds: { width: plateSide, depth: plateSide, height },
       compatibility: {
-        pitchAligned: true,
+        adjacentToGridfinity: true,
+        pitchAligned: false,
         standardBaseplateCompatible: false,
-        note: "42 mm pitch aligned; not compatible with a standard Gridfinity baseplate because the short side is under 41.5 mm",
+        note: "A custom one-compartment gap filler beside the existing Gridfinity layout; not a standard Gridfinity bin or baseplate part.",
       },
     },
-    assembly: createBoxUnionStl("printpath_gridfinity_pitch_strip_all_parts", assemblyBoxes),
-    parts: partBoxes.map((boxes, index) => createBoxUnionStl(`printpath_gridfinity_pitch_strip_part_${index + 1}`, boxes)),
+    model: trianglesToStl("printpath_gridfinity_gap_tray_p1s_diagonal", plateTriangles),
   };
 }
+
+// Keeps projects saved by Bridge 0.2 working while generating the corrected one-compartment design.
+export const createGridfinityPitchStripStls = createGridfinityGapTrayStl;
 
 export function slugify(value) {
   return value
