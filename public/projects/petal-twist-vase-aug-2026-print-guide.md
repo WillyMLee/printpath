@@ -1,10 +1,10 @@
 # Petal Twist Vase — draft print guide
 
-Status: design review  
-Printer: Bambu Lab P1S  
-Nozzle: 0.4 mm  
-Material: PETG  
-Finished size: 122.6 × 122.6 × 245 mm  
+- Status: design review
+- Printer: Bambu Lab P1S
+- Nozzle: 0.4 mm
+- Material: PETG
+- Finished size: 122.6 × 122.6 × 245 mm
 
 ## Why it fits
 
@@ -38,4 +38,3 @@ Mesh validation proves that the digital surface is closed; it cannot guarantee t
 3. If dry, fill it normally and leave it on a fresh towel for 12 hours.
 4. Check the bottom and vertical seam. Do not place it on finished furniture until it passes.
 5. If it seeps, use a removable liner or seal the interior with a coating suitable for the intended use.
-
