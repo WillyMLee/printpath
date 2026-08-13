@@ -5,14 +5,22 @@ from __future__ import annotations
 import argparse
 import math
 import re
+import struct
 from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 
-def load_ascii_stl(path: Path) -> np.ndarray:
-    text = path.read_text(encoding="utf-8")
+def load_stl(path: Path) -> np.ndarray:
+    data = path.read_bytes()
+    if len(data) >= 84:
+        triangle_count = struct.unpack("<I", data[80:84])[0]
+        if len(data) == 84 + triangle_count * 50:
+            record_type = np.dtype([("normal", "<f4", (3,)), ("vertices", "<f4", (3, 3)), ("attribute", "<u2")])
+            records = np.frombuffer(data, dtype=record_type, count=triangle_count, offset=84)
+            return records["vertices"].astype(float)
+    text = data.decode("utf-8")
     vertices = np.array(
         [[float(value) for value in match] for match in re.findall(r"vertex\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)", text)],
         dtype=float,
@@ -54,7 +62,19 @@ def rounded_label(draw: ImageDraw.ImageDraw, box: tuple[int, int, int, int], tex
     draw.text((box[0] + 20, box[1] + 11), text, font=font(20, True), fill=color)
 
 
-def render(stl_path: Path, output_path: Path) -> None:
+def render(
+    stl_path: Path,
+    output_path: Path,
+    *,
+    eyebrow: str = "DRAWER GAP TRAY",
+    title: str = "One uninterrupted compartment",
+    subtitle: str = "Designed for the narrow zone beside an existing Gridfinity layout.",
+    status: str = "ACTUAL STL · APPROVED",
+    profile: str = "P1S · ONE PART",
+    dimensions: str = "254.4 × 39.4 × 49.4 mm",
+    footer: str = "SOFT MATTE PREVIEW  •  AUG 2026",
+    portrait: bool = False,
+) -> None:
     scale_factor = 2
     width, height = 1200 * scale_factor, 675 * scale_factor
     image = Image.new("RGB", (width, height), "#f6f7f1")
@@ -73,12 +93,13 @@ def render(stl_path: Path, output_path: Path) -> None:
 
     shadow = Image.new("RGBA", image.size, (0, 0, 0, 0))
     shadow_draw = ImageDraw.Draw(shadow)
-    shadow_draw.ellipse((255 * scale_factor, 485 * scale_factor, 1050 * scale_factor, 610 * scale_factor), fill=(21, 54, 44, 75))
+    shadow_box = (505, 500, 985, 615) if portrait else (255, 485, 1050, 610)
+    shadow_draw.ellipse(tuple(value * scale_factor for value in shadow_box), fill=(21, 54, 44, 75))
     shadow = shadow.filter(ImageFilter.GaussianBlur(28 * scale_factor))
     image = Image.alpha_composite(image.convert("RGBA"), shadow)
     draw = ImageDraw.Draw(image, "RGBA")
 
-    triangles = load_ascii_stl(stl_path)
+    triangles = load_stl(stl_path)
     centered = triangles - triangles.reshape((-1, 3)).mean(axis=0)
     centered = rotate_z(centered, -17)
     right, up, view = camera_basis(-58, 31)
@@ -88,10 +109,11 @@ def render(stl_path: Path, output_path: Path) -> None:
     projected = np.stack((projected_x, projected_y), axis=-1)
     flat = projected.reshape((-1, 2))
     span = flat.max(axis=0) - flat.min(axis=0)
-    object_scale = min(780 * scale_factor / span[0], 335 * scale_factor / span[1])
+    target_width, target_height = ((470, 390) if portrait else (780, 335))
+    object_scale = min(target_width * scale_factor / span[0], target_height * scale_factor / span[1])
     projected *= object_scale
-    projected[..., 0] += 665 * scale_factor
-    projected[..., 1] = 430 * scale_factor - projected[..., 1]
+    projected[..., 0] += (765 if portrait else 665) * scale_factor
+    projected[..., 1] = (445 if portrait else 430) * scale_factor - projected[..., 1]
 
     edges_a = centered[:, 1] - centered[:, 0]
     edges_b = centered[:, 2] - centered[:, 0]
@@ -128,14 +150,14 @@ def render(stl_path: Path, output_path: Path) -> None:
     draw.line(hull + [hull[0]], fill=(28, 103, 80, 190), width=2 * scale_factor, joint="curve")
 
     # Minimal framing and dimensional truth.
-    draw.text((72 * scale_factor, 60 * scale_factor), "DRAWER GAP TRAY", font=font(22 * scale_factor, True), fill="#2d6e5a")
-    draw.text((72 * scale_factor, 101 * scale_factor), "One uninterrupted compartment", font=font(42 * scale_factor, True), fill="#132d25")
-    draw.text((74 * scale_factor, 158 * scale_factor), "Designed for the narrow zone beside an existing Gridfinity layout.", font=font(21 * scale_factor), fill="#65766f")
-    rounded_label(draw, (72 * scale_factor, 202 * scale_factor, 342 * scale_factor, 254 * scale_factor), "ACTUAL STL · APPROVED", "#ddf4e9", "#236a55")
-    rounded_label(draw, (360 * scale_factor, 202 * scale_factor, 550 * scale_factor, 254 * scale_factor), "P1S · ONE PART", "#e8ece7", "#52635c")
+    draw.text((72 * scale_factor, 60 * scale_factor), eyebrow, font=font(22 * scale_factor, True), fill="#2d6e5a")
+    draw.text((72 * scale_factor, 101 * scale_factor), title, font=font(42 * scale_factor, True), fill="#132d25")
+    draw.text((74 * scale_factor, 158 * scale_factor), subtitle, font=font(21 * scale_factor), fill="#65766f")
+    rounded_label(draw, (72 * scale_factor, 202 * scale_factor, 390 * scale_factor, 254 * scale_factor), status, "#ddf4e9", "#236a55")
+    rounded_label(draw, (408 * scale_factor, 202 * scale_factor, 605 * scale_factor, 254 * scale_factor), profile, "#e8ece7", "#52635c")
     draw.rounded_rectangle((750 * scale_factor, 565 * scale_factor, 1135 * scale_factor, 630 * scale_factor), radius=18 * scale_factor, fill="#ffffffdd", outline="#dfe7e1")
-    draw.text((780 * scale_factor, 580 * scale_factor), "254.4 × 39.4 × 49.4 mm", font=font(24 * scale_factor, True), fill="#18372d")
-    draw.text((72 * scale_factor, 598 * scale_factor), "SOFT MATTE PREVIEW  •  AUG 2026", font=font(18 * scale_factor, True), fill="#71827b")
+    draw.text((780 * scale_factor, 580 * scale_factor), dimensions, font=font(24 * scale_factor, True), fill="#18372d")
+    draw.text((72 * scale_factor, 598 * scale_factor), footer, font=font(18 * scale_factor, True), fill="#71827b")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     image.convert("RGB").resize((1200, 675), Image.Resampling.LANCZOS).save(output_path, quality=94)
@@ -145,5 +167,24 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("stl", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--eyebrow", default="DRAWER GAP TRAY")
+    parser.add_argument("--title", default="One uninterrupted compartment")
+    parser.add_argument("--subtitle", default="Designed for the narrow zone beside an existing Gridfinity layout.")
+    parser.add_argument("--status", default="ACTUAL STL · APPROVED")
+    parser.add_argument("--profile", default="P1S · ONE PART")
+    parser.add_argument("--dimensions", default="254.4 × 39.4 × 49.4 mm")
+    parser.add_argument("--footer", default="SOFT MATTE PREVIEW  •  AUG 2026")
+    parser.add_argument("--portrait", action="store_true")
     args = parser.parse_args()
-    render(args.stl, args.output)
+    render(
+        args.stl,
+        args.output,
+        eyebrow=args.eyebrow,
+        title=args.title,
+        subtitle=args.subtitle,
+        status=args.status,
+        profile=args.profile,
+        dimensions=args.dimensions,
+        footer=args.footer,
+        portrait=args.portrait,
+    )

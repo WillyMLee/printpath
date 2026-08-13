@@ -107,13 +107,14 @@ const projectCards = [
     cover: "/projects/drawer-gap-tray-aug-2026-cover.png",
   },
   {
-    name: "Under-desk headphone hanger",
-    kind: "Single part",
-    status: "In progress",
+    name: "Petal Twist Vase",
+    kind: "Water-capable floral form",
+    status: "Design review",
     statusClass: "progress",
     parts: "1 part · 1 plate",
-    next: "Confirm measurements",
-    confidence: 72,
+    next: "Approve shape + water test",
+    confidence: 86,
+    cover: "/projects/petal-twist-vase-aug-2026-cover.png",
   },
   {
     name: "Board game organizer",
@@ -229,16 +230,16 @@ function OverviewPage(props: DashboardProps) {
       <div className="overview-lower-grid">
         <section className="page-card recent-projects">
           <div className="card-heading-row"><div><span className="page-eyebrow">Your projects</span><h2>Pick up where you left off</h2></div><button className="text-link" onClick={() => props.onNavigate("projects")}>View all <ChevronRight size={15} /></button></div>
+          <button className="recent-project-row" onClick={() => props.onNavigate("projects")}>
+            <span className="project-cover-thumb"><img src="/projects/petal-twist-vase-aug-2026-cover.png" alt="Rendered Petal Twist Vase" /></span>
+            <div><strong>Petal Twist Vase</strong><small>245 mm tall · PETG · one part</small></div>
+            <span className="review-mini">Review draft</span>
+            <ChevronRight size={17} />
+          </button>
           <button className="recent-project-row" onClick={props.onOpenProject}>
             <span className="project-cover-thumb"><img src="/projects/drawer-gap-tray-aug-2026-cover.png" alt="Rendered Drawer Gap Tray" /></span>
             <div><strong>Drawer Gap Tray</strong><small>254.4 × 39.4 × 49.4 mm · one part</small></div>
             <span className="completed-mini"><Check size={12} /> Completed</span>
-            <ChevronRight size={17} />
-          </button>
-          <button className="recent-project-row" onClick={() => props.onUseTemplate("grid-customizer")}>
-            <span className="project-symbol coral"><Grid3X3 size={20} /></span>
-            <div><strong>Custom drawer Gridfinity</strong><small>Popular · measured system</small></div>
-            <span className="recommended-mini">Recommended</span>
             <ChevronRight size={17} />
           </button>
         </section>
@@ -264,14 +265,14 @@ function ProjectsPage(props: DashboardProps) {
         description="Single parts stay simple. Compound projects are broken into plates, checkpoints, and assembly steps."
         action={<button className="primary-button page-action" onClick={props.onNewProject}><Plus size={17} /> New project</button>}
       />
-      <section className="completed-project-feature page-card">
-        <div className="completed-project-cover"><img src="/projects/drawer-gap-tray-aug-2026-cover.png" alt="Isometric render of the approved Drawer Gap Tray STL" /></div>
+      <section className="completed-project-feature design-review-feature page-card">
+        <div className="completed-project-cover"><img src="/projects/petal-twist-vase-aug-2026-cover.png" alt="Isometric render of the Petal Twist Vase draft STL" /></div>
         <div className="completed-project-copy">
-          <span className="completion-kicker"><BadgeCheck size={15} /> Completed design · Aug 2026</span>
-          <h2>Drawer Gap Tray</h2>
-          <p>One uninterrupted compartment for the narrow leftover zone beside the existing Gridfinity layout. The cover is rendered from the approved watertight STL.</p>
-          <div className="completed-project-facts"><span><strong>254.4 × 39.4 × 49.4 mm</strong><small>printed outside</small></span><span><strong>1 part</strong><small>single P1S plate</small></span><span><strong>0.4 mm</strong><small>nozzle profile</small></span></div>
-          <div className="completed-project-actions"><button className="primary-button" onClick={props.onOpenProject}>Open design <ArrowRight size={16} /></button><button className="secondary-button" onClick={() => props.onNavigate("process")}><Smartphone size={16} /> Reprint workflow</button></div>
+          <span className="completion-kicker review"><Flower2 size={15} /> Design draft · Needs your eye</span>
+          <h2>Petal Twist Vase</h2>
+          <p>A single-piece PETG vase with eight soft flutes, a stable bulb-shaped base, and a scalloped petal rim. The mesh is closed; the finished print still requires a leak test before flowers go in.</p>
+          <div className="completed-project-facts"><span><strong>122.6 × 122.6 × 245 mm</strong><small>P1S-safe outside</small></span><span><strong>2.4 mm</strong><small>continuous wall</small></span><span><strong>PETG</strong><small>water-capable material</small></span></div>
+          <div className="completed-project-actions"><a className="primary-button" href="/projects/petal-twist-vase-aug-2026.stl" download><Download size={16} /> Download draft STL</a><a className="secondary-button" href="/projects/petal-twist-vase-aug-2026-print-guide.md" target="_blank" rel="noreferrer"><ShieldCheck size={16} /> Print approach</a></div>
         </div>
       </section>
 
@@ -279,7 +280,7 @@ function ProjectsPage(props: DashboardProps) {
       <div className="project-card-grid">
         {projectCards.map((project, index) => (
           <button className="project-card" key={project.name} onClick={index === 0 ? props.onOpenProject : undefined}>
-            <div className={`project-art project-art-${index + 1}`}>{project.cover ? <img src={project.cover} alt="Drawer Gap Tray cover" /> : <span>{index === 1 ? <Wrench size={28} /> : <Component size={30} />}</span>}<em>{project.kind}</em></div>
+            <div className={`project-art project-art-${index + 1}`}>{project.cover ? <img src={project.cover} alt={`${project.name} cover`} /> : <span>{index === 1 ? <Wrench size={28} /> : <Component size={30} />}</span>}<em>{project.kind}</em></div>
             <div className="project-card-body">
               <div className="project-card-title"><h2>{project.name}</h2><span className={`status-chip ${project.statusClass}`}>{project.status}</span></div>
               <p>{project.parts}</p>

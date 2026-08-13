@@ -26,6 +26,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Project presentation | Actual-STL cover render and completed-project card | Shipped |
 | Information architecture | Maker-focused navigation, room/use template categories, and one unified process page | Shipped |
 | Branding | PrintPath cube favicon for browser tabs and bookmarks | Shipped |
+| Petal Twist vase | 245 mm single-piece PETG draft, actual-STL preview, manifold validation, and downloadable artifact | Design review |
 | Deployment | GitHub workflow and Cloudflare Workers static hosting | Shipped |
 
 ## Next implementation candidates
@@ -89,3 +90,4 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-13:** Use the generated STL as the source for the project cover render.
 - **2026-08-13:** Remove Control Tower and Bambu Handoff from primary navigation; explain both as project memory and print handoff within one process page.
 - **2026-08-13:** Organize the design library by Kitchen, Bathroom, Bedroom, Board Games, Plants, and Desk & Workshop while keeping Gridfinity as a featured system.
+- **2026-08-13:** Keep the water-holding vase seam-free at 245 mm tall; use PETG, a 2.4 mm wall, a 3.2 mm floor, and require a physical leak test.
