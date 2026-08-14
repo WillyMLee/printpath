@@ -299,6 +299,26 @@ function PartPreview({ spec }: { spec: ProjectSpec }) {
     );
   }
 
+  const isSevenWondersOrganizer = /7 wonders duel/i.test(`${spec.name} ${spec.description}`);
+
+  if (isSevenWondersOrganizer) {
+    return (
+      <div className="preview-shell responsive-pipeline-preview seven-wonders-pipeline-preview">
+        <div className="preview-toolbar">
+          <div><span className="eyebrow">Live organizer plan</span><strong>7 Wonders Duel module pipeline</strong></div>
+          <span className="pipeline-preview-status">2 card systems mapped</span>
+        </div>
+        <div className="preview-canvas">
+          <picture>
+            <source media="(max-width: 620px)" srcSet="/projects/seven-wonders-duel-organizer-concept-mobile.svg?v=2" />
+            <img src="/projects/seven-wonders-duel-organizer-concept.svg?v=2" alt="Responsive exploded four-module 7 Wonders Duel organizer and design pipeline" />
+          </picture>
+          <span className="preview-note">Published inputs mapped · 3 physical checks remain</span>
+        </div>
+      </div>
+    );
+  }
+
   const visualWidth = clamp(170 + (spec.width - 50) * 1.15, 165, 315);
   const visualHeight = clamp(94 + (spec.height - 20) * 1.4, 96, 190);
   const visualDepth = clamp(56 + (spec.depth - 30) * 0.7, 50, 98);

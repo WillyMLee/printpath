@@ -351,6 +351,10 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .cozy-pipeline-preview .preview-canvas { background: #eef3ef; }
 .cozy-pipeline-preview .preview-canvas > img { width: 100%; height: 100%; display: block; object-fit: cover; position: relative; z-index: 2; }
 .cozy-preview-status { padding: 7px 10px; border-radius: 999px; color: #2b6857; background: #e3f3eb; font-size: 8px; font-weight: 800; }
+.responsive-pipeline-preview .preview-canvas { background: #f2f3ed; }
+.responsive-pipeline-preview .preview-canvas > picture { width: 100%; height: 100%; display: block; position: relative; z-index: 2; }
+.responsive-pipeline-preview .preview-canvas > picture img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.pipeline-preview-status { padding: 7px 10px; border-radius: 999px; color: #755130; background: #f5eadb; font-size: 8px; font-weight: 800; }
 .grid-floor { position: absolute; inset: 46% -40% -55%; transform: perspective(420px) rotateX(62deg); transform-origin: center top; opacity: .36; background-image: linear-gradient(rgba(53,93,82,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(53,93,82,.12) 1px, transparent 1px); background-size: 27px 27px; mask-image: radial-gradient(ellipse at center top, black 10%, transparent 67%); }
 .part-group { transition: transform .45s cubic-bezier(.2,.8,.2,1); }
 .dimension-markers line { stroke: #899893; stroke-width: 1; stroke-dasharray: 2 3; }
@@ -526,6 +530,8 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .project-card:hover { transform: translateY(-2px); box-shadow: 0 24px 55px rgba(34,51,47,.12); }
 .project-art { height: 168px; position: relative; display: grid; place-items: center; background: linear-gradient(145deg,#edf7f2,#dfece5); }
 .project-art > img { width: 100%; height: 100%; display: block; object-fit: contain; background: #f4f7f3; }
+.project-art > picture { width: 100%; height: 100%; display: block; }
+.project-art > picture img { width: 100%; height: 100%; display: block; object-fit: contain; background: #f4f7f3; }
 .project-art > span { width: 66px; height: 66px; display: grid; place-items: center; border-radius: 18px; color: #2d7f68; background: rgba(255,255,255,.64); border: 1px solid rgba(255,255,255,.8); box-shadow: 0 14px 25px rgba(43,102,84,.12); transform: rotate(-7deg); }
 .project-art em { position: absolute; top: 14px; left: 14px; padding: 7px 9px; border-radius: 999px; background: rgba(255,255,255,.9); color: #52635d; font-size: 9px; font-style: normal; font-weight: 800; }
 .project-art-2 { background: linear-gradient(145deg,#fff1e9,#f4dccc); }
@@ -567,6 +573,10 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .organizer-concept-grid { margin-top: 21px; display: grid; grid-template-columns: minmax(0,.94fr) minmax(420px,1.06fr); gap: 25px; align-items: center; }
 .organizer-concept-art { overflow: hidden; min-height: 385px; border: 1px solid #e0e5df; border-radius: 15px; background: #f4f2e9; }
 .organizer-concept-art img { width: 100%; height: 100%; min-height: 385px; display: block; object-fit: contain; }
+.organizer-concept-art picture { width: 100%; height: 100%; display: block; }
+.organizer-concept-art picture img { width: 100%; height: 100%; display: block; }
+.seven-wonders-organizer .organizer-concept-art { min-height: 0; aspect-ratio: 16 / 9; background: #f2f3ed; }
+.seven-wonders-organizer .organizer-concept-art img { min-height: 0; object-fit: contain; }
 .organizer-concept-copy h3 { margin: 16px 0 8px; font-size: 24px; letter-spacing: -.04em; }
 .organizer-concept-copy > p { margin: 0; color: #667671; font-size: 12px; line-height: 1.6; }
 .organizer-module-grid { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -1065,6 +1075,7 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
   .organizer-concept .card-heading-row { align-items: flex-start; flex-direction: column; }
   .organizer-concept-art { min-height: 0; aspect-ratio: 16 / 9; }
   .organizer-concept-art img { min-height: 0; }
+  .seven-wonders-organizer .organizer-concept-art { aspect-ratio: 4 / 5; }
   .organizer-module-grid, .organizer-gates { grid-template-columns: 1fr; }
   .organizer-gates strong { grid-column: auto; }
   .organizer-start { width: 100%; justify-content: center; }

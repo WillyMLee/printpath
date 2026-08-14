@@ -137,14 +137,15 @@ const projectCards = [
   {
     name: "7 Wonders Duel Organizer",
     kind: "Board game insert",
-    status: "Layout v1",
+    status: "Dimensions mapped",
     statusClass: "progress",
     parts: "4 modules · 2 plates",
     printFacts: { plates: "2 planned", prints: "2", components: "4 modules", material: "Pending CAD", time: "Pending CAD" },
     estimateNote: "Concept layout only · material and time begin after printable geometry exists",
-    next: "Confirm box + sleeve measurements",
-    confidence: 72,
-    cover: "/projects/seven-wonders-duel-organizer-concept.svg",
+    next: "Confirm inside box + sleeve choice",
+    confidence: 76,
+    cover: "/projects/seven-wonders-duel-organizer-concept.svg?v=2",
+    coverMobile: "/projects/seven-wonders-duel-organizer-concept-mobile.svg?v=2",
     filter: "progress" as Exclude<ProjectFilter, "all">,
     artIndex: 3,
     target: "seven-wonders-organizer",
@@ -456,7 +457,7 @@ function ProjectsPage(props: DashboardProps) {
       {filteredProjects.length > 0 ? <div className="project-card-grid">
         {filteredProjects.map((project) => (
           <button className="project-card" key={project.name} onClick={() => project.name === "Drawer Gap Tray" ? props.onOpenProject() : document.getElementById(project.target)?.scrollIntoView({ behavior: "smooth", block: "start" })}>
-            <div className={`project-art project-art-${project.artIndex}`}>{project.cover ? <img src={project.cover} alt={`${project.name} cover`} /> : <span><Component size={30} /></span>}<em>{project.kind}</em></div>
+            <div className={`project-art project-art-${project.artIndex}`}>{project.cover ? ('coverMobile' in project && project.coverMobile ? <picture><source media="(max-width: 520px)" srcSet={project.coverMobile} /><img src={project.cover} alt={`${project.name} cover`} /></picture> : <img src={project.cover} alt={`${project.name} cover`} />) : <span><Component size={30} /></span>}<em>{project.kind}</em></div>
             <div className="project-card-body">
               <div className="project-card-title"><h2>{project.name}</h2><span className={`status-chip ${project.statusClass}`}>{project.status}</span></div>
               <p>{project.parts}</p>
@@ -475,23 +476,23 @@ function ProjectsPage(props: DashboardProps) {
         ))}
       </div> : <div className="project-empty-state"><PackageOpen size={24} /><div><strong>No {projectFilter === "ready" ? "ready-to-print" : projectFilter} projects yet.</strong><p>Projects will appear here as they move through the design and print checks.</p></div></div>}
 
-      <section className="organizer-concept page-card" id="seven-wonders-organizer" aria-labelledby="organizer-title">
-        <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Layout v1</span><h2 id="organizer-title">7 Wonders Duel organizer</h2><p>A concrete four-module reference layout for the base game, with measurements still acting as the final CAD gate.</p></div><span className="research-badge"><Gamepad2 size={14} /> Reference envelope</span></div>
+      <section className="organizer-concept page-card seven-wonders-organizer" id="seven-wonders-organizer" aria-labelledby="organizer-title">
+        <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Layout pipeline</span><h2 id="organizer-title">7 Wonders Duel organizer</h2><p>A four-module base-game plan with published card dimensions mapped and three physical fit checks remaining.</p></div><span className="research-badge"><Gamepad2 size={14} /> Web dimensions mapped</span></div>
         <div className="organizer-concept-grid">
-          <div className="organizer-concept-art"><img src="/projects/seven-wonders-duel-organizer-concept.svg" alt="Four-module organizer concept for 7 Wonders Duel" /></div>
+          <div className="organizer-concept-art"><picture><source media="(max-width: 760px)" srcSet="/projects/seven-wonders-duel-organizer-concept-mobile.svg?v=2" /><img src="/projects/seven-wonders-duel-organizer-concept.svg?v=2" alt="Responsive exploded four-module organizer plan for 7 Wonders Duel" /></picture></div>
           <div className="organizer-concept-copy">
-            <span className="recommendation-tag"><BadgeCheck size={14} /> 196 × 196 × 42 mm reference · P1S · 4 modules</span>
-            <h3>The layout is assigned. Fit is the remaining question.</h3>
-            <p>The 196 mm square reference is split by a 2 mm service gap. All four modules fit on one P1S plate, but two staged plates reduce the cost of a sleeve-clearance mistake.</p>
+            <span className="recommendation-tag"><BadgeCheck size={14} /> 205–208 mm box family · 73 small + 12 Wonder cards</span>
+            <h3>The component map is known. Your copy sets the final fit.</h3>
+            <p>Published outer boxes vary slightly by printing. The current plan keeps a conservative 196 mm prototype envelope and stages the card modules first, so sleeve clearance is approved before the loose-piece plate.</p>
             <div className="organizer-module-grid">
-              <span><CreditCard size={17} /><strong>Age card bank</strong><small>121.5 × 117.5 × 28 mm · two broad wells + dividers</small></span>
-              <span><Gem size={17} /><strong>Wonder cradle</strong><small>72.5 × 117.5 × 28 mm · large cards + thumb ramp</small></span>
+              <span><CreditCard size={17} /><strong>Age card bank</strong><small>73 cards · 44 × 68 mm · Ages I–III + Guilds</small></span>
+              <span><Gem size={17} /><strong>Wonder cradle</strong><small>12 cards · 65 × 100 mm · wide thumb ramp</small></span>
               <span><Coins size={17} /><strong>Coin bank</strong><small>121.5 × 76.5 × 28 mm · three table-ready wells</small></span>
               <span><Gamepad2 size={17} /><strong>Token caddy</strong><small>72.5 × 76.5 × 28 mm · Progress, Military, Conflict</small></span>
             </div>
-            <div className="organizer-gates"><strong>Five checks before STL</strong><span>1. Box width + depth at two heights</span><span>2. Usable height under boards and rules</span><span>3. Thickest deck dimensions + sleeves</span><span>4. Base game or expansion reserve</span><span>5. Flat or vertical storage</span></div>
-            <button className="primary-button organizer-start" onClick={() => props.onStartIdea("A modular 7 Wonders Duel box organizer for the base game with four lift-out zones: three Age decks plus Guild cards, the 12 Wonder cards, a three-value coin bank, and a token caddy for Progress, Military, and Conflict pieces. Confirm inside box dimensions, sleeves, expansions, and vertical storage before CAD.")}>Start measured organizer <ArrowRight size={16} /></button>
-            <div className="organizer-sources"><span>Open:</span><a href="/projects/seven-wonders-duel-organizer-v1-aug-2026.md" target="_blank" rel="noreferrer">Layout packet</a><a href="https://sevenwondersduel.com/" target="_blank" rel="noreferrer">Official contents</a><a href="https://foldedspace.com/download/product/public/7-wonders-duel/file_65158f4e336c5.pdf" target="_blank" rel="noreferrer">Packing reference</a></div>
+            <div className="organizer-gates"><strong>Three physical checks before CAD</strong><span>1. Inside box width, depth, and usable height</span><span>2. Unsleeved or sleeve brand + expansion scope</span><span>3. Board/rule stack thickness + storage orientation</span></div>
+            <button className="primary-button organizer-start" onClick={() => props.onStartIdea("A responsive four-module 7 Wonders Duel organizer for the base game: an Age card bank for 73 cards at 44 × 68 mm, a Wonder cradle for 12 cards at 65 × 100 mm, a three-value coin bank, and a token caddy for Progress, Military, and Conflict pieces. Published outer boxes vary around 205–208 mm square; confirm only the inside box dimensions and usable height, sleeve brand or unsleeved plus expansion scope, and board/rule stack thickness plus storage orientation before CAD.")}>Confirm 7 Wonders fit <ArrowRight size={16} /></button>
+            <div className="organizer-sources"><span>Open:</span><a href="/projects/seven-wonders-duel-organizer-v1-aug-2026.md" target="_blank" rel="noreferrer">Layout packet</a><a href="https://www.asmodee.co.uk/products/asm7du-en01-7-wonders-duel" target="_blank" rel="noreferrer">Box dimensions</a><a href="https://www.rykergames.com/products/7-wonders-duel-card-sleeve-kit" target="_blank" rel="noreferrer">Card dimensions</a><a href="https://sevenwondersduel.com/" target="_blank" rel="noreferrer">Official contents</a></div>
           </div>
         </div>
       </section>

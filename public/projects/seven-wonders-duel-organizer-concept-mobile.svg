@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="900" viewBox="0 0 720 900" role="img" aria-labelledby="title desc">
+  <title id="title">7 Wonders Duel mobile organizer pipeline</title>
+  <desc id="desc">A mobile layout with four large organizer modules and a vertical research-to-slice pipeline.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#faf8f1"/><stop offset="1" stop-color="#e9eee9"/></linearGradient>
+    <filter id="s" x="-40%" y="-40%" width="180%" height="210%"><feDropShadow dx="0" dy="12" stdDeviation="10" flood-color="#253b35" flood-opacity=".17"/></filter>
+    <pattern id="g" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#4c665e" stroke-opacity=".07"/></pattern>
+  </defs>
+  <rect width="720" height="900" rx="28" fill="url(#bg)"/><rect y="160" width="720" height="590" fill="url(#g)"/>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="42" y="50" fill="#75603f" font-size="12" font-weight="800" letter-spacing="2">LAYOUT PIPELINE · CONCEPT 02</text>
+    <text x="42" y="88" fill="#1e2e29" font-size="28" font-weight="800">7 Wonders Duel</text>
+    <text x="42" y="118" fill="#68746e" font-size="15">Four modules · two staged plates</text>
+    <g transform="translate(42 137)"><rect width="304" height="54" rx="14" fill="#fff" stroke="#dddccf"/><text x="15" y="21" fill="#858174" font-size="9" font-weight="700">PUBLISHED INPUTS</text><text x="15" y="41" fill="#3f463f" font-size="14" font-weight="800">205–208 mm box family</text></g>
+    <g transform="translate(358 137)"><rect width="320" height="54" rx="14" fill="#f4ead9" stroke="#e8d6b8"/><text x="15" y="21" fill="#826b45" font-size="9" font-weight="700">CARD SYSTEMS</text><text x="15" y="41" fill="#6b4e2d" font-size="14" font-weight="800">73 small · 12 Wonder</text></g>
+
+    <g opacity=".46"><path d="M170 425L360 323l190 100-190 103Z" fill="#fff" stroke="#71857d" stroke-width="2" stroke-dasharray="7 8"/><text x="360" y="428" text-anchor="middle" fill="#74837d" font-size="10" font-weight="800">196 MM PROTOTYPE</text></g>
+    <g stroke="#71857d" stroke-width="2" stroke-dasharray="5 6" fill="none"><path d="M215 310l76 70"/><path d="M505 310l-76 70"/><path d="M215 577l76-70"/><path d="M505 577l-76-70"/></g>
+
+    <g transform="translate(42 225)" filter="url(#s)"><path d="M0 45l78-42 116 61-79 43Z" fill="#e1b86e" stroke="#8e632d" stroke-width="2"/><path d="M0 45v70l115 61v-69Z" fill="#bd8642" stroke="#805929" stroke-width="2"/><path d="M115 107l79-43v69l-79 43Z" fill="#9f6a33" stroke="#704b27" stroke-width="2"/><path d="M38 34l116 61M76 14l116 61" stroke="#8e632d" stroke-width="2"/></g>
+    <g transform="translate(42 205)"><rect width="154" height="29" rx="14.5" fill="#fff" stroke="#e1d5bf"/><text x="13" y="19" fill="#71512d" font-size="10" font-weight="800">01 · AGE BANK</text></g>
+
+    <g transform="translate(484 225)" filter="url(#s)"><path d="M0 45l78-42 116 61-79 43Z" fill="#7fa89f" stroke="#3c6961" stroke-width="2"/><path d="M0 45v70l115 61v-69Z" fill="#568078" stroke="#365e57" stroke-width="2"/><path d="M115 107l79-43v69l-79 43Z" fill="#426d65" stroke="#30534d" stroke-width="2"/><path d="M40 48l58-31 61 32-59 32Z" fill="#f3eee1" stroke="#50766e" stroke-width="2"/></g>
+    <g transform="translate(519 205)"><rect width="159" height="29" rx="14.5" fill="#fff" stroke="#cfdbd7"/><text x="13" y="19" fill="#3e665f" font-size="10" font-weight="800">02 · WONDER</text></g>
+
+    <g transform="translate(42 544)" filter="url(#s)"><path d="M0 45l78-42 116 61-79 43Z" fill="#d28b60" stroke="#8e4f35" stroke-width="2"/><path d="M0 45v70l115 61v-69Z" fill="#b86648" stroke="#82442f" stroke-width="2"/><path d="M115 107l79-43v69l-79 43Z" fill="#99523a" stroke="#733d2d" stroke-width="2"/><g fill="#f2c878" stroke="#966525" stroke-width="2"><ellipse cx="72" cy="57" rx="22" ry="13"/><ellipse cx="119" cy="80" rx="22" ry="13"/><ellipse cx="145" cy="52" rx="22" ry="13"/></g></g>
+    <g transform="translate(42 705)"><rect width="145" height="29" rx="14.5" fill="#fff" stroke="#ead2c6"/><text x="13" y="19" fill="#814932" font-size="10" font-weight="800">03 · COIN BANK</text></g>
+
+    <g transform="translate(484 544)" filter="url(#s)"><path d="M0 45l78-42 116 61-79 43Z" fill="#949dbd" stroke="#59647e" stroke-width="2"/><path d="M0 45v70l115 61v-69Z" fill="#727d9c" stroke="#515c77" stroke-width="2"/><path d="M115 107l79-43v69l-79 43Z" fill="#5d6887" stroke="#46516c" stroke-width="2"/><g fill="#edf0f6" stroke="#59647e" stroke-width="2"><circle cx="71" cy="60" r="17"/><circle cx="116" cy="83" r="17"/><path d="M149 49l20 11-20 12-21-11Z"/></g></g>
+    <g transform="translate(522 705)"><rect width="156" height="29" rx="14.5" fill="#fff" stroke="#d5d8e2"/><text x="13" y="19" fill="#555f79" font-size="10" font-weight="800">04 · TOKEN CADDY</text></g>
+
+    <g transform="translate(42 773)"><rect width="636" height="86" rx="20" fill="#fff" fill-opacity=".94" stroke="#dedfd8"/><path d="M61 34H572" stroke="#dadcd7" stroke-width="4" stroke-linecap="round"/><path d="M61 34H231" stroke="#b7894d" stroke-width="4" stroke-linecap="round"/><g font-size="10" font-weight="800" text-anchor="middle"><circle cx="61" cy="34" r="8" fill="#6f7e76"/><text x="61" y="65" fill="#65746d">RESEARCH</text><circle cx="231" cy="34" r="9" fill="#d59c58" stroke="#fff" stroke-width="3"/><text x="231" y="65" fill="#80582d">DIMENSIONS</text><circle cx="401" cy="34" r="6" fill="#d8dbd6"/><text x="401" y="65" fill="#828b86">CAD</text><circle cx="572" cy="34" r="6" fill="#d8dbd6"/><text x="572" y="65" fill="#828b86">SLICE</text></g></g>
+  </g>
+</svg>
