@@ -349,10 +349,11 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .preview-canvas { height: 410px; overflow: hidden; position: relative; background: radial-gradient(circle at 50% 35%, #ffffff 0%, #f4f6f1 58%, #e9ede6 100%); }
 .preview-canvas svg { width: 100%; height: 100%; position: relative; z-index: 2; }
 .cozy-pipeline-preview .preview-canvas { background: #eef3ef; }
-.cozy-pipeline-preview .preview-canvas > img { width: 100%; height: 100%; display: block; object-fit: cover; position: relative; z-index: 2; }
+.cozy-pipeline-preview .preview-canvas > img { width: 100%; height: 100%; display: block; object-fit: contain; position: relative; z-index: 2; }
 .cozy-preview-status { padding: 7px 10px; border-radius: 999px; color: #2b6857; background: #e3f3eb; font-size: 8px; font-weight: 800; }
 .responsive-pipeline-preview .preview-canvas { background: #f2f3ed; }
-.responsive-pipeline-preview .preview-canvas > picture { width: 100%; height: 100%; display: block; position: relative; z-index: 2; }
+.responsive-pipeline-preview .preview-canvas > picture, .responsive-pipeline-preview .preview-canvas > img { width: 100%; height: 100%; display: block; position: relative; z-index: 2; }
+.responsive-pipeline-preview .preview-canvas > img { object-fit: contain; }
 .responsive-pipeline-preview .preview-canvas > picture img { width: 100%; height: 100%; display: block; object-fit: contain; }
 .pipeline-preview-status { padding: 7px 10px; border-radius: 999px; color: #755130; background: #f5eadb; font-size: 8px; font-weight: 800; }
 .grid-floor { position: absolute; inset: 46% -40% -55%; transform: perspective(420px) rotateX(62deg); transform-origin: center top; opacity: .36; background-image: linear-gradient(rgba(53,93,82,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(53,93,82,.12) 1px, transparent 1px); background-size: 27px 27px; mask-image: radial-gradient(ellipse at center top, black 10%, transparent 67%); }
@@ -573,12 +574,11 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .organizer-concept .card-heading-row p { max-width: 700px; margin: 7px 0 0; color: #6f7e79; font-size: 11.5px; line-height: 1.55; }
 .research-badge { flex: 0 0 auto; padding: 8px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; color: #8b5435; background: #fff0e6; font-size: 9.5px; font-weight: 850; }
 .organizer-concept-grid { margin-top: 21px; display: grid; grid-template-columns: minmax(0,.94fr) minmax(420px,1.06fr); gap: 25px; align-items: center; }
-.organizer-concept-art { overflow: hidden; min-height: 385px; border: 1px solid #e0e5df; border-radius: 15px; background: #f4f2e9; }
-.organizer-concept-art img { width: 100%; height: 100%; min-height: 385px; display: block; object-fit: contain; }
+.organizer-concept-art { overflow: hidden; min-height: 0; aspect-ratio: 16 / 9; border: 1px solid #e0e5df; border-radius: 15px; background: #f4f2e9; }
+.organizer-concept-art img { width: 100%; height: 100%; min-height: 0; display: block; object-fit: contain; }
 .organizer-concept-art picture { width: 100%; height: 100%; display: block; }
 .organizer-concept-art picture img { width: 100%; height: 100%; display: block; }
-.seven-wonders-organizer .organizer-concept-art { min-height: 0; aspect-ratio: 16 / 9; background: #f2f3ed; }
-.seven-wonders-organizer .organizer-concept-art img { min-height: 0; object-fit: contain; }
+.seven-wonders-organizer .organizer-concept-art { background: #f2f3ed; }
 .organizer-concept-copy h3 { margin: 16px 0 8px; font-size: 24px; letter-spacing: -.04em; }
 .organizer-concept-copy > p { margin: 0; color: #667671; font-size: 12px; line-height: 1.6; }
 .organizer-module-grid { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -593,11 +593,8 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .organizer-sources { margin-top: 13px; display: flex; flex-wrap: wrap; gap: 7px 11px; align-items: center; font-size: 8.5px; }
 .organizer-sources span { color: #82908b; font-weight: 750; }
 .organizer-sources a { color: #317a67; text-underline-offset: 2px; }
-.cozy-organizer .organizer-concept-art { min-height: 0; aspect-ratio: 16 / 9; background: #eef3ef; }
-.cozy-organizer .organizer-concept-art img { min-height: 0; height: 100%; object-fit: cover; }
-.magnetic-organizer .organizer-concept-grid { grid-template-columns: minmax(340px,.9fr) minmax(440px,1.1fr); gap: 32px; align-items: start; }
-.magnetic-organizer .organizer-concept-art { min-height: 0; aspect-ratio: 4 / 3; background: #eff5f1; }
-.magnetic-organizer .organizer-concept-art img { min-height: 0; height: 100%; object-fit: cover; }
+.cozy-organizer .organizer-concept-art { background: #eef3ef; }
+.magnetic-organizer .organizer-concept-art { background: #eff5f1; }
 .ready-project-badge { flex: 0 0 auto; padding: 8px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; color: #286f5c; background: #e7f6ef; font-size: 9.5px; font-weight: 850; }
 .project-spec-strip { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border: 1px solid #e0e6e1; border-radius: 11px; background: #fafbf9; }
 .project-spec-strip > span { min-width: 0; padding: 12px; display: grid; grid-template-columns: 22px minmax(0,1fr); align-items: center; }
@@ -994,7 +991,6 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
   .completed-project-copy { padding: 25px 27px; }
   .design-version-grid { grid-template-columns: 1fr; }
   .organizer-concept-grid { grid-template-columns: 1fr; }
-  .magnetic-organizer .organizer-concept-grid { grid-template-columns: 1fr; gap: 24px; }
   .organizer-concept-art, .organizer-concept-art img { min-height: 0; }
   .next-project-grid { grid-template-columns: 1fr; }
   .vase-inspiration-grid { grid-template-columns: 1fr 1fr; }
@@ -1116,7 +1112,6 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
   .organizer-concept .card-heading-row { align-items: flex-start; flex-direction: column; }
   .organizer-concept-art { min-height: 0; aspect-ratio: 16 / 9; }
   .organizer-concept-art img { min-height: 0; }
-  .seven-wonders-organizer .organizer-concept-art { aspect-ratio: 4 / 5; }
   .organizer-module-grid, .organizer-gates { grid-template-columns: 1fr; }
   .organizer-gates strong { grid-column: auto; }
   .organizer-start { width: 100%; justify-content: center; }

@@ -145,7 +145,6 @@ const projectCards = [
     next: "Confirm inside box + sleeve choice",
     confidence: 76,
     cover: "/projects/seven-wonders-duel-organizer-concept.svg?v=2",
-    coverMobile: "/projects/seven-wonders-duel-organizer-concept-mobile.svg?v=2",
     filter: "progress" as Exclude<ProjectFilter, "all">,
     artIndex: 3,
     target: "seven-wonders-organizer",
@@ -445,7 +444,7 @@ function ProjectsPage(props: DashboardProps) {
       {filteredProjects.length > 0 ? <div className="project-card-grid">
         {filteredProjects.map((project) => (
           <button className="project-card" key={project.name} onClick={() => project.name === "Drawer Gap Tray" ? props.onOpenProject() : document.getElementById(project.target)?.scrollIntoView({ behavior: "smooth", block: "start" })}>
-            <div className={`project-art project-art-${project.artIndex}`}>{project.cover ? ('coverMobile' in project && project.coverMobile ? <picture><source media="(max-width: 520px)" srcSet={project.coverMobile} /><img src={project.cover} alt={`${project.name} cover`} /></picture> : <img src={project.cover} alt={`${project.name} cover`} />) : <span><Component size={30} /></span>}<em>{project.kind}</em></div>
+            <div className={`project-art project-art-${project.artIndex}`}>{project.cover ? <img src={project.cover} alt={`${project.name} cover`} /> : <span><Component size={30} /></span>}<em>{project.kind}</em></div>
             <div className="project-card-body">
               <div className="project-card-title"><h2>{project.name}</h2><span className={`status-chip ${project.statusClass}`}>{project.status}</span></div>
               <p>{project.parts}</p>
@@ -467,7 +466,7 @@ function ProjectsPage(props: DashboardProps) {
       <section className="organizer-concept page-card seven-wonders-organizer" id="seven-wonders-organizer" aria-labelledby="organizer-title">
         <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Layout pipeline</span><h2 id="organizer-title">7 Wonders Duel organizer</h2><p>A four-module base-game plan with published card dimensions mapped and three physical fit checks remaining.</p></div><span className="research-badge"><Gamepad2 size={14} /> Web dimensions mapped</span></div>
         <div className="organizer-concept-grid">
-          <div className="organizer-concept-art"><picture><source media="(max-width: 760px)" srcSet="/projects/seven-wonders-duel-organizer-concept-mobile.svg?v=2" /><img src="/projects/seven-wonders-duel-organizer-concept.svg?v=2" alt="Responsive exploded four-module organizer plan for 7 Wonders Duel" /></picture></div>
+          <div className="organizer-concept-art"><img src="/projects/seven-wonders-duel-organizer-concept.svg?v=2" alt="Exploded four-module organizer plan for 7 Wonders Duel" /></div>
           <div className="organizer-concept-copy">
             <span className="recommendation-tag"><BadgeCheck size={14} /> 205–208 mm box family · 73 small + 12 Wonder cards</span>
             <h3>The component map is known. Your copy sets the final fit.</h3>

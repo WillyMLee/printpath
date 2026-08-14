@@ -283,7 +283,7 @@ function PartPreview({ spec }: { spec: ProjectSpec }) {
 
   if (isCozyOrganizer) {
     return (
-      <div className="preview-shell cozy-pipeline-preview">
+      <div className="preview-shell responsive-pipeline-preview cozy-pipeline-preview">
         <div className="preview-toolbar">
           <div>
             <span className="eyebrow">Live organizer plan</span>
@@ -309,10 +309,7 @@ function PartPreview({ spec }: { spec: ProjectSpec }) {
           <span className="pipeline-preview-status">2 card systems mapped</span>
         </div>
         <div className="preview-canvas">
-          <picture>
-            <source media="(max-width: 620px)" srcSet="/projects/seven-wonders-duel-organizer-concept-mobile.svg?v=2" />
-            <img src="/projects/seven-wonders-duel-organizer-concept.svg?v=2" alt="Responsive exploded four-module 7 Wonders Duel organizer and design pipeline" />
-          </picture>
+          <img src="/projects/seven-wonders-duel-organizer-concept.svg?v=2" alt="Exploded four-module 7 Wonders Duel organizer and design pipeline" />
           <span className="preview-note">Published inputs mapped · 3 physical checks remain</span>
         </div>
       </div>

@@ -38,9 +38,10 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Print planning facts | Readable plate, print-job, component, material, and time estimates on every project card | Shipped |
 | Honest concept estimates | Geometry-backed projects show one planning estimate; project cards and workbench metrics show `Pending CAD` until volume exists | Shipped |
 | Cozy source dimensions | Published 305 × 225 × 51 mm box and 181 unsleeved 63 × 88 mm cards mapped; three physical fit checks remain | Shipped |
-| Responsive 7 Wonders pipeline | Desktop and mobile organizer compositions map published box/card data and reduce the fit gate to three physical checks | Shipped |
+| Responsive 7 Wonders pipeline | One full-image organizer composition maps published box/card data and reduces the fit gate to three physical checks | Shipped |
 | Navigation and library cleanup | Five top-level projects, nested drafts excluded from the count, simplified Overview, and a minimal category-based template list | Shipped |
 | Responsive project cards | Card columns follow available workspace width; headings, print facts, and next steps wrap safely on compact desktop and phone layouts | Shipped |
+| Organizer presentation standard | 7 Wonders, Cozy Stickerville, and magnetic-token workbenches use one full-image 16:9 layout with contain-fit artwork on desktop and mobile | Shipped |
 
 ## Next implementation candidates
 
@@ -117,3 +118,4 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-14:** Use Thangs references only as form vocabulary; preserve original PrintPath geometry and the PETG water-holding requirements.
 - **2026-08-14:** Show plate count, print jobs, components, material, and time together; label unsliced numbers as estimates and keep Bambu Studio as the final authority.
 - **2026-08-14:** Require a two-pod magnetic connection test before batch-printing token storage; one pod alone cannot validate polarity or holding strength.
+- **2026-08-14:** Keep organizer artwork in one 16:9 contain-fit presentation instead of maintaining crop-prone project-specific mobile compositions.
