@@ -39,6 +39,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Honest concept estimates | Geometry-backed projects show one planning estimate; project cards and workbench metrics show `Pending CAD` until volume exists | Shipped |
 | Cozy source dimensions | Published 305 × 225 × 51 mm box and 181 unsleeved 63 × 88 mm cards mapped; three physical fit checks remain | Shipped |
 | Responsive 7 Wonders pipeline | Desktop and mobile organizer compositions map published box/card data and reduce the fit gate to three physical checks | Shipped |
+| Navigation and library cleanup | Five top-level projects, nested drafts excluded from the count, simplified Overview, and a minimal category-based template list | Shipped |
 
 ## Next implementation candidates
 

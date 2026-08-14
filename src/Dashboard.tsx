@@ -335,18 +335,6 @@ function OverviewPage(props: DashboardProps) {
         </section>
       </div>
 
-      <section className="gridfinity-popular page-card">
-        <div className="card-heading-row">
-          <div><span className="page-eyebrow">Popular customization</span><h2>Gridfinity for dimensions that do not divide evenly</h2><p>Use the 42 mm system where it helps, then solve the awkward leftover space deliberately.</p></div>
-          <button className="text-link" onClick={() => props.onNavigate("library")}>See all Gridfinity options <ChevronRight size={15} /></button>
-        </div>
-        <div className="popular-template-row">
-          <button onClick={() => props.onUseTemplate("grid-customizer")}><span className="popular-art grid-art"><LayoutGrid size={25} /></span><div><em>Most popular</em><strong>Custom drawer layout</strong><p>Full cells plus centered edge margins for an exact drawer footprint.</p><small><Ruler size={13} /> Starts from drawer width + depth</small></div><ArrowRight size={17} /></button>
-          <button onClick={() => props.onUseTemplate("grid-edge-filler")}><span className="popular-art filler-art"><PanelsTopLeft size={25} /></span><div><em>Finishing piece</em><strong>Edge & corner fillers</strong><p>Purpose-built strips that stop the usable grid from sliding around.</p><small><PackageCheck size={13} /> 1–4 simple parts</small></div><ArrowRight size={17} /></button>
-          <button onClick={() => props.onUseTemplate("grid-fractional-bin")}><span className="popular-art fraction-art"><Grid3X3 size={25} /></span><div><em>Flexible sizing</em><strong>Fractional bins</strong><p>Half- and quarter-width bins for spaces a standard cell cannot use.</p><small><Box size={13} /> Test fit included</small></div><ArrowRight size={17} /></button>
-        </div>
-      </section>
-
       <div className="overview-lower-grid">
         <section className="page-card recent-projects">
           <div className="card-heading-row"><div><span className="page-eyebrow">Your projects</span><h2>Pick up where you left off</h2></div><button className="text-link" onClick={() => props.onNavigate("projects")}>View all <ChevronRight size={15} /></button></div>
@@ -547,29 +535,6 @@ function ProjectsPage(props: DashboardProps) {
         </div>
       </section>
 
-      <section className="next-project-section page-card">
-        <div className="card-heading-row"><div><span className="page-eyebrow">What should we solve next?</span><h2>Three useful steps up from the gap tray</h2><p>Each option reuses the same measure → confirm → generate → handoff loop, with one new design challenge at a time.</p></div></div>
-        <div className="next-project-grid">
-          <button onClick={() => props.onStartIdea("A measured drawer-divider end cap that fills a leftover gap and stops an existing divider from shifting.")}><span><PanelsTopLeft size={20} /></span><div><em>Fastest follow-up</em><strong>Drawer divider end cap</strong><small>One fit surface · one part</small></div><ArrowRight size={16} /></button>
-          <button onClick={() => props.onUseTemplate("token-tray")}><span><Coins size={20} /></span><div><em>Recommended</em><strong>Board-game token tray</strong><small>Add a pour corner and rounded well</small></div><ArrowRight size={16} /></button>
-          <button onClick={() => props.onUseTemplate("card-holder")}><span><CreditCard size={20} /></span><div><em>New measurement skill</em><strong>Sleeved-card holder</strong><small>Fit a deck with finger access</small></div><ArrowRight size={16} /></button>
-        </div>
-      </section>
-
-      <section className="page-card assembly-scaffold">
-        <div className="assembly-intro"><span className="page-eyebrow">7 Wonders Duel · Compound scaffold</span><h2>Four modules, staged across two P1S plates</h2><p>The inventory and module envelope are assigned; your physical box and thickest card deck are now the only safe fit gate.</p></div>
-        <div className="assembly-flow">
-          <div className="assembly-stage complete"><span><Check size={16} /></span><strong>Map objects</strong><small>Cards, coins, tokens, boards</small></div>
-          <ChevronRight size={18} />
-          <div className="assembly-stage complete"><span><Check size={16} /></span><strong>Assign layout</strong><small>196 mm reference · four modules</small></div>
-          <ChevronRight size={18} />
-          <div className="assembly-stage"><span>3</span><strong>Measure box</strong><small>Inside size + usable height</small></div>
-          <ChevronRight size={18} />
-          <div className="assembly-stage"><span>4</span><strong>Gauge cards</strong><small>Thickest sleeved deck first</small></div>
-          <ChevronRight size={18} />
-          <div className="assembly-stage"><span>5</span><strong>Print plates</strong><small>Labelled plate order</small></div>
-        </div>
-      </section>
     </>
   );
 }
@@ -619,24 +584,27 @@ function LibraryPage(props: DashboardProps) {
   );
   return (
     <>
-      <PageHeader eyebrow="Design library" title="Customize a useful starting point." description="Pick a familiar object, then change the dimensions, fit, and features for your exact space." />
-      <section className="library-feature custom-grid-feature page-card">
-        <div><span className="recommendation-tag"><LayoutGrid size={14} /> Popular · Gridfinity customization</span><h2>Keep the grid. Fix the awkward edges.</h2><p>Tell us the real drawer dimensions. We’ll calculate full 42 mm cells, remaining space, centered margins, and which pieces should share a print plate.</p><div className="feature-facts"><span><strong>42 mm</strong><small>standard cells</small></span><span><strong>Any size</strong><small>measured perimeter</small></span><span><strong>Plate plan</strong><small>split for P1S</small></span></div><button className="primary-button" onClick={() => props.onUseTemplate("grid-customizer")}>Customize my drawer <ArrowRight size={15} /></button></div>
-        <div className="custom-grid-visual" aria-hidden="true"><span className="measure-top">287 mm</span><span className="measure-side">463 mm</span><div className="custom-grid-cells">{Array.from({length:24}).map((_, index) => <i key={index} className={index % 6 === 5 ? "remainder" : ""} />)}</div><em>17.5 mm remainder</em></div>
+      <PageHeader eyebrow="Design library" title="Start with something familiar." description="Choose a simple pattern, then PrintPath will ask only for the dimensions and decisions that change the result." />
+      <section className="minimal-library page-card">
+        <div className="minimal-library-heading">
+          <div><span className="page-eyebrow">Templates</span><h2>{activeCategory === "Popular" ? "Useful starting points" : activeCategory}</h2><p>{visibleTemplates.length} focused options · select one to begin the measured setup.</p></div>
+          <span className="profile-context"><Printer size={14} /> P1S · {props.nozzle} mm · {props.plate}</span>
+        </div>
+        <div className="catalog-filters minimal-catalog-filters" aria-label="Template categories">{catalogCategories.map((category) => <button key={category} className={activeCategory === category ? "active" : ""} onClick={() => setActiveCategory(category)}>{category}<span>{category === "Popular" ? catalogTemplates.filter((item) => item.popular).length : catalogTemplates.filter((item) => item.category === category).length}</span></button>)}</div>
+        <div className="minimal-template-list">
+          {visibleTemplates.map((template) => {
+            const Icon = template.icon;
+            return (
+              <button className="minimal-template-item" key={template.id} onClick={() => props.onUseTemplate(template.id)}>
+                <span className={`minimal-template-icon tone-${template.tone}`}><Icon size={20} /></span>
+                <span className="minimal-template-copy"><em>{template.category}</em><strong>{template.title}</strong><small>{template.description}</small></span>
+                <span className="minimal-template-meta"><small>You provide</small><strong>{template.input}</strong></span>
+                <ArrowRight size={17} />
+              </button>
+            );
+          })}
+        </div>
       </section>
-      <div className="library-section-heading catalog-heading"><div><span className="page-eyebrow">Template catalog</span><h2>Designed around everyday jobs</h2></div><span className="profile-context"><Printer size={14} /> P1S · {props.nozzle} mm · {props.plate}</span></div>
-      <div className="catalog-filters" aria-label="Template categories">{catalogCategories.map((category) => <button key={category} className={activeCategory === category ? "active" : ""} onClick={() => setActiveCategory(category)}>{category}<span>{category === "Popular" ? catalogTemplates.filter((item) => item.popular).length : catalogTemplates.filter((item) => item.category === category).length}</span></button>)}</div>
-      <div className="template-grid catalog-grid">
-        {visibleTemplates.map((template) => {
-          const Icon = template.icon;
-          return (
-            <article className="template-card" key={template.id}>
-              <div className={`template-art catalog-art tone-${template.tone}`}><span><Icon size={30} /></span><em>{template.category}</em><div className="object-sketch"><i /><i /><i /></div></div>
-              <div className="template-body"><h3>{template.title}</h3><p>{template.description}</p><div className="template-input"><Ruler size={13} /><span><small>YOU PROVIDE</small>{template.input}</span></div><div className="template-facts"><span><Clock3 size={13} />{template.time}</span><span><PackageOpen size={13} />{template.parts}</span></div><button className="secondary-button" onClick={() => props.onUseTemplate(template.id)}>Customize template <ArrowRight size={15} /></button></div>
-            </article>
-          );
-        })}
-      </div>
     </>
   );
 }
