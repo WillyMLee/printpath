@@ -115,6 +115,7 @@ const projectCards = [
     cover: "/projects/drawer-gap-tray-aug-2026-product.png",
     filter: "completed" as Exclude<ProjectFilter, "all">,
     artIndex: 1,
+    target: "drawer-gap-tray",
   },
   {
     name: "Petal Twist Vase",
@@ -127,18 +128,46 @@ const projectCards = [
     cover: "/projects/petal-twist-vase-aug-2026-product.png",
     filter: "progress" as Exclude<ProjectFilter, "all">,
     artIndex: 2,
+    target: "vase-history-title",
   },
   {
     name: "7 Wonders Duel Organizer",
     kind: "Board game insert",
-    status: "Research brief",
+    status: "Layout v1",
     statusClass: "progress",
     parts: "4 modules · 2 plates",
     next: "Confirm box + sleeve measurements",
-    confidence: 58,
+    confidence: 72,
     cover: "/projects/seven-wonders-duel-organizer-concept.svg",
     filter: "progress" as Exclude<ProjectFilter, "all">,
     artIndex: 3,
+    target: "seven-wonders-organizer",
+  },
+  {
+    name: "Cozy Stickerville Organizer",
+    kind: "Campaign insert",
+    status: "Research mapped",
+    statusClass: "progress",
+    parts: "4 modules · 2 plates",
+    next: "Measure inside box + card stacks",
+    confidence: 48,
+    cover: "/projects/cozy-stickerville-organizer-concept.svg",
+    filter: "progress" as Exclude<ProjectFilter, "all">,
+    artIndex: 4,
+    target: "cozy-stickerville-organizer",
+  },
+  {
+    name: "Magnetic Hex Token Pods",
+    kind: "Modular token system",
+    status: "Alpha STL",
+    statusClass: "ready",
+    parts: "4 printable files · 1 plate",
+    next: "Print 6 × 2 mm magnet coupon",
+    confidence: 78,
+    cover: "/projects/magnetic-hex-token-system-concept.svg",
+    filter: "ready" as Exclude<ProjectFilter, "all">,
+    artIndex: 5,
+    target: "magnetic-token-system",
   },
 ];
 
@@ -399,10 +428,23 @@ function ProjectsPage(props: DashboardProps) {
         </div>
       </section>
 
+      <section className="vase-inspiration page-card" aria-labelledby="vase-inspiration-title">
+        <div className="card-heading-row">
+          <div><span className="page-eyebrow">Thangs research · Original directions</span><h2 id="vase-inspiration-title">Four ideas worth translating—not copying.</h2><p>The strongest references combine one memorable silhouette with support-free surface rhythm. Any new PrintPath version will keep the 245 mm P1S height, a real-water wall, and its own geometry.</p></div>
+          <span className="version-count">Inspiration board</span>
+        </div>
+        <div className="vase-inspiration-grid">
+          <article><div className="vase-study-art spiral"><i /><i /><i /></div><span>01 · Quiet Spiral</span><h3>Fine ribs, wide base, calmer neck.</h3><p>The most natural evolution of Petal Twist: reduce the large flutes and let many subtle ribs catch light behind leafy stems.</p><a href="https://thangs.com/designer/Slimprint/post/New%20design%3A%20vase%20SUSAN-252156" target="_blank" rel="noreferrer">View Susan reference <ExternalLink size={13} /></a></article>
+          <article><div className="vase-study-art fan"><i /><i /><i /><i /></div><span>02 · Fan Fold</span><h3>Pleats converge into an asymmetric crown.</h3><p>Strong with eucalyptus or pampas: architectural folds below, a playful serrated rim above, and a broad planted base.</p><a href="https://thangs.com/designer/Slimprint/post/New%20design%3A%20Vase%20SENSU-252432" target="_blank" rel="noreferrer">View Sensu reference <ExternalLink size={13} /></a></article>
+          <article><div className="vase-study-art cloud"><i /><i /><i /></div><span>03 · Cloud Stack</span><h3>Soft rings with a structured silhouette.</h3><p>Friendly and tactile, with stacked rounded volumes that feel more playful than the current botanical versions.</p><a href="https://thangs.com/designer/Core%20Essentials/3d-model/Ona%20Vase-1461516" target="_blank" rel="noreferrer">View Ona reference <ExternalLink size={13} /></a></article>
+          <article><div className="vase-study-art fold"><i /><i /></div><span>04 · Folded Sweep</span><h3>One dramatic fold and an offset rim.</h3><p>A statement-piece direction: asymmetric movement, a stable heavy-looking foot, and enough mouth area for a loose leafy bouquet.</p><a href="https://thangs.com/designer/DeskFormStudio/3d-model/Modern%20Organic%20Sculptural%20Vase%20-%20Fluid%20Geometric%20Folded%20Decor%20-%203D%20Printable%20Olive%20Green%20Vessel-1510401/memberships" target="_blank" rel="noreferrer">View folded reference <ExternalLink size={13} /></a></article>
+        </div>
+      </section>
+
       <div className="project-filter-row" aria-label="Filter projects">{filterOptions.map((filter) => <button className={projectFilter === filter.id ? "active" : ""} aria-pressed={projectFilter === filter.id} key={filter.id} onClick={() => setProjectFilter(filter.id)}>{filter.label} <span>{filter.count}</span></button>)}</div>
       {filteredProjects.length > 0 ? <div className="project-card-grid">
         {filteredProjects.map((project) => (
-          <button className="project-card" key={project.name} onClick={() => project.name === "Drawer Gap Tray" ? props.onOpenProject() : document.getElementById(project.name === "7 Wonders Duel Organizer" ? "seven-wonders-organizer" : "vase-history-title")?.scrollIntoView({ behavior: "smooth", block: "start" })}>
+          <button className="project-card" key={project.name} onClick={() => project.name === "Drawer Gap Tray" ? props.onOpenProject() : document.getElementById(project.target)?.scrollIntoView({ behavior: "smooth", block: "start" })}>
             <div className={`project-art project-art-${project.artIndex}`}>{project.cover ? <img src={project.cover} alt={`${project.name} cover`} /> : <span><Component size={30} /></span>}<em>{project.kind}</em></div>
             <div className="project-card-body">
               <div className="project-card-title"><h2>{project.name}</h2><span className={`status-chip ${project.statusClass}`}>{project.status}</span></div>
@@ -415,22 +457,70 @@ function ProjectsPage(props: DashboardProps) {
       </div> : <div className="project-empty-state"><PackageOpen size={24} /><div><strong>No {projectFilter === "ready" ? "ready-to-print" : projectFilter} projects yet.</strong><p>Projects will appear here as they move through the design and print checks.</p></div></div>}
 
       <section className="organizer-concept page-card" id="seven-wonders-organizer" aria-labelledby="organizer-title">
-        <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Research brief</span><h2 id="organizer-title">7 Wonders Duel organizer</h2><p>A modular, table-ready insert based on the official base-game inventory and common sleeve envelopes.</p></div><span className="research-badge"><Gamepad2 size={14} /> Measure before CAD</span></div>
+        <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Layout v1</span><h2 id="organizer-title">7 Wonders Duel organizer</h2><p>A concrete four-module reference layout for the base game, with measurements still acting as the final CAD gate.</p></div><span className="research-badge"><Gamepad2 size={14} /> Reference envelope</span></div>
         <div className="organizer-concept-grid">
           <div className="organizer-concept-art"><img src="/projects/seven-wonders-duel-organizer-concept.svg" alt="Four-module organizer concept for 7 Wonders Duel" /></div>
           <div className="organizer-concept-copy">
-            <span className="recommendation-tag"><BadgeCheck size={14} /> Base-game first · P1S · 4 modules</span>
-            <h3>Lift the trays out and play from them.</h3>
-            <p>The first direction uses the box efficiently while reducing setup: cards stay sorted by Age, coins arrive at the table already separated, and every token has a scoopable home.</p>
+            <span className="recommendation-tag"><BadgeCheck size={14} /> 196 × 196 × 42 mm reference · P1S · 4 modules</span>
+            <h3>The layout is assigned. Fit is the remaining question.</h3>
+            <p>The 196 mm square reference is split by a 2 mm service gap. All four modules fit on one P1S plate, but two staged plates reduce the cost of a sleeve-clearance mistake.</p>
             <div className="organizer-module-grid">
-              <span><CreditCard size={17} /><strong>Age card lane</strong><small>Three decks + Guild divider · sleeve target 50 × 75 mm</small></span>
-              <span><Gem size={17} /><strong>Wonder tray</strong><small>12 large cards · sleeve target 70 × 106 mm</small></span>
-              <span><Coins size={17} /><strong>Coin bank</strong><small>Three curved wells for values 1, 3, and 6</small></span>
-              <span><Gamepad2 size={17} /><strong>Token caddy</strong><small>Progress, Military, and Conflict pieces</small></span>
+              <span><CreditCard size={17} /><strong>Age card bank</strong><small>121.5 × 117.5 × 28 mm · two broad wells + dividers</small></span>
+              <span><Gem size={17} /><strong>Wonder cradle</strong><small>72.5 × 117.5 × 28 mm · large cards + thumb ramp</small></span>
+              <span><Coins size={17} /><strong>Coin bank</strong><small>121.5 × 76.5 × 28 mm · three table-ready wells</small></span>
+              <span><Gamepad2 size={17} /><strong>Token caddy</strong><small>72.5 × 76.5 × 28 mm · Progress, Military, Conflict</small></span>
             </div>
-            <div className="organizer-gates"><strong>Four answers before geometry</strong><span>1. Inside box width, depth, and usable height</span><span>2. Unsleeved or the exact sleeve brand</span><span>3. Base game only, or room for Pantheon / Agora</span><span>4. Horizontal or vertical box storage</span></div>
+            <div className="organizer-gates"><strong>Five checks before STL</strong><span>1. Box width + depth at two heights</span><span>2. Usable height under boards and rules</span><span>3. Thickest deck dimensions + sleeves</span><span>4. Base game or expansion reserve</span><span>5. Flat or vertical storage</span></div>
             <button className="primary-button organizer-start" onClick={() => props.onStartIdea("A modular 7 Wonders Duel box organizer for the base game with four lift-out zones: three Age decks plus Guild cards, the 12 Wonder cards, a three-value coin bank, and a token caddy for Progress, Military, and Conflict pieces. Confirm inside box dimensions, sleeves, expansions, and vertical storage before CAD.")}>Start measured organizer <ArrowRight size={16} /></button>
-            <div className="organizer-sources"><span>Research:</span><a href="https://cdn.svc.asmodee.net/production-rprod/storage/downloads/games/7wonders-duel/en/7du-rules-us-15990558193s5I6.pdf" target="_blank" rel="noreferrer">Official contents</a><a href="https://www.rykergames.com/products/7-wonders-duel-card-sleeve-kit" target="_blank" rel="noreferrer">Card sizes</a><a href="https://foldedspace.com/product/7-wonders-duel" target="_blank" rel="noreferrer">Packing reference</a></div>
+            <div className="organizer-sources"><span>Open:</span><a href="/projects/seven-wonders-duel-organizer-v1-aug-2026.md" target="_blank" rel="noreferrer">Layout packet</a><a href="https://sevenwondersduel.com/" target="_blank" rel="noreferrer">Official contents</a><a href="https://foldedspace.com/download/product/public/7-wonders-duel/file_65158f4e336c5.pdf" target="_blank" rel="noreferrer">Packing reference</a></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="organizer-concept page-card cozy-organizer" id="cozy-stickerville-organizer" aria-labelledby="cozy-organizer-title">
+        <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Campaign organizer</span><h2 id="cozy-organizer-title">Cozy Stickerville</h2><p>A campaign-state insert built around ten Event decks, an ordered Catalog, four shared resources, and the supplied save-game box.</p></div><span className="research-badge"><Sprout size={14} /> Inventory mapped</span></div>
+        <div className="organizer-concept-grid">
+          <div className="organizer-concept-art"><img src="/projects/cozy-stickerville-organizer-concept.svg" alt="Four-module Cozy Stickerville organizer concept" /></div>
+          <div className="organizer-concept-copy">
+            <span className="recommendation-tag"><BadgeCheck size={14} /> 225 × 300 × 53 mm outer box · modular P1S plan</span>
+            <h3>Organize the campaign, not just the components.</h3>
+            <p>The design separates archived years from the active year and turns the resource storage into four lift-out table bowls. The map, sticker book, and storybook stay as a supported flat layer.</p>
+            <div className="organizer-module-grid">
+              <span><Layers3 size={17} /><strong>Year Library</strong><small>Ten 12-card Event decks + active-year pull tab</small></span>
+              <span><CreditCard size={17} /><strong>Catalog Library</strong><small>Cards 1–60 remain ordered and finger-accessible</small></span>
+              <span><Sprout size={17} /><strong>Resource Village</strong><small>Wood, Food, Gold, Ore, and die in lift-out bowls</small></span>
+              <span><PackageCheck size={17} /><strong>Save-Game Dock</strong><small>Preserves the supplied box and current campaign state</small></span>
+            </div>
+            <div className="organizer-gates"><strong>Measure before CAD</strong><span>1. Inside width, depth, and usable height</span><span>2. Event + Catalog card stacks</span><span>3. Supplied save-game box outside size</span><span>4. Flat book/map stack thickness</span><span>5. Flat or vertical storage</span></div>
+            <button className="primary-button organizer-start" onClick={() => props.onStartIdea("A Cozy Stickerville campaign organizer with a ten-deck Year Library, ordered Catalog Library, four lift-out resource bowls, a die home, a dock for the supplied save-game box, and a supported top layer for the map, sticker book, and storybook. Confirm the inside box, card stacks, save box, flat stack, and storage orientation before CAD.")}>Start Cozy measurements <ArrowRight size={16} /></button>
+            <div className="organizer-sources"><span>Open:</span><a href="/projects/cozy-stickerville-organizer-v1-aug-2026.md" target="_blank" rel="noreferrer">Campaign packet</a><a href="https://www.asmodee.ca/en/product/cozy-stickerville/" target="_blank" rel="noreferrer">Official contents</a><a href="https://cdn.svc.asmodee.net/production-asmodeeca/uploads/2026/01/Cozy_Stickerville_Rulebook_English.pdf" target="_blank" rel="noreferrer">Rulebook</a></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="organizer-concept page-card magnetic-organizer" id="magnetic-token-system" aria-labelledby="magnetic-token-title">
+        <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Printable alpha</span><h2 id="magnetic-token-title">Magnetic Hex Token Pods</h2><p>A reusable polygon tray system with optional one-, two-, and three-zone interiors plus replaceable 6 × 2 mm magnet cups.</p></div><span className="ready-project-badge"><PackageCheck size={14} /> Alpha STL ready</span></div>
+        <div className="organizer-concept-grid">
+          <div className="organizer-concept-art"><img src="/projects/magnetic-hex-token-system-concept.svg" alt="Three magnetically connected hex token trays" /></div>
+          <div className="organizer-concept-copy">
+            <span className="recommendation-tag"><BadgeCheck size={14} /> 96 × 83.1 × 22 mm · support-free · P1S</span>
+            <h3>Print the magnet coupon before the tray.</h3>
+            <p>The tray itself is a clean manifold shell. Separate glue-on magnet cups keep the first prototype support-free, repairable, and safer to iterate if your magnets measure differently.</p>
+            <div className="organizer-module-grid">
+              <span><Coins size={17} /><strong>Single well</strong><small>Large shared token or coin supply</small></span>
+              <span><PanelsTopLeft size={17} /><strong>Split well</strong><small>Two resources in one connected pod</small></span>
+              <span><Grid3X3 size={17} /><strong>Triple well</strong><small>Three wedge zones around a center hub</small></span>
+              <span><CircleDot size={17} /><strong>Fit system</strong><small>6.20, 6.35, and 6.50 mm coupon pockets</small></span>
+            </div>
+            <div className="magnetic-downloads">
+              <a className="primary-button" href="/projects/magnetic-hex-token-tray-fit-coupon-aug-2026.stl" download><Download size={16} /> Magnet coupon first</a>
+              <a className="secondary-button" href="/projects/magnetic-hex-token-tray-single-aug-2026.stl" download><Download size={16} /> Single tray</a>
+              <a className="secondary-button" href="/projects/magnetic-hex-token-tray-split-aug-2026.stl" download><Download size={16} /> Split tray</a>
+              <a className="secondary-button" href="/projects/magnetic-hex-token-tray-triple-aug-2026.stl" download><Download size={16} /> Triple tray</a>
+              <a className="secondary-button" href="/projects/magnetic-hex-token-magnet-cup-6x2-aug-2026.stl" download><Download size={16} /> Magnet cup</a>
+              <a className="text-link" href="/projects/magnetic-hex-token-system-aug-2026-print-guide.md" target="_blank" rel="noreferrer">Alpha print guide <ArrowRight size={14} /></a>
+            </div>
+            <div className="organizer-sources"><span>Research:</span><a href="https://cults3d.com/en/3d-model/game/hex-token-tray-modular-geekshapes-system" target="_blank" rel="noreferrer">6 × 2 mm precedent</a><a href="https://www.etsy.com/listing/4458957561/magnetic-hex-board-game-token-trays" target="_blank" rel="noreferrer">Table-size reference</a></div>
           </div>
         </div>
       </section>
@@ -445,15 +535,15 @@ function ProjectsPage(props: DashboardProps) {
       </section>
 
       <section className="page-card assembly-scaffold">
-        <div className="assembly-intro"><span className="page-eyebrow">7 Wonders Duel · Compound scaffold</span><h2>Four modules across two P1S plates</h2><p>The research brief is complete; measurements are the gate before printable geometry.</p></div>
+        <div className="assembly-intro"><span className="page-eyebrow">7 Wonders Duel · Compound scaffold</span><h2>Four modules, staged across two P1S plates</h2><p>The inventory and module envelope are assigned; your physical box and thickest card deck are now the only safe fit gate.</p></div>
         <div className="assembly-flow">
           <div className="assembly-stage complete"><span><Check size={16} /></span><strong>Map objects</strong><small>Cards, coins, tokens, boards</small></div>
           <ChevronRight size={18} />
-          <div className="assembly-stage"><span>2</span><strong>Measure box</strong><small>Inside size + usable height</small></div>
+          <div className="assembly-stage complete"><span><Check size={16} /></span><strong>Assign layout</strong><small>196 mm reference · four modules</small></div>
           <ChevronRight size={18} />
-          <div className="assembly-stage"><span>3</span><strong>Assign modules</strong><small>Four lift-out jobs</small></div>
+          <div className="assembly-stage"><span>3</span><strong>Measure box</strong><small>Inside size + usable height</small></div>
           <ChevronRight size={18} />
-          <div className="assembly-stage"><span>4</span><strong>Test fit</strong><small>One corner + card coupon</small></div>
+          <div className="assembly-stage"><span>4</span><strong>Gauge cards</strong><small>Thickest sleeved deck first</small></div>
           <ChevronRight size={18} />
           <div className="assembly-stage"><span>5</span><strong>Print plates</strong><small>Labelled plate order</small></div>
         </div>

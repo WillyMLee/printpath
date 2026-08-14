@@ -18,6 +18,9 @@ PrintPath is an open-source, visual workflow for turning an everyday 3D-printing
 - Prefilled dimensions, materials, part counts, and assembly assumptions for every template
 - Local, pairing-code-protected handoff into Bambu Studio without sharing Bambu credentials
 - Printable generators for an exact-dimension open tray and a one-compartment Gridfinity gap tray
+- A printable magnetic hex token-pod alpha with single, split, and triple wells, a 6 mm magnet-fit coupon, and replaceable magnet cups
+- Measured-layout packets for 7 Wonders Duel and Cozy Stickerville compound organizers
+- A saved vase inspiration study that translates form ideas into original, water-capable PrintPath directions
 - Multi-part plate, checkpoint, and assembly planning
 - Build-volume, wall-thickness, and clearance checks
 - Automatic local saving
@@ -28,7 +31,7 @@ PrintPath is an open-source, visual workflow for turning an everyday 3D-printing
 - Portable JSON project-spec export
 - Responsive interface on Cloudflare Workers with selective `/api/*` Worker routing
 
-Most visual previews are intentionally labeled as concepts and do not yet produce printable geometry.
+Most visual previews are intentionally labeled as concepts and do not yet produce printable geometry. The magnetic hex token-pod project is an explicit alpha: print its fit coupon before committing to trays or magnets.
 
 The **Exact-fit open tray** and **Custom drawer grid** workflows are exceptions. PrintPath Bridge can generate their STLs locally and open them in Bambu Studio for human slicing and print review. The drawer workflow can produce one continuous gap-filler compartment beside an existing Gridfinity layout. It rotates long parts diagonally for P1S plate margin and does not falsely claim standard baseplate compatibility.
 

@@ -1,6 +1,6 @@
 # PrintPath Implementation Roadmap
 
-Last updated: 2026-08-13
+Last updated: 2026-08-14
 
 This is the living implementation record for PrintPath. Update it whenever a feature ships, a workflow decision changes, or a new project exposes friction.
 
@@ -28,7 +28,10 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Branding | PrintPath cube favicon for browser tabs and bookmarks | Shipped |
 | Vase project | Visible saved-version history for Petal Twist v1 and Leaf Bloom v2; both manifold and downloadable | Design review |
 | Project controls | Working status filters and persistent version selection | Shipped |
-| 7 Wonders Duel organizer | Official inventory research, sleeve-aware four-module concept, and measurement gate | Research brief |
+| 7 Wonders Duel organizer | Official inventory research, 196 × 196 × 42 mm reference envelope, four-module layout v1, and measurement gate | Layout v1 |
+| Cozy Stickerville organizer | Official inventory map, P1S-aware modular concept, campaign-state workflow, and measurement packet | Research mapped |
+| Magnetic hex token pods | Generated single, split, and triple tray STLs, 6 mm magnet-fit coupon, replaceable cups, and print guide | Printable alpha |
+| Vase inspiration | Four original form directions informed by spiral, fan, cloud-stack, and folded-organic references on Thangs | Saved study |
 | Deployment | GitHub workflow and Cloudflare Workers static hosting | Shipped |
 | Public access | Browse-only showcase with protected project authoring | Shipped |
 | AI cost boundary | Signed Maker Mode sessions, server-only OpenAI key, body/token caps, and rate limits | Shipped |
@@ -102,3 +105,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-13:** Start the 7 Wonders Duel organizer with four lift-out modules; require actual box, sleeve, expansion, and storage-orientation answers before CAD.
 - **2026-08-13:** Keep the showcase public while requiring Maker Mode for project authoring and every paid AI request.
 - **2026-08-13:** Keep OpenAI credentials server-only; cap, rate-limit, and fail closed on all AI intake requests.
+- **2026-08-14:** Treat 196 × 196 × 42 mm as a 7 Wonders Duel reference insert envelope, not a guaranteed fit; require the user's box, sleeve, and deck measurements before CAD.
+- **2026-08-14:** Make Cozy Stickerville modular across staged P1S plates because its published 225 × 300 × 53 mm outer box exceeds one P1S plate direction.
+- **2026-08-14:** De-risk the magnetic token system with a three-size magnet coupon and separate glue-on cups before integrating magnets into full trays.
+- **2026-08-14:** Use Thangs references only as form vocabulary; preserve original PrintPath geometry and the PETG water-holding requirements.

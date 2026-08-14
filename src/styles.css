@@ -526,6 +526,8 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .project-art-2 > span { color: #b7613b; }
 .project-art-3 { background: linear-gradient(145deg,#eef0f6,#dfe4ee); }
 .project-art-3 > span { color: #61708b; }
+.project-art-4 { background: linear-gradient(145deg,#fff6e9,#e6f1e8); }
+.project-art-5 { background: linear-gradient(145deg,#e9f5ef,#e7ebf2); }
 .project-card-body { padding: 20px; }
 .project-card-title { display: flex; gap: 8px; justify-content: space-between; align-items: flex-start; }
 .project-card h2 { margin: 0; font-size: 16px; line-height: 1.25; letter-spacing: -.025em; }
@@ -565,6 +567,30 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .organizer-sources { margin-top: 13px; display: flex; flex-wrap: wrap; gap: 7px 11px; align-items: center; font-size: 8.5px; }
 .organizer-sources span { color: #82908b; font-weight: 750; }
 .organizer-sources a { color: #317a67; text-underline-offset: 2px; }
+.cozy-organizer .organizer-concept-art { background: #fbf5ea; }
+.magnetic-organizer .organizer-concept-art { background: #eff5f1; }
+.ready-project-badge { flex: 0 0 auto; padding: 8px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; color: #286f5c; background: #e7f6ef; font-size: 9.5px; font-weight: 850; }
+.magnetic-downloads { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.magnetic-downloads .text-link { margin-left: 2px; }
+.vase-inspiration { max-width: 1370px; margin: 18px auto 0; padding: 26px 28px; }
+.vase-inspiration .card-heading-row p { max-width: 760px; margin: 7px 0 0; color: #6f7e79; font-size: 11.5px; line-height: 1.55; }
+.vase-inspiration-grid { margin-top: 20px; display: grid; grid-template-columns: repeat(4,1fr); gap: 11px; }
+.vase-inspiration-grid article { overflow: hidden; padding: 10px 10px 14px; border: 1px solid #e0e5df; border-radius: 14px; background: #fbfcfa; }
+.vase-inspiration-grid article > span { display: block; margin: 12px 4px 0; color: #43806d; font-size: 7.5px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+.vase-inspiration-grid h3 { margin: 5px 4px 6px; font-size: 12px; letter-spacing: -.02em; }
+.vase-inspiration-grid p { min-height: 62px; margin: 0 4px 10px; color: #74817c; font-size: 9px; line-height: 1.55; }
+.vase-inspiration-grid a { margin: 0 4px; display: inline-flex; align-items: center; gap: 4px; color: #2e7864; font-size: 8.5px; font-weight: 750; text-decoration: none; }
+.vase-study-art { position: relative; height: 155px; overflow: hidden; border-radius: 10px; background: radial-gradient(circle at 50% 82%,#f8f4ec 0 15%,transparent 40%),linear-gradient(145deg,#eef5ef,#f6ece6); }
+.vase-study-art::after { content: ""; position: absolute; left: 50%; bottom: 15px; width: 78px; height: 118px; transform: translateX(-50%); background: linear-gradient(145deg,#8ed5bb,#4e9a7e); box-shadow: 0 16px 24px rgba(45,105,84,.18); }
+.vase-study-art.spiral::after { border-radius: 42% 42% 35% 35% / 22% 22% 55% 55%; clip-path: polygon(18% 0,82% 0,69% 24%,88% 68%,72% 100%,28% 100%,12% 68%,31% 24%); }
+.vase-study-art.spiral i { position: absolute; z-index: 2; left: 50%; bottom: 24px; width: 55px; height: 94px; border: 2px solid rgba(221,255,244,.55); border-radius: 50%; transform: translateX(-50%) rotate(18deg); }
+.vase-study-art.spiral i:nth-child(2) { transform: translateX(-50%) rotate(48deg); }.vase-study-art.spiral i:nth-child(3) { transform: translateX(-50%) rotate(78deg); }
+.vase-study-art.fan::after { width: 92px; clip-path: polygon(48% 0,60% 2%,100% 85%,78% 100%,20% 100%,0 85%,39% 2%); border-radius: 8px 8px 28px 28px; }
+.vase-study-art.fan i { position: absolute; z-index: 2; bottom: 20px; left: 50%; width: 2px; height: 108px; transform-origin: bottom; background: rgba(222,255,244,.6); }.vase-study-art.fan i:nth-child(1){transform:rotate(-21deg)}.vase-study-art.fan i:nth-child(2){transform:rotate(-7deg)}.vase-study-art.fan i:nth-child(3){transform:rotate(7deg)}.vase-study-art.fan i:nth-child(4){transform:rotate(21deg)}
+.vase-study-art.cloud::after { width: 92px; border-radius: 46% 46% 40% 40%; background: linear-gradient(#9cdbc5 0 24%,#69b99d 24% 27%,#9cdbc5 27% 50%,#69b99d 50% 53%,#7dc6ad 53% 76%,#54a287 76%); }
+.vase-study-art.cloud i { position: absolute; z-index: 2; left: 50%; width: 88px; height: 34px; border: 2px solid rgba(236,255,248,.48); border-radius: 50%; transform: translateX(-50%); }.vase-study-art.cloud i:nth-child(1){bottom:28px}.vase-study-art.cloud i:nth-child(2){bottom:60px;width:80px}.vase-study-art.cloud i:nth-child(3){bottom:91px;width:70px}
+.vase-study-art.fold::after { width: 95px; clip-path: polygon(24% 0,80% 9%,66% 38%,100% 78%,74% 100%,20% 96%,0 62%,26% 36%); border-radius: 18px; }
+.vase-study-art.fold i { position: absolute; z-index: 2; left: 50%; bottom: 17px; width: 2px; height: 110px; transform: rotate(22deg); background: rgba(230,255,246,.58); }.vase-study-art.fold i:nth-child(2){transform:rotate(-16deg);height:92px}
 .next-project-section { max-width: 1370px; margin: 22px auto 0; padding: 25px 27px; }
 .next-project-section .card-heading-row p { max-width: 700px; margin: 8px 0 0; color: #6f7e79; font-size: 11.5px; line-height: 1.55; }
 .next-project-grid { margin-top: 18px; display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
@@ -892,6 +918,7 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
   .organizer-concept-grid { grid-template-columns: 1fr; }
   .organizer-concept-art, .organizer-concept-art img { min-height: 0; }
   .next-project-grid { grid-template-columns: 1fr; }
+  .vase-inspiration-grid { grid-template-columns: 1fr 1fr; }
   .popular-template-row { grid-template-columns: 1fr; }
   .bridge-page-grid { grid-template-columns: 1fr; }
   .assembly-flow { display: grid; grid-template-columns: 1fr 1fr; }
@@ -1006,6 +1033,12 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
   .organizer-module-grid, .organizer-gates { grid-template-columns: 1fr; }
   .organizer-gates strong { grid-column: auto; }
   .organizer-start { width: 100%; justify-content: center; }
+  .magnetic-downloads { align-items: stretch; flex-direction: column; }
+  .magnetic-downloads > * { width: 100%; justify-content: center; }
+  .vase-inspiration { padding: 21px 18px; }
+  .vase-inspiration .card-heading-row { align-items: flex-start; flex-direction: column; }
+  .vase-inspiration-grid { grid-template-columns: 1fr; }
+  .vase-inspiration-grid p { min-height: 0; }
   .next-project-section { padding: 20px 17px; }
   .process-journey { margin-top: 14px; padding: 21px 18px; }
   .process-journey-heading h2 { font-size: 18px; }
