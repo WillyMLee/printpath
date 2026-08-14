@@ -30,7 +30,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Project controls | Working status filters and persistent version selection | Shipped |
 | 7 Wonders Duel organizer | Official inventory research, 196 × 196 × 42 mm reference envelope, four-module layout v1, and measurement gate | Layout v1 |
 | Cozy Stickerville organizer | Official inventory map, P1S-aware modular concept, campaign-state workflow, and measurement packet | Research mapped |
-| Magnetic hex token pods | Generated single, split, and triple tray STLs, 6 mm magnet-fit coupon, replaceable cups, and print guide | Printable alpha |
+| Magnetic hex token pods | Generated single, split, and triple tray STLs, 6 mm magnet-fit coupon, replaceable cups, two-pod connection-test plate, and staged print guide | Printable alpha |
 | Vase inspiration | Four original form directions informed by spiral, fan, cloud-stack, and folded-organic references on Thangs | Saved study |
 | Deployment | GitHub workflow and Cloudflare Workers static hosting | Shipped |
 | Public access | Browse-only showcase with protected project authoring | Shipped |
@@ -116,3 +116,4 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-14:** De-risk the magnetic token system with a three-size magnet coupon and separate glue-on cups before integrating magnets into full trays.
 - **2026-08-14:** Use Thangs references only as form vocabulary; preserve original PrintPath geometry and the PETG water-holding requirements.
 - **2026-08-14:** Show plate count, print jobs, components, material, and time together; label unsliced numbers as estimates and keep Bambu Studio as the final authority.
+- **2026-08-14:** Require a two-pod magnetic connection test before batch-printing token storage; one pod alone cannot validate polarity or holding strength.

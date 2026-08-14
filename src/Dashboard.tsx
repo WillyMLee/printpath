@@ -170,12 +170,12 @@ const projectCards = [
     kind: "Modular token system",
     status: "Alpha STL",
     statusClass: "ready",
-    parts: "5 printable files · 1 plate",
-    printFacts: { plates: "1", prints: "2 staged", components: "8 printed + 6 magnets", material: "≈40 g PLA", time: "≈3 hr" },
-    estimateNote: "One pod, six cups, and the fit coupon · print the coupon first",
+    parts: "6 printable files · 1 starter plate",
+    printFacts: { plates: "1 starter plate", prints: "2 staged", components: "14 printed + 12 magnets", material: "≈80 g PLA", time: "≈5–6 hr" },
+    estimateNote: "Two pods, twelve cups, and the fit coupon · print the coupon first",
     next: "Print 6 × 2 mm magnet coupon",
     confidence: 78,
-    cover: "/projects/magnetic-hex-token-system-concept.svg",
+    cover: "/projects/magnetic-hex-token-two-pod-starter-kit-aug-2026-product.png?v=1",
     filter: "ready" as Exclude<ProjectFilter, "all">,
     artIndex: 5,
     target: "magnetic-token-system",
@@ -509,18 +509,24 @@ function ProjectsPage(props: DashboardProps) {
       <section className="organizer-concept page-card magnetic-organizer" id="magnetic-token-system" aria-labelledby="magnetic-token-title">
         <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Printable alpha</span><h2 id="magnetic-token-title">Magnetic Hex Token Pods</h2><p>A reusable polygon tray system with optional one-, two-, and three-zone interiors plus replaceable 6 × 2 mm magnet cups.</p></div><span className="ready-project-badge"><PackageCheck size={14} /> Alpha STL ready</span></div>
         <div className="organizer-concept-grid">
-          <div className="organizer-concept-art"><img src="/projects/magnetic-hex-token-system-concept.svg" alt="Three magnetically connected hex token trays" /></div>
+          <div className="organizer-concept-art"><img src="/projects/magnetic-hex-token-two-pod-starter-kit-aug-2026-product.png?v=1" alt="Actual STL render of two magnetic hex token pods and twelve removable magnet cups" /></div>
           <div className="organizer-concept-copy">
             <div className="project-spec-strip">
               <span><Ruler size={16} /><small>Pod size</small><strong>96 × 83.1 × 22 mm</strong></span>
               <span><Printer size={16} /><small>Print setup</small><strong>P1S · one plate</strong></span>
-              <span><Component size={16} /><small>Starter set</small><strong>1 pod · 6 cups</strong></span>
+              <span><Component size={16} /><small>Starter set</small><strong>2 pods · 12 cups</strong></span>
             </div>
             <h3>Print the magnet coupon before the tray.</h3>
-            <p>The tray itself is a clean manifold shell. Separate glue-on magnet cups keep the first prototype support-free, repairable, and safer to iterate if your magnets measure differently.</p>
+            <p>The tray itself is a clean manifold shell. Separate glue-on magnet cups keep the first prototype support-free, repairable, and safer to iterate if your magnets measure differently. The starter plate now includes two pods so the first full print can actually prove connection strength and polarity.</p>
+            <div className="magnetic-prototype-path" aria-label="Magnetic token pod prototype sequence">
+              <span><b>1</b><strong>Fit</strong><small>Choose the 6.20, 6.35, or 6.50 mm magnet pocket.</small></span>
+              <span><b>2</b><strong>Connect</strong><small>Print two pods and twelve cups on one P1S plate.</small></span>
+              <span><b>3</b><strong>Batch</strong><small>Then choose single, split, or triple wells.</small></span>
+            </div>
             <div className="project-primary-actions">
-              <a className="primary-button" href="/projects/magnetic-hex-token-tray-fit-coupon-aug-2026.stl" download><Download size={16} /> Magnet coupon first</a>
-              <a className="secondary-button" href="/projects/magnetic-hex-token-system-aug-2026-print-guide.md" target="_blank" rel="noreferrer">Print guide <ArrowRight size={15} /></a>
+              <a className="primary-button" href="/projects/magnetic-hex-token-tray-fit-coupon-aug-2026.stl" download><Download size={16} /> 1 · Magnet coupon</a>
+              <a className="secondary-button" href="/projects/magnetic-hex-token-two-pod-starter-kit-aug-2026.stl" download><Download size={16} /> 2 · Two-pod starter</a>
+              <a className="text-link" href="/projects/magnetic-hex-token-system-aug-2026-print-guide.md" target="_blank" rel="noreferrer">Print guide <ArrowRight size={15} /></a>
             </div>
             <details className="project-file-drawer">
               <summary><span>Tray variants and component files</span><small>4 additional STLs</small><ChevronRight size={16} /></summary>

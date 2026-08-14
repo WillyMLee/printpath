@@ -6,8 +6,11 @@
 - **Split well:** two resource zones.
 - **Triple well:** three wedge-like resource zones.
 - **6 × 2 mm magnet coupon:** three pocket sizes from tight to loose.
+- **Two-pod starter plate:** two single-well pods and twelve glue-on cups, arranged to prove connection strength before a batch print.
 
 Each tray is approximately **96 × 83.1 × 22 mm** and fits comfortably on the Bambu Lab P1S. Six separate glue-on cups accept nominal 6 × 2 mm disc magnets. This alpha keeps the connectors replaceable and lets the tray itself print as a clean support-free shell.
+
+The starter plate is approximately **200 × 113.4 × 22 mm**, requires **12 magnets**, and is planned at roughly **80 g PLA / 5–6 hours** before Bambu Studio slicing. Print it only after the fit coupon succeeds.
 
 ## Print the coupon first
 
@@ -18,6 +21,14 @@ Print the 45 × 18 mm coupon before any full tray. From left to right, the circu
 3. 6.50 mm diameter — loose/glue fit.
 
 Use the well that holds your actual magnets securely without splitting the print. The alpha tray uses the nominal 6.30 mm pocket.
+
+## Prove one connection before batching
+
+1. Print the magnet coupon and choose the fit that works with your actual magnets.
+2. Print the two-pod starter plate: two single-well pods plus twelve cups.
+3. Assemble only one facing pair of cups first and verify attraction, holding strength, and easy separation.
+4. Mark the remaining alternating faces `A` and `B`, then complete the two-pod test.
+5. Only after that test passes, print the single-, split-, or triple-well variants needed for a larger set.
 
 ## P1S starting profile
 

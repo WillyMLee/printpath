@@ -175,6 +175,26 @@ def generate_coupon() -> list[Triangle]:
     return triangles
 
 
+def translated(triangles: list[Triangle], offset_x: float, offset_y: float, offset_z: float = 0.0) -> list[Triangle]:
+    return [
+        tuple((x + offset_x, y + offset_y, z + offset_z) for x, y, z in triangle)
+        for triangle in triangles
+    ]
+
+
+def generate_two_pod_starter_kit() -> list[Triangle]:
+    """Lay out two pods and twelve cups as a connection-test set on one P1S plate."""
+    triangles: list[Triangle] = []
+    triangles.extend(translated(generate_tray("single"), -52.0, 0.0))
+    triangles.extend(translated(generate_tray("single"), 52.0, 0.0))
+    cup = generate_magnet_cup()
+    cup_x_positions = (-37.5, -22.5, -7.5, 7.5, 22.5, 37.5)
+    for y in (-52.0, 52.0):
+        for x in cup_x_positions:
+            triangles.extend(translated(cup, x, y))
+    return triangles
+
+
 def normal(triangle: Triangle) -> Vec3:
     a, b, c = triangle
     ab = (b[0] - a[0], b[1] - a[1], b[2] - a[2])
@@ -242,3 +262,8 @@ if __name__ == "__main__":
     magnet_cup_path = project_dir / "magnetic-hex-token-magnet-cup-6x2-aug-2026.stl"
     write_binary_stl(magnet_cup_path, magnet_cup, "PrintPath 6x2 glue-on magnet cup")
     print(f"magnet cup: {magnet_cup_report['dimensions']} mm · {magnet_cup_report['triangles']} triangles · watertight shell")
+    starter_kit = generate_two_pod_starter_kit()
+    starter_kit_report = validate(starter_kit)
+    starter_kit_path = project_dir / "magnetic-hex-token-two-pod-starter-kit-aug-2026.stl"
+    write_binary_stl(starter_kit_path, starter_kit, "PrintPath two-pod magnetic connection starter kit")
+    print(f"starter kit: {starter_kit_report['dimensions']} mm · {starter_kit_report['triangles']} triangles · watertight shells")
