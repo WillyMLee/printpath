@@ -42,6 +42,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Navigation and library cleanup | Five top-level projects, nested drafts excluded from the count, simplified Overview, and a minimal category-based template list | Shipped |
 | Responsive project cards | Card columns follow available workspace width; headings, print facts, and next steps wrap safely on compact desktop and phone layouts | Shipped |
 | Organizer presentation standard | 7 Wonders, Cozy Stickerville, and magnetic-token workbenches use one full-image 16:9 layout with contain-fit artwork on desktop and mobile | Shipped |
+| Project workspace cleanup | Removed the duplicate thumbnail gallery; active projects use full workbench rows and completed prints have a dedicated archive section | Shipped |
 
 ## Next implementation candidates
 
@@ -119,3 +120,4 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-14:** Show plate count, print jobs, components, material, and time together; label unsliced numbers as estimates and keep Bambu Studio as the final authority.
 - **2026-08-14:** Require a two-pod magnetic connection test before batch-printing token storage; one pod alone cannot validate polarity or holding strength.
 - **2026-08-14:** Keep organizer artwork in one 16:9 contain-fit presentation instead of maintaining crop-prone project-specific mobile compositions.
+- **2026-08-14:** Use full project records for active work and a separate completed archive instead of repeating every project in a thumbnail gallery and a detail row.

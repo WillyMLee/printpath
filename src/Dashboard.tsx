@@ -9,7 +9,6 @@ import {
   Check,
   ChevronRight,
   CircleDot,
-  Clock3,
   Coins,
   Component,
   CreditCard,
@@ -18,7 +17,6 @@ import {
   Droplets,
   ExternalLink,
   Flower2,
-  Gauge,
   Gamepad2,
   Gem,
   Grid3X3,
@@ -30,7 +28,6 @@ import {
   Link2,
   LockKeyhole,
   PackageCheck,
-  PackageOpen,
   PanelsTopLeft,
   Plus,
   Printer,
@@ -101,85 +98,6 @@ const plateOptions = [
 ];
 
 type VaseVersionId = "petal-twist" | "leaf-bloom";
-type ProjectFilter = "all" | "progress" | "ready" | "completed";
-
-const projectCards = [
-  {
-    name: "Drawer Gap Tray",
-    kind: "Custom fit",
-    status: "Completed",
-    statusClass: "complete",
-    parts: "1 part · 1 plate",
-    printFacts: { plates: "1", prints: "1", components: "1", material: "≈111 g PLA", time: "≈4–6 hr" },
-    estimateNote: "Calculated from the approved tray geometry · confirm in Bambu Studio",
-    next: "Ready to reprint",
-    confidence: 100,
-    cover: "/projects/drawer-gap-tray-aug-2026-product.png",
-    filter: "completed" as Exclude<ProjectFilter, "all">,
-    artIndex: 1,
-    target: "drawer-gap-tray",
-  },
-  {
-    name: "Petal Twist Vase",
-    kind: "Floral vase",
-    status: "Design review",
-    statusClass: "progress",
-    parts: "1 part · 1 plate",
-    printFacts: { plates: "1", prints: "1", components: "1", material: "≈260 g PETG", time: "≈9 hr" },
-    estimateNote: "Geometry-based planning estimate · Bambu Studio supplies the final sliced values",
-    next: "Approve shape + water test",
-    confidence: 86,
-    cover: "/projects/petal-twist-vase-aug-2026-product.png",
-    filter: "progress" as Exclude<ProjectFilter, "all">,
-    artIndex: 2,
-    target: "vase-history-title",
-  },
-  {
-    name: "7 Wonders Duel Organizer",
-    kind: "Board game insert",
-    status: "Dimensions mapped",
-    statusClass: "progress",
-    parts: "4 modules · 2 plates",
-    printFacts: { plates: "2 planned", prints: "2", components: "4 modules", material: "Pending CAD", time: "Pending CAD" },
-    estimateNote: "Concept layout only · material and time begin after printable geometry exists",
-    next: "Confirm inside box + sleeve choice",
-    confidence: 76,
-    cover: "/projects/seven-wonders-duel-organizer-concept.svg?v=2",
-    filter: "progress" as Exclude<ProjectFilter, "all">,
-    artIndex: 3,
-    target: "seven-wonders-organizer",
-  },
-  {
-    name: "Cozy Stickerville Organizer",
-    kind: "Campaign insert",
-    status: "Dimensions mapped",
-    statusClass: "progress",
-    parts: "4 modules · 2 plates",
-    printFacts: { plates: "2 planned", prints: "2", components: "4 modules", material: "Pending CAD", time: "Pending CAD" },
-    estimateNote: "Published box and card sizes mapped · material follows layout CAD",
-    next: "Confirm inside box + supplied save box",
-    confidence: 64,
-    cover: "/projects/cozy-stickerville-organizer-concept.svg?v=2",
-    filter: "progress" as Exclude<ProjectFilter, "all">,
-    artIndex: 4,
-    target: "cozy-stickerville-organizer",
-  },
-  {
-    name: "Magnetic Hex Token Pods",
-    kind: "Modular token system",
-    status: "Alpha STL",
-    statusClass: "ready",
-    parts: "6 printable files · 1 starter plate",
-    printFacts: { plates: "1 starter plate", prints: "2 staged", components: "14 printed + 12 magnets", material: "≈80 g PLA", time: "≈5–6 hr" },
-    estimateNote: "Two pods, twelve cups, and the fit coupon · print the coupon first",
-    next: "Print 6 × 2 mm magnet coupon",
-    confidence: 78,
-    cover: "/projects/magnetic-hex-token-two-pod-starter-kit-aug-2026-product.png?v=1",
-    filter: "ready" as Exclude<ProjectFilter, "all">,
-    artIndex: 5,
-    target: "magnetic-token-system",
-  },
-];
 
 const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v1";
 
@@ -364,7 +282,6 @@ function OverviewPage(props: DashboardProps) {
 }
 
 function ProjectsPage(props: DashboardProps) {
-  const [projectFilter, setProjectFilter] = useState<ProjectFilter>("all");
   const [selectedVaseId, setSelectedVaseId] = useState<VaseVersionId>(() => {
     try {
       return localStorage.getItem(SELECTED_VASE_VERSION_KEY) === "leaf-bloom" ? "leaf-bloom" : "petal-twist";
@@ -373,13 +290,6 @@ function ProjectsPage(props: DashboardProps) {
     }
   });
   const selectedVase = vaseVersions.find((version) => version.id === selectedVaseId) ?? vaseVersions[0];
-  const filteredProjects = projectFilter === "all" ? projectCards : projectCards.filter((project) => project.filter === projectFilter);
-  const filterOptions: Array<{ id: ProjectFilter; label: string; count: number }> = [
-    { id: "all", label: "All projects", count: projectCards.length },
-    { id: "progress", label: "In progress", count: projectCards.filter((project) => project.filter === "progress").length },
-    { id: "ready", label: "Ready", count: projectCards.filter((project) => project.filter === "ready").length },
-    { id: "completed", label: "Completed", count: projectCards.filter((project) => project.filter === "completed").length },
-  ];
   const selectVase = (id: VaseVersionId) => {
     setSelectedVaseId(id);
     try { localStorage.setItem(SELECTED_VASE_VERSION_KEY, id); } catch { /* Local persistence is optional. */ }
@@ -439,29 +349,10 @@ function ProjectsPage(props: DashboardProps) {
         </div>
       </section>
 
-      <div className="project-filter-row" aria-label="Filter projects">{filterOptions.map((filter) => <button className={projectFilter === filter.id ? "active" : ""} aria-pressed={projectFilter === filter.id} key={filter.id} onClick={() => setProjectFilter(filter.id)}>{filter.label} <span>{filter.count}</span></button>)}</div>
-      <div className="project-estimate-key"><Gauge size={15} /><span><strong>Print planning facts</strong> Material is calculated only when geometry exists; concepts remain “Pending CAD.” Bambu Studio supplies the final time.</span></div>
-      {filteredProjects.length > 0 ? <div className="project-card-grid">
-        {filteredProjects.map((project) => (
-          <button className="project-card" key={project.name} onClick={() => project.name === "Drawer Gap Tray" ? props.onOpenProject() : document.getElementById(project.target)?.scrollIntoView({ behavior: "smooth", block: "start" })}>
-            <div className={`project-art project-art-${project.artIndex}`}>{project.cover ? <img src={project.cover} alt={`${project.name} cover`} /> : <span><Component size={30} /></span>}<em>{project.kind}</em></div>
-            <div className="project-card-body">
-              <div className="project-card-title"><h2>{project.name}</h2><span className={`status-chip ${project.statusClass}`}>{project.status}</span></div>
-              <p>{project.parts}</p>
-              <div className="project-print-facts" aria-label={`${project.name} print estimates`}>
-                <span><Layers3 size={15} /><small>Plates</small><strong>{project.printFacts.plates}</strong></span>
-                <span><Printer size={15} /><small>Prints</small><strong>{project.printFacts.prints}</strong></span>
-                <span><Component size={15} /><small>Components</small><strong>{project.printFacts.components}</strong></span>
-                <span><Box size={15} /><small>Material</small><strong>{project.printFacts.material}</strong></span>
-                <span><Clock3 size={15} /><small>Time</small><strong>{project.printFacts.time}</strong></span>
-              </div>
-              <div className="project-estimate-note"><Gauge size={13} /><span>{project.estimateNote}</span></div>
-              <div className="project-next"><span>Next step</span><strong>{project.next}</strong></div>
-              <div className="confidence-meter"><span style={{ width: `${project.confidence}%` }} /><em>{project.confidence}% confidence</em></div>
-            </div>
-          </button>
-        ))}
-      </div> : <div className="project-empty-state"><PackageOpen size={24} /><div><strong>No {projectFilter === "ready" ? "ready-to-print" : projectFilter} projects yet.</strong><p>Projects will appear here as they move through the design and print checks.</p></div></div>}
+      <div className="project-section-heading">
+        <div><span className="page-eyebrow">Active work</span><h2>Board-game systems on the workbench</h2><p>These full project records hold the current layout, fit gates, printable files, and next action without a duplicate thumbnail gallery.</p></div>
+        <span>3 active projects</span>
+      </div>
 
       <section className="organizer-concept page-card seven-wonders-organizer" id="seven-wonders-organizer" aria-labelledby="organizer-title">
         <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Layout pipeline</span><h2 id="organizer-title">7 Wonders Duel organizer</h2><p>A four-module base-game plan with published card dimensions mapped and three physical fit checks remaining.</p></div><span className="research-badge"><Gamepad2 size={14} /> Web dimensions mapped</span></div>
@@ -537,6 +428,22 @@ function ProjectsPage(props: DashboardProps) {
               </div>
             </details>
           </div>
+        </div>
+      </section>
+
+      <div className="project-section-heading completed-heading">
+        <div><span className="page-eyebrow">Completed</span><h2>Approved prints ready to revisit</h2><p>Completed work keeps its final dimensions, print facts, and handoff record without competing with active design work.</p></div>
+        <span>1 completed project</span>
+      </div>
+
+      <section className="completed-project-feature project-completed-feature page-card" id="drawer-gap-tray">
+        <div className="completed-project-cover"><img src="/projects/drawer-gap-tray-aug-2026-product.png" alt="Actual STL render of the completed Drawer Gap Tray" /></div>
+        <div className="completed-project-copy">
+          <span className="completion-kicker"><Check size={15} /> Completed · Aug 2026</span>
+          <h2>Drawer Gap Tray</h2>
+          <p>The approved one-compartment tray fills the narrow zone beside the existing Gridfinity layout and remains ready for reprint or revision.</p>
+          <div className="completed-project-facts"><span><strong>254.4 × 39.4 × 49.4 mm</strong><small>Final outside size</small></span><span><strong>1 plate</strong><small>Single part</small></span><span><strong>≈111 g PLA</strong><small>Planning estimate</small></span></div>
+          <div className="completed-project-actions"><button className="primary-button" onClick={props.onOpenProject}><PackageCheck size={16} /> Open completed project</button></div>
         </div>
       </section>
 
