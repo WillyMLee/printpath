@@ -169,7 +169,7 @@ const projectCards = [
     kind: "Modular token system",
     status: "Alpha STL",
     statusClass: "ready",
-    parts: "4 printable files · 1 plate",
+    parts: "5 printable files · 1 plate",
     printFacts: { plates: "1", prints: "2 staged", components: "8 printed + 6 magnets", material: "≈40–45 g PLA", time: "≈2.5–3.5 hr" },
     estimateNote: "One pod, six cups, and the fit coupon · print the coupon first",
     next: "Print 6 × 2 mm magnet coupon",
@@ -522,24 +522,26 @@ function ProjectsPage(props: DashboardProps) {
         <div className="organizer-concept-grid">
           <div className="organizer-concept-art"><img src="/projects/magnetic-hex-token-system-concept.svg" alt="Three magnetically connected hex token trays" /></div>
           <div className="organizer-concept-copy">
-            <span className="recommendation-tag"><BadgeCheck size={14} /> 96 × 83.1 × 22 mm · support-free · P1S</span>
+            <div className="project-spec-strip">
+              <span><Ruler size={16} /><small>Pod size</small><strong>96 × 83.1 × 22 mm</strong></span>
+              <span><Printer size={16} /><small>Print setup</small><strong>P1S · one plate</strong></span>
+              <span><Component size={16} /><small>Starter set</small><strong>1 pod · 6 cups</strong></span>
+            </div>
             <h3>Print the magnet coupon before the tray.</h3>
             <p>The tray itself is a clean manifold shell. Separate glue-on magnet cups keep the first prototype support-free, repairable, and safer to iterate if your magnets measure differently.</p>
-            <div className="organizer-module-grid">
-              <span><Coins size={17} /><strong>Single well</strong><small>Large shared token or coin supply</small></span>
-              <span><PanelsTopLeft size={17} /><strong>Split well</strong><small>Two resources in one connected pod</small></span>
-              <span><Grid3X3 size={17} /><strong>Triple well</strong><small>Three wedge zones around a center hub</small></span>
-              <span><CircleDot size={17} /><strong>Fit system</strong><small>6.20, 6.35, and 6.50 mm coupon pockets</small></span>
-            </div>
-            <div className="magnetic-downloads">
+            <div className="project-primary-actions">
               <a className="primary-button" href="/projects/magnetic-hex-token-tray-fit-coupon-aug-2026.stl" download><Download size={16} /> Magnet coupon first</a>
-              <a className="secondary-button" href="/projects/magnetic-hex-token-tray-single-aug-2026.stl" download><Download size={16} /> Single tray</a>
-              <a className="secondary-button" href="/projects/magnetic-hex-token-tray-split-aug-2026.stl" download><Download size={16} /> Split tray</a>
-              <a className="secondary-button" href="/projects/magnetic-hex-token-tray-triple-aug-2026.stl" download><Download size={16} /> Triple tray</a>
-              <a className="secondary-button" href="/projects/magnetic-hex-token-magnet-cup-6x2-aug-2026.stl" download><Download size={16} /> Magnet cup</a>
-              <a className="text-link" href="/projects/magnetic-hex-token-system-aug-2026-print-guide.md" target="_blank" rel="noreferrer">Alpha print guide <ArrowRight size={14} /></a>
+              <a className="secondary-button" href="/projects/magnetic-hex-token-system-aug-2026-print-guide.md" target="_blank" rel="noreferrer">Print guide <ArrowRight size={15} /></a>
             </div>
-            <div className="organizer-sources"><span>Research:</span><a href="https://cults3d.com/en/3d-model/game/hex-token-tray-modular-geekshapes-system" target="_blank" rel="noreferrer">6 × 2 mm precedent</a><a href="https://www.etsy.com/listing/4458957561/magnetic-hex-board-game-token-trays" target="_blank" rel="noreferrer">Table-size reference</a></div>
+            <details className="project-file-drawer">
+              <summary><span>Tray variants and component files</span><small>4 additional STLs</small><ChevronRight size={16} /></summary>
+              <div className="project-file-grid">
+                <a href="/projects/magnetic-hex-token-tray-single-aug-2026.stl" download><Download size={15} /><span><strong>Single well</strong><small>General tokens</small></span></a>
+                <a href="/projects/magnetic-hex-token-tray-split-aug-2026.stl" download><Download size={15} /><span><strong>Split well</strong><small>Two token groups</small></span></a>
+                <a href="/projects/magnetic-hex-token-tray-triple-aug-2026.stl" download><Download size={15} /><span><strong>Triple well</strong><small>Three token groups</small></span></a>
+                <a href="/projects/magnetic-hex-token-magnet-cup-6x2-aug-2026.stl" download><Download size={15} /><span><strong>Magnet cup</strong><small>6 × 2 mm magnet</small></span></a>
+              </div>
+            </details>
           </div>
         </div>
       </section>

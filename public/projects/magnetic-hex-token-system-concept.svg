@@ -1,19 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 675" role="img" aria-labelledby="title desc">
   <title id="title">Magnetic hex token tray system</title>
-  <desc id="desc">Three mint-green hexagonal token bowls joined by magnetic side cups.</desc>
+  <desc id="desc">Three mint-green hexagonal token bowls with single, split, and triple wells.</desc>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f3f7f3"/><stop offset="1" stop-color="#e7ecef"/></linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4f8f4"/><stop offset="1" stop-color="#e7edef"/></linearGradient>
     <linearGradient id="mint" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a4e1cc"/><stop offset="1" stop-color="#4a9b7f"/></linearGradient>
     <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="22" stdDeviation="20" flood-color="#243f36" flood-opacity=".2"/></filter>
   </defs>
-  <rect width="1200" height="675" fill="url(#bg)"/>
-  <g opacity=".45" stroke="#cdd8d2"><path d="M60 550h1080M120 485h960M180 420h840M240 355h720"/><path d="M600 270 80 620M600 270l520 350M600 270 320 640M600 270l280 370"/></g>
-  <g font-family="Arial, sans-serif">
-    <text x="62" y="70" fill="#3f7c68" font-size="20" font-weight="700" letter-spacing="2">BOARD GAMES · PRINTABLE ALPHA</text>
-    <text x="62" y="116" fill="#19352d" font-size="44" font-weight="800">Magnetic Hex Token Pods</text>
-    <text x="62" y="151" fill="#6d7c76" font-size="20">Six connecting faces · optional dividers · 6 × 2 mm magnets</text>
-  </g>
-  <g filter="url(#shadow)" transform="translate(210 175)">
+  <rect width="900" height="675" fill="url(#bg)"/>
+  <g opacity=".38" stroke="#cdd8d2"><path d="M35 570h830M80 505h740M125 440h650M170 375h560"/><path d="M450 265 45 620M450 265l405 355M450 265 220 640M450 265l230 375"/></g>
+  <g filter="url(#shadow)" transform="translate(68 135)">
     <g transform="translate(0 120)">
       <path d="m0 70 105-70 130 35 26 106-105 70-130-35Z" fill="#34775f" stroke="#28624e" stroke-width="5"/>
       <path d="m0 70 26 106 130 35 105-70-3 55-103 71-132-36Z" fill="#2d644f"/>
@@ -37,5 +32,4 @@
     <g fill="#efc568" stroke="#9c7b36" stroke-width="3"><circle cx="246" cy="146" r="8"/><circle cx="498" cy="146" r="8"/></g>
     <path d="M231 146h8M505 146h8" stroke="#8c6a2c" stroke-width="3"/>
   </g>
-  <g font-family="Arial, sans-serif"><rect x="896" y="58" width="240" height="52" rx="26" fill="#fff" opacity=".92"/><text x="1016" y="91" fill="#31745d" font-size="16" font-weight="700" text-anchor="middle">96 × 89.7 × 22.6 MM</text></g>
 </svg>
