@@ -125,8 +125,8 @@ const projectCards = [
     status: "Design review",
     statusClass: "progress",
     parts: "1 part · 1 plate",
-    printFacts: { plates: "1", prints: "1", components: "1", material: "≈255–265 g PETG", time: "≈8–11 hr" },
-    estimateNote: "Calculated from the STL volume plus a brim · slicer estimate is final",
+    printFacts: { plates: "1", prints: "1", components: "1", material: "≈260 g PETG", time: "≈9 hr" },
+    estimateNote: "Geometry-based planning estimate · Bambu Studio supplies the final sliced values",
     next: "Approve shape + water test",
     confidence: 86,
     cover: "/projects/petal-twist-vase-aug-2026-product.png",
@@ -140,8 +140,8 @@ const projectCards = [
     status: "Layout v1",
     statusClass: "progress",
     parts: "4 modules · 2 plates",
-    printFacts: { plates: "2 planned", prints: "2", components: "4 modules", material: "≈450–650 g PLA", time: "≈18–28 hr" },
-    estimateNote: "Planning range · updates after box and sleeve measurements",
+    printFacts: { plates: "2 planned", prints: "2", components: "4 modules", material: "Pending CAD", time: "Pending CAD" },
+    estimateNote: "Concept layout only · material and time begin after printable geometry exists",
     next: "Confirm box + sleeve measurements",
     confidence: 72,
     cover: "/projects/seven-wonders-duel-organizer-concept.svg",
@@ -152,14 +152,14 @@ const projectCards = [
   {
     name: "Cozy Stickerville Organizer",
     kind: "Campaign insert",
-    status: "Research mapped",
+    status: "Dimensions mapped",
     statusClass: "progress",
     parts: "4 modules · 2 plates",
-    printFacts: { plates: "2 planned", prints: "2", components: "4 modules", material: "≈550–800 g PLA", time: "≈24–36 hr" },
-    estimateNote: "Planning range · updates after box and stack measurements",
-    next: "Measure inside box + card stacks",
-    confidence: 48,
-    cover: "/projects/cozy-stickerville-organizer-concept.svg",
+    printFacts: { plates: "2 planned", prints: "2", components: "4 modules", material: "Pending CAD", time: "Pending CAD" },
+    estimateNote: "Published box and card sizes mapped · material follows layout CAD",
+    next: "Confirm inside box + supplied save box",
+    confidence: 64,
+    cover: "/projects/cozy-stickerville-organizer-concept.svg?v=2",
     filter: "progress" as Exclude<ProjectFilter, "all">,
     artIndex: 4,
     target: "cozy-stickerville-organizer",
@@ -170,7 +170,7 @@ const projectCards = [
     status: "Alpha STL",
     statusClass: "ready",
     parts: "5 printable files · 1 plate",
-    printFacts: { plates: "1", prints: "2 staged", components: "8 printed + 6 magnets", material: "≈40–45 g PLA", time: "≈2.5–3.5 hr" },
+    printFacts: { plates: "1", prints: "2 staged", components: "8 printed + 6 magnets", material: "≈40 g PLA", time: "≈3 hr" },
     estimateNote: "One pod, six cups, and the fit coupon · print the coupon first",
     next: "Print 6 × 2 mm magnet coupon",
     confidence: 78,
@@ -452,7 +452,7 @@ function ProjectsPage(props: DashboardProps) {
       </section>
 
       <div className="project-filter-row" aria-label="Filter projects">{filterOptions.map((filter) => <button className={projectFilter === filter.id ? "active" : ""} aria-pressed={projectFilter === filter.id} key={filter.id} onClick={() => setProjectFilter(filter.id)}>{filter.label} <span>{filter.count}</span></button>)}</div>
-      <div className="project-estimate-key"><Gauge size={15} /><span><strong>Print planning estimates</strong> Material and time become final only after the selected STL is sliced in Bambu Studio.</span></div>
+      <div className="project-estimate-key"><Gauge size={15} /><span><strong>Print planning facts</strong> Material is calculated only when geometry exists; concepts remain “Pending CAD.” Bambu Studio supplies the final time.</span></div>
       {filteredProjects.length > 0 ? <div className="project-card-grid">
         {filteredProjects.map((project) => (
           <button className="project-card" key={project.name} onClick={() => project.name === "Drawer Gap Tray" ? props.onOpenProject() : document.getElementById(project.target)?.scrollIntoView({ behavior: "smooth", block: "start" })}>
@@ -497,22 +497,22 @@ function ProjectsPage(props: DashboardProps) {
       </section>
 
       <section className="organizer-concept page-card cozy-organizer" id="cozy-stickerville-organizer" aria-labelledby="cozy-organizer-title">
-        <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Campaign organizer</span><h2 id="cozy-organizer-title">Cozy Stickerville</h2><p>A campaign-state insert built around ten Event decks, an ordered Catalog, four shared resources, and the supplied save-game box.</p></div><span className="research-badge"><Sprout size={14} /> Inventory mapped</span></div>
+        <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Campaign organizer</span><h2 id="cozy-organizer-title">Cozy Stickerville</h2><p>A campaign-state insert built around ten Event decks, an ordered Catalog, four shared resources, and the supplied save-game box.</p></div><span className="research-badge"><Sprout size={14} /> Web dimensions mapped</span></div>
         <div className="organizer-concept-grid">
-          <div className="organizer-concept-art"><img src="/projects/cozy-stickerville-organizer-concept.svg" alt="Four-module Cozy Stickerville organizer concept" /></div>
+          <div className="organizer-concept-art"><img src="/projects/cozy-stickerville-organizer-concept.svg?v=2" alt="Four-module Cozy Stickerville organizer concept" /></div>
           <div className="organizer-concept-copy">
-            <span className="recommendation-tag"><BadgeCheck size={14} /> 225 × 300 × 53 mm outer box · modular P1S plan</span>
+            <span className="recommendation-tag"><BadgeCheck size={14} /> 305 × 225 × 51 mm box · 181 cards at 63 × 88 mm</span>
             <h3>Organize the campaign, not just the components.</h3>
             <p>The design separates archived years from the active year and turns the resource storage into four lift-out table bowls. The map, sticker book, and storybook stay as a supported flat layer.</p>
             <div className="organizer-module-grid">
-              <span><Layers3 size={17} /><strong>Year Library</strong><small>Ten 12-card Event decks + active-year pull tab</small></span>
-              <span><CreditCard size={17} /><strong>Catalog Library</strong><small>Cards 1–60 remain ordered and finger-accessible</small></span>
+              <span><Layers3 size={17} /><strong>Year Library</strong><small>120 cards · ten 12-card Event decks · 63 × 88 mm</small></span>
+              <span><CreditCard size={17} /><strong>Catalog Library</strong><small>60 Catalog cards + reference · 63 × 88 mm</small></span>
               <span><Sprout size={17} /><strong>Resource Village</strong><small>Wood, Food, Gold, Ore, and die in lift-out bowls</small></span>
               <span><PackageCheck size={17} /><strong>Save-Game Dock</strong><small>Preserves the supplied box and current campaign state</small></span>
             </div>
-            <div className="organizer-gates"><strong>Measure before CAD</strong><span>1. Inside width, depth, and usable height</span><span>2. Event + Catalog card stacks</span><span>3. Supplied save-game box outside size</span><span>4. Flat book/map stack thickness</span><span>5. Flat or vertical storage</span></div>
-            <button className="primary-button organizer-start" onClick={() => props.onStartIdea("A Cozy Stickerville campaign organizer with a ten-deck Year Library, ordered Catalog Library, four lift-out resource bowls, a die home, a dock for the supplied save-game box, and a supported top layer for the map, sticker book, and storybook. Confirm the inside box, card stacks, save box, flat stack, and storage orientation before CAD.")}>Start Cozy measurements <ArrowRight size={16} /></button>
-            <div className="organizer-sources"><span>Open:</span><a href="/projects/cozy-stickerville-organizer-v1-aug-2026.md" target="_blank" rel="noreferrer">Campaign packet</a><a href="https://www.asmodee.ca/en/product/cozy-stickerville/" target="_blank" rel="noreferrer">Official contents</a><a href="https://cdn.svc.asmodee.net/production-asmodeeca/uploads/2026/01/Cozy_Stickerville_Rulebook_English.pdf" target="_blank" rel="noreferrer">Rulebook</a></div>
+            <div className="organizer-gates"><strong>Three physical checks before CAD</strong><span>1. Inside box width, depth, and usable height</span><span>2. Supplied save-game box outside size</span><span>3. Flat map/book stack thickness + storage orientation</span></div>
+            <button className="primary-button organizer-start" onClick={() => props.onStartIdea("A Cozy Stickerville campaign organizer for the published 305 × 225 × 51 mm box and 181 unsleeved 63 × 88 mm cards, with a ten-deck Year Library, ordered Catalog Library, four lift-out resource bowls, a die home, a dock for the supplied save-game box, and a supported top layer for the map, sticker book, and storybook. Confirm only the inside box dimensions, supplied save box outside size, and flat stack thickness plus storage orientation before CAD.")}>Confirm Cozy fit <ArrowRight size={16} /></button>
+            <div className="organizer-sources"><span>Open:</span><a href="/projects/cozy-stickerville-organizer-v1-aug-2026.md" target="_blank" rel="noreferrer">Campaign packet</a><a href="https://www.hugendubel.de/de/spielware/corey_konieczka-unexpected_games_cozy_stickerville-52767357-produkt-details.html" target="_blank" rel="noreferrer">Box dimensions</a><a href="https://fundas.online/juegos/cozy-stickerville" target="_blank" rel="noreferrer">Card dimensions</a><a href="https://www.asmodee.ca/en/product/cozy-stickerville/" target="_blank" rel="noreferrer">Official contents</a></div>
           </div>
         </div>
       </section>

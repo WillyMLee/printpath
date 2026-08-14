@@ -36,6 +36,8 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Public access | Browse-only showcase with protected project authoring | Shipped |
 | AI cost boundary | Signed Maker Mode sessions, server-only OpenAI key, body/token caps, and rate limits | Shipped |
 | Print planning facts | Readable plate, print-job, component, material, and time estimates on every project card | Shipped |
+| Honest concept estimates | Geometry-backed projects show one planning estimate; project cards and workbench metrics show `Pending CAD` until volume exists | Shipped |
+| Cozy source dimensions | Published 305 × 225 × 51 mm box and 181 unsleeved 63 × 88 mm cards mapped; three physical fit checks remain | Shipped |
 
 ## Next implementation candidates
 

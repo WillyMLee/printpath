@@ -8,9 +8,9 @@ A campaign-friendly insert that separates archived cards from the active year, b
 
 The official contents include a sticker book, storybook, die, 120 Event cards arranged as ten 12-card year decks, 60 Catalog cards, a reference card, save-game box, map, and tokens for 12 Food, 12 Wood, 12 Gold, and 6 Ore.
 
-Sources: [official contents](https://www.asmodee.ca/en/product/cozy-stickerville/), [official rulebook](https://cdn.svc.asmodee.net/production-asmodeeca/uploads/2026/01/Cozy_Stickerville_Rulebook_English.pdf), and [English-edition outer box record](https://boardgamegeek.com/boardgameversion/777006/english-edition).
+Sources: [official contents](https://www.asmodee.ca/en/product/cozy-stickerville/), [official rulebook](https://cdn.svc.asmodee.net/production-asmodeeca/uploads/2026/01/Cozy_Stickerville_Rulebook_English.pdf), [published box dimensions](https://www.hugendubel.de/de/spielware/corey_konieczka-unexpected_games_cozy_stickerville-52767357-produkt-details.html), and [card dimensions](https://fundas.online/juegos/cozy-stickerville).
 
-The recorded outer box is approximately **225 × 300 × 53 mm**. Because one axis exceeds the P1S plate, the insert must be modular even before the internal dimensions are known.
+The published outer box is approximately **305 × 225 × 51 mm**. The game has **181 cards at 63 × 88 mm** unsleeved. Because one box axis exceeds the P1S plate, the insert must be modular even before the internal dimensions are known.
 
 ## Original module plan
 
@@ -27,10 +27,8 @@ The Year Library and Catalog Library form Plate A. The Resource Village and Save
 ## Required measurements before printable CAD
 
 1. Inside box width, depth, and usable height with all books and the map stacked as intended.
-2. Event and Catalog card width, length, and total stack height; include sleeves if used.
-3. Outside size of the supplied save-game box.
-4. Thickness of the map, sticker book, storybook, and reference stack.
-5. Whether the box will be stored vertically.
+2. Outside size of the supplied save-game box.
+3. Thickness of the map/book stack and whether the box will be stored vertically.
 
 ## First prototype
 

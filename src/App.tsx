@@ -279,6 +279,26 @@ function PartPreview({ spec }: { spec: ProjectSpec }) {
     );
   }
 
+  const isCozyOrganizer = /cozy stickerville/i.test(`${spec.name} ${spec.description}`);
+
+  if (isCozyOrganizer) {
+    return (
+      <div className="preview-shell cozy-pipeline-preview">
+        <div className="preview-toolbar">
+          <div>
+            <span className="eyebrow">Live organizer plan</span>
+            <strong>Cozy Stickerville module pipeline</strong>
+          </div>
+          <span className="cozy-preview-status">2 source dimensions mapped</span>
+        </div>
+        <div className="preview-canvas">
+          <img src="/projects/cozy-stickerville-organizer-concept.svg?v=2" alt="Exploded four-module Cozy Stickerville organizer layout and design pipeline" />
+          <span className="preview-note">Published inputs mapped · 3 physical checks remain</span>
+        </div>
+      </div>
+    );
+  }
+
   const visualWidth = clamp(170 + (spec.width - 50) * 1.15, 165, 315);
   const visualHeight = clamp(94 + (spec.height - 20) * 1.4, 96, 190);
   const visualDepth = clamp(56 + (spec.depth - 30) * 0.7, 50, 98);
@@ -1367,8 +1387,8 @@ export default function App() {
           <section className="visual-panel">
             <PartPreview spec={spec} />
             <div className="metrics-row">
-              <Metric icon={Clock3} label="Rough time" value={`~${estimatedHours} hr`} detail="early estimate" />
-              <Metric icon={Layers3} label="Material" value={`~${estimatedGrams} g`} detail={spec.material} />
+              <Metric icon={Clock3} label="Rough time" value={hasPrintableGeometry ? `~${estimatedHours} hr` : "Pending CAD"} detail={hasPrintableGeometry ? "geometry estimate" : "slice after geometry"} />
+              <Metric icon={Layers3} label="Material" value={hasPrintableGeometry ? `~${estimatedGrams} g` : "Pending CAD"} detail={hasPrintableGeometry ? spec.material : "no volume yet"} />
               <Metric icon={Gauge} label="Readiness" value={`${readyCount}/${checks.length}`} detail={readyCount === checks.length ? "checks passed" : "needs review"} />
             </div>
             <div className="readiness-card">

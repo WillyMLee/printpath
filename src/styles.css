@@ -348,6 +348,9 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .close-nav { display: none; }
 .preview-canvas { height: 410px; overflow: hidden; position: relative; background: radial-gradient(circle at 50% 35%, #ffffff 0%, #f4f6f1 58%, #e9ede6 100%); }
 .preview-canvas svg { width: 100%; height: 100%; position: relative; z-index: 2; }
+.cozy-pipeline-preview .preview-canvas { background: #eef3ef; }
+.cozy-pipeline-preview .preview-canvas > img { width: 100%; height: 100%; display: block; object-fit: cover; position: relative; z-index: 2; }
+.cozy-preview-status { padding: 7px 10px; border-radius: 999px; color: #2b6857; background: #e3f3eb; font-size: 8px; font-weight: 800; }
 .grid-floor { position: absolute; inset: 46% -40% -55%; transform: perspective(420px) rotateX(62deg); transform-origin: center top; opacity: .36; background-image: linear-gradient(rgba(53,93,82,.12) 1px, transparent 1px), linear-gradient(90deg, rgba(53,93,82,.12) 1px, transparent 1px); background-size: 27px 27px; mask-image: radial-gradient(ellipse at center top, black 10%, transparent 67%); }
 .part-group { transition: transform .45s cubic-bezier(.2,.8,.2,1); }
 .dimension-markers line { stroke: #899893; stroke-width: 1; stroke-dasharray: 2 3; }
@@ -578,7 +581,8 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .organizer-sources { margin-top: 13px; display: flex; flex-wrap: wrap; gap: 7px 11px; align-items: center; font-size: 8.5px; }
 .organizer-sources span { color: #82908b; font-weight: 750; }
 .organizer-sources a { color: #317a67; text-underline-offset: 2px; }
-.cozy-organizer .organizer-concept-art { background: #fbf5ea; }
+.cozy-organizer .organizer-concept-art { min-height: 0; aspect-ratio: 16 / 9; background: #eef3ef; }
+.cozy-organizer .organizer-concept-art img { min-height: 0; height: 100%; object-fit: cover; }
 .magnetic-organizer .organizer-concept-grid { grid-template-columns: minmax(340px,.9fr) minmax(440px,1.1fr); gap: 32px; align-items: start; }
 .magnetic-organizer .organizer-concept-art { min-height: 0; aspect-ratio: 4 / 3; background: #eff5f1; }
 .magnetic-organizer .organizer-concept-art img { min-height: 0; height: 100%; object-fit: cover; }
