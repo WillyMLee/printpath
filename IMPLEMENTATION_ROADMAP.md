@@ -35,6 +35,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Deployment | GitHub workflow and Cloudflare Workers static hosting | Shipped |
 | Public access | Browse-only showcase with protected project authoring | Shipped |
 | AI cost boundary | Signed Maker Mode sessions, server-only OpenAI key, body/token caps, and rate limits | Shipped |
+| Print planning facts | Readable plate, print-job, component, material, and time estimates on every project card | Shipped |
 
 ## Next implementation candidates
 
@@ -109,3 +110,4 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-14:** Make Cozy Stickerville modular across staged P1S plates because its published 225 × 300 × 53 mm outer box exceeds one P1S plate direction.
 - **2026-08-14:** De-risk the magnetic token system with a three-size magnet coupon and separate glue-on cups before integrating magnets into full trays.
 - **2026-08-14:** Use Thangs references only as form vocabulary; preserve original PrintPath geometry and the PETG water-holding requirements.
+- **2026-08-14:** Show plate count, print jobs, components, material, and time together; label unsliced numbers as estimates and keep Bambu Studio as the final authority.

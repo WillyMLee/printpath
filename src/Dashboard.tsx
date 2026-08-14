@@ -110,6 +110,8 @@ const projectCards = [
     status: "Completed",
     statusClass: "complete",
     parts: "1 part · 1 plate",
+    printFacts: { plates: "1", prints: "1", components: "1", material: "≈111 g PLA", time: "≈4–6 hr" },
+    estimateNote: "Calculated from the approved tray geometry · confirm in Bambu Studio",
     next: "Ready to reprint",
     confidence: 100,
     cover: "/projects/drawer-gap-tray-aug-2026-product.png",
@@ -123,6 +125,8 @@ const projectCards = [
     status: "Design review",
     statusClass: "progress",
     parts: "1 part · 1 plate",
+    printFacts: { plates: "1", prints: "1", components: "1", material: "≈255–265 g PETG", time: "≈8–11 hr" },
+    estimateNote: "Calculated from the STL volume plus a brim · slicer estimate is final",
     next: "Approve shape + water test",
     confidence: 86,
     cover: "/projects/petal-twist-vase-aug-2026-product.png",
@@ -136,6 +140,8 @@ const projectCards = [
     status: "Layout v1",
     statusClass: "progress",
     parts: "4 modules · 2 plates",
+    printFacts: { plates: "2 planned", prints: "2", components: "4 modules", material: "≈450–650 g PLA", time: "≈18–28 hr" },
+    estimateNote: "Planning range · updates after box and sleeve measurements",
     next: "Confirm box + sleeve measurements",
     confidence: 72,
     cover: "/projects/seven-wonders-duel-organizer-concept.svg",
@@ -149,6 +155,8 @@ const projectCards = [
     status: "Research mapped",
     statusClass: "progress",
     parts: "4 modules · 2 plates",
+    printFacts: { plates: "2 planned", prints: "2", components: "4 modules", material: "≈550–800 g PLA", time: "≈24–36 hr" },
+    estimateNote: "Planning range · updates after box and stack measurements",
     next: "Measure inside box + card stacks",
     confidence: 48,
     cover: "/projects/cozy-stickerville-organizer-concept.svg",
@@ -162,6 +170,8 @@ const projectCards = [
     status: "Alpha STL",
     statusClass: "ready",
     parts: "4 printable files · 1 plate",
+    printFacts: { plates: "1", prints: "2 staged", components: "8 printed + 6 magnets", material: "≈40–45 g PLA", time: "≈2.5–3.5 hr" },
+    estimateNote: "One pod, six cups, and the fit coupon · print the coupon first",
     next: "Print 6 × 2 mm magnet coupon",
     confidence: 78,
     cover: "/projects/magnetic-hex-token-system-concept.svg",
@@ -442,6 +452,7 @@ function ProjectsPage(props: DashboardProps) {
       </section>
 
       <div className="project-filter-row" aria-label="Filter projects">{filterOptions.map((filter) => <button className={projectFilter === filter.id ? "active" : ""} aria-pressed={projectFilter === filter.id} key={filter.id} onClick={() => setProjectFilter(filter.id)}>{filter.label} <span>{filter.count}</span></button>)}</div>
+      <div className="project-estimate-key"><Gauge size={15} /><span><strong>Print planning estimates</strong> Material and time become final only after the selected STL is sliced in Bambu Studio.</span></div>
       {filteredProjects.length > 0 ? <div className="project-card-grid">
         {filteredProjects.map((project) => (
           <button className="project-card" key={project.name} onClick={() => project.name === "Drawer Gap Tray" ? props.onOpenProject() : document.getElementById(project.target)?.scrollIntoView({ behavior: "smooth", block: "start" })}>
@@ -449,6 +460,14 @@ function ProjectsPage(props: DashboardProps) {
             <div className="project-card-body">
               <div className="project-card-title"><h2>{project.name}</h2><span className={`status-chip ${project.statusClass}`}>{project.status}</span></div>
               <p>{project.parts}</p>
+              <div className="project-print-facts" aria-label={`${project.name} print estimates`}>
+                <span><Layers3 size={15} /><small>Plates</small><strong>{project.printFacts.plates}</strong></span>
+                <span><Printer size={15} /><small>Prints</small><strong>{project.printFacts.prints}</strong></span>
+                <span><Component size={15} /><small>Components</small><strong>{project.printFacts.components}</strong></span>
+                <span><Box size={15} /><small>Material</small><strong>{project.printFacts.material}</strong></span>
+                <span><Clock3 size={15} /><small>Time</small><strong>{project.printFacts.time}</strong></span>
+              </div>
+              <div className="project-estimate-note"><Gauge size={13} /><span>{project.estimateNote}</span></div>
               <div className="project-next"><span>Next step</span><strong>{project.next}</strong></div>
               <div className="confidence-meter"><span style={{ width: `${project.confidence}%` }} /><em>{project.confidence}% confidence</em></div>
             </div>
