@@ -98,6 +98,7 @@ const plateOptions = [
 ];
 
 type VaseVersionId = "petal-twist" | "leaf-bloom";
+type ProjectSelection = "drawer-gap" | "vase" | "seven-wonders" | "cozy" | "magnetic";
 
 const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v1";
 
@@ -282,6 +283,7 @@ function OverviewPage(props: DashboardProps) {
 }
 
 function ProjectsPage(props: DashboardProps) {
+  const [selectedProject, setSelectedProject] = useState<ProjectSelection>("vase");
   const [selectedVaseId, setSelectedVaseId] = useState<VaseVersionId>(() => {
     try {
       return localStorage.getItem(SELECTED_VASE_VERSION_KEY) === "leaf-bloom" ? "leaf-bloom" : "petal-twist";
@@ -290,10 +292,15 @@ function ProjectsPage(props: DashboardProps) {
     }
   });
   const selectedVase = vaseVersions.find((version) => version.id === selectedVaseId) ?? vaseVersions[0];
+  const chooseProject = (id: ProjectSelection) => {
+    setSelectedProject(id);
+    requestAnimationFrame(() => document.getElementById("selected-project-detail")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  };
   const selectVase = (id: VaseVersionId) => {
+    setSelectedProject("vase");
     setSelectedVaseId(id);
     try { localStorage.setItem(SELECTED_VASE_VERSION_KEY, id); } catch { /* Local persistence is optional. */ }
-    document.querySelector(".completed-project-feature")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    requestAnimationFrame(() => document.getElementById("selected-project-detail")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
   return (
     <>
@@ -303,6 +310,51 @@ function ProjectsPage(props: DashboardProps) {
         description="Single parts stay simple. Compound projects are broken into plates, checkpoints, and assembly steps."
         action={<button className="primary-button page-action" onClick={props.onNewProject}><Plus size={17} /> New project</button>}
       />
+
+      <section className="project-index-section" aria-labelledby="completed-projects-title">
+        <div className="project-index-heading">
+          <div><span className="page-eyebrow">Completed</span><h2 id="completed-projects-title">Ready whenever you need them</h2></div>
+          <span>1 project</span>
+        </div>
+        <div className="project-index-grid">
+          <button className={`project-index-card ${selectedProject === "drawer-gap" ? "selected" : ""}`} aria-pressed={selectedProject === "drawer-gap"} onClick={() => chooseProject("drawer-gap")}>
+            <span className="project-index-art"><img src="/projects/drawer-gap-tray-aug-2026-product.png" alt="Drawer Gap Tray render" /><em className="project-index-badge complete"><Check size={12} /> Completed</em></span>
+            <span className="project-index-copy"><span><strong>Drawer Gap Tray</strong><small>Ready to reprint</small></span><ChevronRight size={18} /></span>
+          </button>
+        </div>
+      </section>
+
+      <section className="project-index-section" aria-labelledby="active-projects-title">
+        <div className="project-index-heading">
+          <div><span className="page-eyebrow">Active projects</span><h2 id="active-projects-title">Continue your latest work</h2></div>
+          <span>4 projects</span>
+        </div>
+        <div className="project-index-grid">
+          <button className={`project-index-card ${selectedProject === "vase" ? "selected" : ""}`} aria-pressed={selectedProject === "vase"} onClick={() => chooseProject("vase")}>
+            <span className="project-index-art"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Petal Twist Vase render" /><em className="project-index-badge recent">Most recent</em></span>
+            <span className="project-index-copy"><span><strong>Petal Twist Vase</strong><small>Review two saved designs</small></span><ChevronRight size={18} /></span>
+          </button>
+          <button className={`project-index-card ${selectedProject === "seven-wonders" ? "selected" : ""}`} aria-pressed={selectedProject === "seven-wonders"} onClick={() => chooseProject("seven-wonders")}>
+            <span className="project-index-art"><img src="/projects/seven-wonders-duel-organizer-concept.svg?v=2" alt="7 Wonders Duel organizer concept" /><em className="project-index-badge">Fit check</em></span>
+            <span className="project-index-copy"><span><strong>7 Wonders Duel</strong><small>Confirm box and sleeves</small></span><ChevronRight size={18} /></span>
+          </button>
+          <button className={`project-index-card ${selectedProject === "cozy" ? "selected" : ""}`} aria-pressed={selectedProject === "cozy"} onClick={() => chooseProject("cozy")}>
+            <span className="project-index-art"><img src="/projects/cozy-stickerville-organizer-concept.svg?v=2" alt="Cozy Stickerville organizer concept" /><em className="project-index-badge">Fit check</em></span>
+            <span className="project-index-copy"><span><strong>Cozy Stickerville</strong><small>Confirm box and save box</small></span><ChevronRight size={18} /></span>
+          </button>
+          <button className={`project-index-card ${selectedProject === "magnetic" ? "selected" : ""}`} aria-pressed={selectedProject === "magnetic"} onClick={() => chooseProject("magnetic")}>
+            <span className="project-index-art"><img src="/projects/magnetic-hex-token-two-pod-starter-kit-aug-2026-product.png?v=1" alt="Magnetic Hex Token Pods render" /><em className="project-index-badge ready">STL ready</em></span>
+            <span className="project-index-copy"><span><strong>Magnetic Hex Token Pods</strong><small>Print the fit coupon first</small></span><ChevronRight size={18} /></span>
+          </button>
+        </div>
+      </section>
+
+      <div className="project-detail-heading" id="selected-project-detail">
+        <span className="page-eyebrow">Selected project</span>
+        <h2>Quick overview, diagram, and print details</h2>
+      </div>
+
+      {selectedProject === "vase" && <>
       <section className="completed-project-feature design-review-feature page-card">
         <div className="completed-project-cover"><img src={selectedVase.image} alt={`Isometric render of the selected ${selectedVase.name} STL`} /></div>
         <div className="completed-project-copy">
@@ -349,11 +401,9 @@ function ProjectsPage(props: DashboardProps) {
         </div>
       </section>
 
-      <div className="project-section-heading">
-        <div><span className="page-eyebrow">Active work</span><h2>Board-game systems on the workbench</h2><p>These full project records hold the current layout, fit gates, printable files, and next action without a duplicate thumbnail gallery.</p></div>
-        <span>3 active projects</span>
-      </div>
+      </>}
 
+      {selectedProject === "seven-wonders" &&
       <section className="organizer-concept page-card seven-wonders-organizer" id="seven-wonders-organizer" aria-labelledby="organizer-title">
         <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Layout pipeline</span><h2 id="organizer-title">7 Wonders Duel organizer</h2><p>A four-module base-game plan with published card dimensions mapped and three physical fit checks remaining.</p></div><span className="research-badge"><Gamepad2 size={14} /> Web dimensions mapped</span></div>
         <div className="organizer-concept-grid">
@@ -373,8 +423,9 @@ function ProjectsPage(props: DashboardProps) {
             <div className="organizer-sources"><span>Open:</span><a href="/projects/seven-wonders-duel-organizer-v1-aug-2026.md" target="_blank" rel="noreferrer">Layout packet</a><a href="https://www.asmodee.co.uk/products/asm7du-en01-7-wonders-duel" target="_blank" rel="noreferrer">Box dimensions</a><a href="https://www.rykergames.com/products/7-wonders-duel-card-sleeve-kit" target="_blank" rel="noreferrer">Card dimensions</a><a href="https://sevenwondersduel.com/" target="_blank" rel="noreferrer">Official contents</a></div>
           </div>
         </div>
-      </section>
+      </section>}
 
+      {selectedProject === "cozy" &&
       <section className="organizer-concept page-card cozy-organizer" id="cozy-stickerville-organizer" aria-labelledby="cozy-organizer-title">
         <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Campaign organizer</span><h2 id="cozy-organizer-title">Cozy Stickerville</h2><p>A campaign-state insert built around ten Event decks, an ordered Catalog, four shared resources, and the supplied save-game box.</p></div><span className="research-badge"><Sprout size={14} /> Web dimensions mapped</span></div>
         <div className="organizer-concept-grid">
@@ -394,8 +445,9 @@ function ProjectsPage(props: DashboardProps) {
             <div className="organizer-sources"><span>Open:</span><a href="/projects/cozy-stickerville-organizer-v1-aug-2026.md" target="_blank" rel="noreferrer">Campaign packet</a><a href="https://www.hugendubel.de/de/spielware/corey_konieczka-unexpected_games_cozy_stickerville-52767357-produkt-details.html" target="_blank" rel="noreferrer">Box dimensions</a><a href="https://fundas.online/juegos/cozy-stickerville" target="_blank" rel="noreferrer">Card dimensions</a><a href="https://www.asmodee.ca/en/product/cozy-stickerville/" target="_blank" rel="noreferrer">Official contents</a></div>
           </div>
         </div>
-      </section>
+      </section>}
 
+      {selectedProject === "magnetic" &&
       <section className="organizer-concept page-card magnetic-organizer" id="magnetic-token-system" aria-labelledby="magnetic-token-title">
         <div className="card-heading-row"><div><span className="page-eyebrow">Board Games · Printable alpha</span><h2 id="magnetic-token-title">Magnetic Hex Token Pods</h2><p>A reusable polygon tray system with optional one-, two-, and three-zone interiors plus replaceable 6 × 2 mm magnet cups.</p></div><span className="ready-project-badge"><PackageCheck size={14} /> Alpha STL ready</span></div>
         <div className="organizer-concept-grid">
@@ -429,13 +481,9 @@ function ProjectsPage(props: DashboardProps) {
             </details>
           </div>
         </div>
-      </section>
+      </section>}
 
-      <div className="project-section-heading completed-heading">
-        <div><span className="page-eyebrow">Completed</span><h2>Approved prints ready to revisit</h2><p>Completed work keeps its final dimensions, print facts, and handoff record without competing with active design work.</p></div>
-        <span>1 completed project</span>
-      </div>
-
+      {selectedProject === "drawer-gap" &&
       <section className="completed-project-feature project-completed-feature page-card" id="drawer-gap-tray">
         <div className="completed-project-cover"><img src="/projects/drawer-gap-tray-aug-2026-product.png" alt="Actual STL render of the completed Drawer Gap Tray" /></div>
         <div className="completed-project-copy">
@@ -445,7 +493,7 @@ function ProjectsPage(props: DashboardProps) {
           <div className="completed-project-facts"><span><strong>254.4 × 39.4 × 49.4 mm</strong><small>Final outside size</small></span><span><strong>1 plate</strong><small>Single part</small></span><span><strong>≈111 g PLA</strong><small>Planning estimate</small></span></div>
           <div className="completed-project-actions"><button className="primary-button" onClick={props.onOpenProject}><PackageCheck size={16} /> Open completed project</button></div>
         </div>
-      </section>
+      </section>}
 
     </>
   );
