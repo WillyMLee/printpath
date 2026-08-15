@@ -98,7 +98,8 @@ const plateOptions = [
 ];
 
 type VaseVersionId = "petal-twist" | "leaf-bloom";
-type ProjectSelection = "drawer-gap" | "vase" | "seven-wonders" | "cozy" | "magnetic";
+type ConceptProjectId = "pottery-stamps" | "perfume-susan" | "phone-stands" | "ceramic-risers" | "film-camera-tools";
+type ProjectSelection = "drawer-gap" | "vase" | "seven-wonders" | "cozy" | "magnetic" | ConceptProjectId;
 
 const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v1";
 
@@ -128,6 +129,97 @@ const vaseVersions = [
     description: "Seven leaf-like folds rise into a wider, gently flared opening for fuller greenery.",
     historyNote: "Seven twisted botanical folds and a wider flared opening for fuller, leaf-heavy arrangements.",
     facts: [["122.9 × 122.5 × 245 mm", "P1S-safe size"], ["≈105 mm", "Average inner opening"], ["PETG", "One-piece body"]],
+  },
+];
+
+const conceptProjects: Array<{
+  id: ConceptProjectId;
+  title: string;
+  category: string;
+  status: string;
+  image: string;
+  summary: string;
+  thesis: string;
+  description: string;
+  facts: Array<[string, string]>;
+  modules: Array<[string, string]>;
+  questions: string[];
+  prompt: string;
+  sources?: Array<[string, string]>;
+}> = [
+  {
+    id: "pottery-stamps",
+    title: "Jessa + Willy Pottery Stamps",
+    category: "Ceramics",
+    status: "Two marks outlined",
+    image: "/projects/pottery-signature-stamps-concept.svg",
+    summary: "Two related English-name signature stamps with restrained Japanese seal composition.",
+    thesis: "One visual family, two clearly personal maker marks.",
+    description: "Jessa Parayno gets a vertical, botanical seal with a softer frame; Willy Lee gets a compact geometric seal with a calmer monogram. Both use mirrored relief, a depth-stop shoulder, and a broad thumb grip so the mark lands evenly in leather-hard clay.",
+    facts: [["2 stamps", "Separate names"], ["1 plate", "Grip + test tiles"], ["PLA first", "PETG after approval"]],
+    modules: [["Jessa seal", "Full name or JP monogram · botanical border"], ["Willy seal", "Full name or WL monogram · geometric border"], ["Depth-stop grip", "Even pressure without over-driving the mark"], ["Test matrix", "Three relief depths and two mark sizes"]],
+    questions: ["Full names, initials, or one of each?", "Preferred finished mark width: roughly 18, 22, or 26 mm?", "Is the clay usually soft, firm, or leather hard when signed?"],
+    prompt: "Design a paired pottery signature-stamp family for Jessa Parayno and Willy Lee. Use English lettering in a restrained Japanese seal-inspired composition without copying kanji or a traditional crest. Each stamp needs mirrored raised geometry, a broad ergonomic grip, a depth-stop shoulder, and a small test tile with multiple relief depths. Confirm full-name versus initials, preferred finished mark width, and clay firmness before CAD.",
+    sources: [["3D-printed clay stamp practice", "https://ceramicartsnetwork.org/daily/article/Custom-Clay-Stamps-for-the-21st-Century"], ["Reverse-image reminder", "https://ceramicartsnetwork.org/daily/article/Rolling-Rolling-Rolling-Making-Roulettes-to-Add-Texture-and-Depth-to-Your-Pottery"]],
+  },
+  {
+    id: "perfume-susan",
+    title: "Perfume Lazy Susan",
+    category: "Bedroom",
+    status: "Mechanism outlined",
+    image: "/projects/perfume-lazy-susan-concept.svg",
+    summary: "A low, quiet rotating perfume display with a removable tier and bottle-safe rail.",
+    thesis: "Make every bottle visible without turning the organizer into a bulky carousel.",
+    description: "The P1S-friendly direction uses a 220 mm base, a replaceable center bearing module, a shallow outer rail, and an optional half-moon riser for shorter bottles. The rotating mechanism remains isolated from the display tray so the top can be redesigned without rebuilding the bearing fit.",
+    facts: [["≤220 mm", "One-piece top"], ["608 bearing", "8 × 22 × 7 mm"], ["2–4 parts", "Modular assembly"]],
+    modules: [["Display platter", "Non-slip bottle zones and a low spill rail"], ["Half-moon riser", "Elevates shorter bottles without hiding tall ones"], ["Bearing cassette", "Replaceable fit around a common 608 bearing"], ["Weighted base", "Wide footprint with optional steel-washer pockets"]],
+    questions: ["Shelf or dresser maximum width and depth?", "Bottle count plus the widest and tallest bottle?", "Do you prefer one flat level or a removable rear tier?"],
+    prompt: "Design a P1S-printable lazy Susan for perfume bottles with a target maximum platter diameter of 220 mm, a low bottle-safe rail, a removable rear half-moon riser, and a replaceable bearing cassette around a measured 608 bearing. Confirm available footprint, bottle count, widest bottle, tallest bottle, and preferred one-level versus tiered layout before CAD.",
+    sources: [["608 bearing dimensions", "https://cdn.skfmediahub.skf.com/api/public/094abc84edb75bdd/pdf_preview_medium/094abc84edb75bdd_pdf_preview_medium.pdf"]],
+  },
+  {
+    id: "phone-stands",
+    title: "Creature + Nature Phone Stands",
+    category: "Desk & Bedroom",
+    status: "Two directions saved",
+    image: "/projects/phone-stand-pair-concept.svg",
+    summary: "Two original stands: a playful creature guardian and a quiet fern-and-stone cradle.",
+    thesis: "Keep the charm, cable access, and stability—without copying a known character.",
+    description: "Version A uses an original round-eared forest creature whose paws form the phone cradle. Version B uses two curling fern fronds rising from a river-stone base. Both preserve the charging port, support portrait and landscape use, and rely on separate TPU or felt contact pads rather than hard plastic against the phone.",
+    facts: [["2 versions", "One project history"], ["1–2 parts", "Per stand"], ["15° / 60°", "Viewing tests"]],
+    modules: [["Forest guardian", "Original creature silhouette · playful desk object"], ["Fern cradle", "Botanical sweep · quieter bedroom styling"], ["Cable channel", "Rear and bottom exits for charging"], ["Fit coupon", "Case thickness, lip depth, and viewing angle"]],
+    questions: ["Phone model and case thickness?", "Portrait only, or portrait plus landscape?", "Should MagSafe charging remain usable while docked?"],
+    prompt: "Design two original cute phone stands as versions of one project: a playful forest-creature guardian that evokes collectible-monster charm without copying any existing character, and a nature-inspired fern-and-river-stone cradle. Both must fit the measured phone and case, preserve charging access, support portrait and landscape use if requested, and include a small lip-depth and angle coupon before the full print.",
+    sources: [["Reference phone measurements", "https://support.apple.com/en-la/121029"]],
+  },
+  {
+    id: "ceramic-risers",
+    title: "Ceramic Cabinet Risers",
+    category: "Kitchen",
+    status: "Layout outlined",
+    image: "/projects/ceramic-cabinet-risers-concept.svg",
+    summary: "Modular platforms that separate plates, bowls, and serving ceramics without wasting shelf height.",
+    thesis: "Treat the cabinet as a small vertical room, not a pile of dishes.",
+    description: "The starting system uses two bridge-style risers, a narrow corner step, and optional plate dividers. Open sides keep pieces visible and easy to lift, while ribbed feet spread weight and allow each module to print flat without support.",
+    facts: [["3 modules", "Small / medium / corner"], ["1–2 plates", "Likely print plan"], ["PLA or PETG", "Dry cabinet use"]],
+    modules: [["Low bridge", "Cups or small bowls above plates"], ["Tall bridge", "Serving pieces above everyday stacks"], ["Corner step", "Uses the awkward rear cabinet zone"], ["Plate dividers", "Optional vertical lanes for platters and lids"]],
+    questions: ["Inside shelf width, depth, and clear height?", "Largest plate, bowl, and serving-piece diameters?", "Maximum stack weight and preferred shelf arrangement?"],
+    prompt: "Design a modular ceramic cabinet-riser system for a Bambu Lab P1S: low and tall bridge platforms, a rear corner step, and optional vertical plate dividers. Open sides should preserve visibility and hand access, feet should spread load, and every module should print flat without support. Confirm inside shelf dimensions, ceramic diameters, stack heights, and approximate maximum load before CAD.",
+  },
+  {
+    id: "film-camera-tools",
+    title: "Film Camera Toolkit",
+    category: "Photography",
+    status: "System outlined",
+    image: "/projects/film-camera-tools-concept.svg",
+    summary: "Measured lens caps, camera docks, display stands, and small-parts organizers as one expandable system.",
+    thesis: "Start with harmless fit coupons before anything touches vintage camera threads or finishes.",
+    description: "The first collection separates soft-contact display hardware from precision lens accessories. A snap-cap test ring verifies diameter and flex before a cap is printed; camera docks use felt or TPU contact strips; labeled organizers keep batteries, rolls, caps, and adapters together without forcing one camera system into another.",
+    facts: [["4 tool families", "Caps / docks / stands / trays"], ["Coupon first", "No forced lens fit"], ["Model-specific", "Measure each camera"]],
+    modules: [["Lens-cap coupons", "Diameter, snap flex, and tab clearance"], ["Camera dock", "Soft-contact home for one body and mounted lens"], ["Display stand", "Stable presentation with strap and lens clearance"], ["Parts organizer", "Film rolls, batteries, caps, adapters, and tools"]],
+    questions: ["Exact camera bodies and mounted lens combinations?", "Filter-thread or outside-barrel diameter for each cap?", "Display orientation, strap storage, and shelf footprint?"],
+    prompt: "Outline a modular film-camera tool system with model-specific lens-cap fit coupons, soft-contact camera docks, display stands, and labeled organizers for film rolls, batteries, caps, and adapters. Never force a printed part onto a vintage lens: confirm each camera model, mounted-lens envelope, filter-thread or outside-barrel diameter, strap arrangement, and display footprint before CAD.",
+    sources: [["Nikon cap and filter size examples", "https://www.nikonusa.com/accessories/dslr-lens-accessories"], ["Canon lens compatibility chart", "https://www.canon-europe.com/media/Lens_Accessory_Compatibility_Chart_1H17_tcm13-1169764.pdf"]],
   },
 ];
 
@@ -282,6 +374,34 @@ function OverviewPage(props: DashboardProps) {
   );
 }
 
+function ConceptProjectDetail({ project, onStart }: { project: (typeof conceptProjects)[number]; onStart: (idea: string) => void }) {
+  return (
+    <section className="organizer-concept concept-project-detail page-card" aria-labelledby={`${project.id}-title`}>
+      <div className="card-heading-row">
+        <div><span className="page-eyebrow">{project.category} · Concept queue</span><h2 id={`${project.id}-title`}>{project.title}</h2><p>{project.summary}</p></div>
+        <span className="research-badge"><Sparkles size={14} /> {project.status}</span>
+      </div>
+      <div className="organizer-concept-grid">
+        <div className="organizer-concept-art"><img src={project.image} alt={`${project.title} concept diagram`} /></div>
+        <div className="organizer-concept-copy">
+          <span className="recommendation-tag"><BadgeCheck size={14} /> P1S-aware starting direction · dimensions still required</span>
+          <h3>{project.thesis}</h3>
+          <p>{project.description}</p>
+          <div className="project-spec-strip concept-facts">
+            {project.facts.map(([value, label]) => <span key={label}><Ruler size={16} /><small>{label}</small><strong>{value}</strong></span>)}
+          </div>
+          <div className="organizer-module-grid concept-module-grid">
+            {project.modules.map(([name, detail]) => <span key={name}><Box size={17} /><strong>{name}</strong><small>{detail}</small></span>)}
+          </div>
+          <div className="concept-question-list"><strong>Three answers unlock CAD</strong>{project.questions.map((question, index) => <span key={question}><b>{index + 1}</b>{question}</span>)}</div>
+          <button className="primary-button organizer-start" onClick={() => onStart(project.prompt)}>Start measurements <ArrowRight size={16} /></button>
+          {project.sources && <div className="organizer-sources"><span>Research:</span>{project.sources.map(([label, url]) => <a href={url} target="_blank" rel="noreferrer" key={url}>{label}</a>)}</div>}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ProjectsPage(props: DashboardProps) {
   const [selectedProject, setSelectedProject] = useState<ProjectSelection>("vase");
   const [selectedVaseId, setSelectedVaseId] = useState<VaseVersionId>(() => {
@@ -346,6 +466,19 @@ function ProjectsPage(props: DashboardProps) {
             <span className="project-index-art"><img src="/projects/magnetic-hex-token-two-pod-starter-kit-aug-2026-product.png?v=1" alt="Magnetic Hex Token Pods render" /><em className="project-index-badge ready">STL ready</em></span>
             <span className="project-index-copy"><span><strong>Magnetic Hex Token Pods</strong><small>Print the fit coupon first</small></span><ChevronRight size={18} /></span>
           </button>
+        </div>
+      </section>
+
+      <section className="project-index-section concept-index-section" aria-labelledby="concept-projects-title">
+        <div className="project-index-heading">
+          <div><span className="page-eyebrow">Concept queue</span><h2 id="concept-projects-title">New projects to measure and shape</h2></div>
+          <span>5 projects</span>
+        </div>
+        <div className="project-index-grid concept-index-grid">
+          {conceptProjects.map((project) => <button className={`project-index-card ${selectedProject === project.id ? "selected" : ""}`} aria-pressed={selectedProject === project.id} onClick={() => chooseProject(project.id)} key={project.id}>
+            <span className="project-index-art"><img src={project.image} alt={`${project.title} concept`} /><em className="project-index-badge concept">Concept</em></span>
+            <span className="project-index-copy"><span><strong>{project.title}</strong><small>{project.status}</small></span><ChevronRight size={18} /></span>
+          </button>)}
         </div>
       </section>
 
@@ -494,6 +627,8 @@ function ProjectsPage(props: DashboardProps) {
           <div className="completed-project-actions"><button className="primary-button" onClick={props.onOpenProject}><PackageCheck size={16} /> Open completed project</button></div>
         </div>
       </section>}
+
+      {conceptProjects.map((project) => selectedProject === project.id ? <ConceptProjectDetail project={project} onStart={props.onStartIdea} key={project.id} /> : null)}
 
     </>
   );

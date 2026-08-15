@@ -44,6 +44,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Organizer presentation standard | 7 Wonders, Cozy Stickerville, and magnetic-token workbenches use one full-image 16:9 layout with contain-fit artwork on desktop and mobile | Shipped |
 | Project workspace cleanup | Removed the duplicate thumbnail gallery; active projects use full workbench rows and completed prints have a dedicated archive section | Shipped |
 | Project master-detail workspace | Completed-first project index, most-recent marker, minimal clickable cards, and one selected detail workbench | Shipped |
+| New concept queue | Pottery signature stamps, perfume Lazy Susan, two phone-stand directions, ceramic cabinet risers, and a film-camera toolkit with measurement gates | Outlined |
 
 ## Next implementation candidates
 
@@ -123,3 +124,5 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-14:** Keep organizer artwork in one 16:9 contain-fit presentation instead of maintaining crop-prone project-specific mobile compositions.
 - **2026-08-14:** Use full project records for active work and a separate completed archive instead of repeating every project in a thumbnail gallery and a detail row.
 - **2026-08-14:** Put completed work first, keep the vase first among active projects as the most recent, and render full diagrams and print facts only for the selected project.
+- **2026-08-15:** Keep new ideas as five top-level projects; the creature and nature phone stands are two saved directions inside one project.
+- **2026-08-15:** Require test coupons before clay-stamp relief, Lazy Susan bearing fit, phone lip angle, or any lens-cap contact becomes full printable geometry.

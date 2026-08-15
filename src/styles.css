@@ -484,6 +484,7 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .project-index-heading h2 { margin: 4px 0 0; font-size: 21px; letter-spacing: -.035em; }
 .project-index-heading > span { flex: 0 0 auto; padding: 7px 9px; border-radius: 999px; color: #597068; background: #edf2ee; font-size: 9px; font-weight: 800; }
 .project-index-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+.concept-index-grid { grid-template-columns: repeat(5,minmax(0,1fr)); }
 .project-index-card { position: relative; min-width: 0; overflow: hidden; padding: 0; border: 1px solid #dfe5df; border-radius: 14px; color: #213a32; background: #fff; box-shadow: 0 9px 25px rgba(27,48,41,.045); text-align: left; cursor: pointer; transition: border-color .18s, box-shadow .18s, transform .18s; }
 .project-index-card:hover { border-color: #a8cdbf; box-shadow: 0 13px 30px rgba(27,48,41,.08); transform: translateY(-2px); }
 .project-index-card.selected { border-color: #5da88f; box-shadow: 0 0 0 2px #d9eee6, 0 13px 30px rgba(27,48,41,.08); }
@@ -493,6 +494,7 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .project-index-badge { position: absolute; left: 11px; top: 11px; padding: 6px 8px; display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; color: #536961; background: rgba(255,255,255,.92); box-shadow: 0 3px 12px rgba(32,58,49,.08); font-size: 8.5px; font-style: normal; font-weight: 850; backdrop-filter: blur(8px); }
 .project-index-badge.recent { color: #8f522f; background: rgba(255,241,231,.94); }
 .project-index-badge.complete, .project-index-badge.ready { color: #276e5b; background: rgba(231,247,240,.94); }
+.project-index-badge.concept { color: #655d8e; background: rgba(243,240,255,.94); }
 .project-index-copy { min-height: 73px; padding: 13px 14px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .project-index-copy > span { min-width: 0; }
 .project-index-copy strong, .project-index-copy small { display: block; }
@@ -502,6 +504,13 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .project-index-card.selected .project-index-copy svg { color: var(--green); }
 .project-detail-heading { max-width: 1370px; margin: 34px auto 0; padding-top: 2px; scroll-margin-top: 18px; }
 .project-detail-heading h2 { margin: 4px 0 0; font-size: 23px; letter-spacing: -.04em; }
+.concept-project-detail .organizer-concept-art { background: #f2f5f0; }
+.concept-facts { margin-top: 17px; }
+.concept-module-grid { margin-top: 10px; }
+.concept-question-list { margin-top: 14px; padding: 13px 14px; border-radius: 11px; display: grid; gap: 8px; color: #687771; background: #f1f4f0; }
+.concept-question-list > strong { color: #2a473e; font-size: 10.5px; }
+.concept-question-list > span { display: grid; grid-template-columns: 20px minmax(0,1fr); align-items: start; gap: 7px; font-size: 9px; line-height: 1.45; }
+.concept-question-list b { width: 18px; height: 18px; display: grid; place-items: center; border-radius: 999px; color: #fff; background: #4a8c76; font-size: 8px; }
 
 .completed-project-feature { max-width: 1370px; margin: 24px auto 0; padding: 0; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(390px, .92fr); align-items: center; }
 .completed-project-cover { width: 100%; min-height: 0; aspect-ratio: 16 / 9; align-self: center; background: #eef4ef; }
@@ -967,7 +976,7 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
   .overview-printer-card > .text-link { align-self: center; }
   .confidence-steps { grid-template-columns: 1fr 1fr; }
   .template-grid { grid-template-columns: 1fr 1fr; }
-  .project-index-grid { grid-template-columns: 1fr 1fr; }
+  .project-index-grid, .concept-index-grid { grid-template-columns: 1fr 1fr; }
   .completed-project-feature { grid-template-columns: minmax(0,1fr) minmax(340px,.86fr); }
   .completed-project-copy { padding: 25px 27px; }
   .design-version-grid { grid-template-columns: 1fr; }
@@ -1071,7 +1080,7 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
   .project-index-section + .project-index-section { margin-top: 24px; }
   .project-index-heading { align-items: flex-start; }
   .project-index-heading h2 { font-size: 19px; }
-  .project-index-grid { grid-template-columns: 1fr; }
+  .project-index-grid, .concept-index-grid { grid-template-columns: 1fr; }
   .project-index-copy { min-height: 68px; }
   .project-detail-heading { margin-top: 28px; scroll-margin-top: 74px; }
   .project-detail-heading h2 { font-size: 21px; }

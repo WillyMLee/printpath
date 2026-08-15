@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title desc">
+  <title id="title">Ceramic cabinet riser system concept</title><desc id="desc">A cabinet shelf with modular bridge risers holding plates, bowls, and cups on two levels.</desc>
+  <defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#f6f3eb"/><stop offset="1" stop-color="#eef4ef"/></linearGradient><filter id="s"><feDropShadow dy="10" stdDeviation="8" flood-color="#263f37" flood-opacity=".14"/></filter></defs>
+  <rect width="800" height="450" fill="url(#bg)"/><path d="M82 55h636v337H82z" fill="#fdfcf7" stroke="#cddbd2" stroke-width="7"/><path d="M105 356h590" stroke="#8da799" stroke-width="12" stroke-linecap="round"/>
+  <g filter="url(#s)"><path d="M140 215h255v25H140zM150 239h28v110h-28zM357 239h28v110h-28z" fill="#6db49b" stroke="#35745f" stroke-width="5" stroke-linejoin="round"/><path d="M435 151h210v24H435zM445 174h27v174h-27zM608 174h27v174h-27z" fill="#86c7b0" stroke="#35745f" stroke-width="5" stroke-linejoin="round"/></g>
+  <g stroke="#a87959" stroke-width="5" filter="url(#s)"><ellipse cx="250" cy="183" rx="72" ry="18" fill="#f1d5bd"/><path d="M178 183c10 39 134 39 144 0" fill="#e9c29f"/><ellipse cx="250" cy="164" rx="60" ry="16" fill="#fbebe0"/><ellipse cx="535" cy="119" rx="66" ry="17" fill="#d7d0ec"/><path d="M469 119c9 38 123 38 132 0" fill="#bdb3dd"/><ellipse cx="535" cy="100" rx="54" ry="14" fill="#eeeaf8"/></g>
+  <g filter="url(#s)" stroke="#5d7f72" stroke-width="5"><path d="M118 346c6-52 87-52 93 0" fill="#d6e6df"/><path d="M214 346c6-52 87-52 93 0" fill="#e5d8bf"/><path d="M456 344c5-49 77-49 82 0" fill="#d6e2ec"/><path d="M545 344c5-49 77-49 82 0" fill="#e8d1ca"/></g>
+  <g transform="translate(661 205)" fill="none" stroke="#6f9988" stroke-width="7" stroke-linecap="round"><path d="M0 130V0M30 130V12M60 130V24"/><path d="M-12 130h84"/></g>
+</svg>
