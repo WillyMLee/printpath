@@ -88,7 +88,7 @@ const STORAGE_KEY = "printpath-project-v1";
 const BRIDGE_PAIRING_KEY = "printpath-bridge-pairing-v1";
 const ACTIVE_PROJECT_KEY = "printpath-active-project-v1";
 const BRIDGE_URL = "http://127.0.0.1:32145";
-const SHOWCASED_PROJECT_COUNT = 10;
+const SHOWCASED_PROJECT_COUNT = 14;
 const projectStore = createProjectStore<ProjectSpec>();
 
 const starterSpec: ProjectSpec = {

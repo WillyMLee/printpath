@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title desc">
+  <title id="title">Board game token upgrade studio</title><desc id="desc">A sampler plate with resource tokens, stackable coins, status markers, and a large round marker.</desc>
+  <defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#f7f4ed"/><stop offset="1" stop-color="#edf4ef"/></linearGradient><filter id="s"><feDropShadow dy="12" stdDeviation="9" flood-color="#263f37" flood-opacity=".16"/></filter></defs>
+  <rect width="800" height="450" fill="url(#bg)"/><g stroke="#dce5df" opacity=".65"><path d="M0 354H800M0 398H800"/><path d="M90 326L255 450M710 326L545 450"/></g>
+  <g filter="url(#s)"><path d="M105 113h590l34 35v206l-34 34H105l-34-34V148z" fill="#e8eee9" stroke="#aec2b8" stroke-width="6"/><path d="M111 139h578v222H111z" fill="#f8faf7" stroke="#cbd8d1" stroke-width="3" stroke-dasharray="8 8"/></g>
+  <g filter="url(#s)" stroke-width="5"><g stroke="#99703b" fill="#e3b85f"><path d="M152 181l38-24 38 24v43l-38 24-38-24z"/><path d="M246 181l38-24 38 24v43l-38 24-38-24z"/><path d="M340 181l38-24 38 24v43l-38 24-38-24z"/></g><g fill="none" stroke="#fff5d9" stroke-linecap="round"><path d="M174 213l16-31 16 31"/><path d="M266 204q18-35 36 0"/><path d="M365 186h26l-13 32z"/></g>
+  <g transform="translate(482 172)" stroke="#2f6d59"><ellipse cx="52" cy="69" rx="50" ry="20" fill="#387c66"/><ellipse cx="52" cy="53" rx="50" ry="20" fill="#56a58a"/><ellipse cx="52" cy="37" rx="50" ry="20" fill="#7bc4a9"/><circle cx="52" cy="37" r="14" fill="none" stroke="#e5f6ef"/></g>
+  <g transform="translate(604 164)" stroke="#635b8e"><path d="M10 16h70v70H10z" fill="#9c96bd" rx="14"/><path d="M22 28h46v46H22z" fill="#dcd9eb" rx="9"/><path d="M45 34v34M28 51h34" stroke="#635b8e"/></g>
+  <g transform="translate(168 284)" stroke="#9b5e43" fill="#d98661"><circle cx="34" cy="34" r="34"/><circle cx="117" cy="34" r="34"/><circle cx="200" cy="34" r="34"/><path d="M21 34h26M104 21l26 26M130 21l-26 26M184 34h32" fill="none" stroke="#fff1e9" stroke-linecap="round"/></g>
+  <g transform="translate(486 276)" stroke="#2f6d59"><path d="M0 30l50-30 50 30v58l-50 30L0 88z" fill="#75bea4"/><path d="M25 55h50M50 30v50" stroke="#effaf6" stroke-linecap="round"/></g></g>
+</svg>

@@ -98,7 +98,9 @@ const plateOptions = [
 ];
 
 type VaseVersionId = "petal-twist" | "leaf-bloom";
-type ConceptProjectId = "pottery-stamps" | "perfume-susan" | "phone-stands" | "ceramic-risers" | "film-camera-tools";
+type ConceptProjectId =
+  | "pottery-stamps" | "perfume-susan" | "phone-stands" | "ceramic-risers" | "film-camera-tools"
+  | "token-upgrades" | "magnetic-island" | "steam-controller-dock" | "quiet-utility-kit";
 type ProjectSelection = "drawer-gap" | "vase" | "seven-wonders" | "cozy" | "magnetic" | ConceptProjectId;
 
 const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v1";
@@ -220,6 +222,64 @@ const conceptProjects: Array<{
     questions: ["Exact camera bodies and mounted lens combinations?", "Filter-thread or outside-barrel diameter for each cap?", "Display orientation, strap storage, and shelf footprint?"],
     prompt: "Outline a modular film-camera tool system with model-specific lens-cap fit coupons, soft-contact camera docks, display stands, and labeled organizers for film rolls, batteries, caps, and adapters. Never force a printed part onto a vintage lens: confirm each camera model, mounted-lens envelope, filter-thread or outside-barrel diameter, strap arrangement, and display footprint before CAD.",
     sources: [["Nikon cap and filter size examples", "https://www.nikonusa.com/accessories/dslr-lens-accessories"], ["Canon lens compatibility chart", "https://www.canon-europe.com/media/Lens_Accessory_Compatibility_Chart_1H17_tcm13-1169764.pdf"]],
+  },
+  {
+    id: "token-upgrades",
+    title: "Board Game Token Upgrade Studio",
+    category: "Board Games",
+    status: "Kit system outlined",
+    image: "/projects/board-game-token-upgrades-concept.svg",
+    summary: "Original replacement-token families that can be tuned to different games without copying logos or artwork.",
+    thesis: "Upgrade table feel with one reusable design language, then tailor counts and symbols per game.",
+    description: "The studio starts with four tactile token archetypes—resources, currency, status markers, and round or first-player markers. Each game receives its own inventory sheet, original geometric icon set, color plan, and storage footprint. A single sampler plate proves size, edge feel, stackability, and color contrast before a complete token batch is generated.",
+    facts: [["4 archetypes", "Reusable token grammar"], ["1 sampler", "Coupon before batches"], ["Game-specific", "Counts after inventory"]],
+    modules: [["Resource set", "Distinct silhouettes that remain readable without color"], ["Currency + score", "Stackable coins and high-value markers"], ["Status markers", "Condition, damage, charge, or action states"], ["Round marker", "Large table-visible anchor with original iconography"]],
+    questions: ["Which two games should receive the first replacement kits?", "Exact token inventory, maximum footprint, and storage-box limits?", "Single-color, manual color swaps, or AMS-ready face inlays?"],
+    prompt: "Create a board-game token replacement studio with original, logo-free iconography and four reusable token archetypes: resources, currency or score, status markers, and a large round or first-player marker. Start each game with a component inventory and storage-footprint check, then print one sampler plate to test size, edge feel, stackability, and color contrast before generating a full batch. Ask which two games come first, their exact token counts and storage limits, and whether printing is single-color, manual-swap, or AMS-ready.",
+  },
+  {
+    id: "magnetic-island",
+    title: "Magnetic 3D Island Board",
+    category: "Board Games",
+    status: "Five-plate scaffold",
+    image: "/projects/magnetic-3d-island-board-concept.svg",
+    summary: "A terrain-rich 19-hex island compatible with a standard CATAN base set, staged into smaller P1S prints.",
+    thesis: "Build a dramatic 3D board that packs flat, assembles predictably, and never depends on loose exposed magnets.",
+    description: "Nineteen original terrain tiles form the island, with six low shoreline-frame groups and keyed number-token nests. The planning split is three terrain plates, one coast-and-connector plate, and one player-piece test plate. Captured magnets connect the board; steel inserts in roads and buildings can provide gentle placement assistance without adding a second magnet to every small piece.",
+    facts: [["19 hexes", "Official base-set count"], ["5 plates", "Planning estimate"], ["Captured only", "No loose magnets"]],
+    modules: [["Terrain tiles", "Forest, field, pasture, hill, mountain, and desert forms"], ["Coast frame", "Six low-profile groups that square the assembled island"], ["Number nests", "Keyed recesses preserve random setup without magnets"], ["Piece anchors", "Steel-assisted roads, settlements, and cities where useful"]],
+    questions: ["Use your current cardboard hex footprint or a new compact tile size?", "Which expansions, if any, must fit the first version?", "Preferred magnet size and whether children ever access the game?"],
+    prompt: "Design an original magnetic 3D island board compatible with a standard 19-hex CATAN base set without copying published terrain art, logos, or sculpted assets. Stage it for a Bambu Lab P1S as three terrain plates, one coast-and-connector plate, and one player-piece test plate. Use permanently captured board magnets, a polarity jig, keyed number-token nests, and ferrous inserts rather than second magnets in small roads and buildings where practical. Confirm the user's hex footprint, expansion scope, chosen magnet dimensions, and whether children can access the game before CAD.",
+    sources: [["Official base-game component count", "https://www.catan.com/sites/default/files/2021-06/catan_base_rules_2020_200707.pdf"], ["Official 3D-edition structure", "https://www.catan.com/sites/default/files/2024-01/Rules%203D-CATAN.pdf"], ["Magnet safety", "https://www.cpsc.gov/Safety-Education/Safety-Education-Centers/Magnets"]],
+  },
+  {
+    id: "steam-controller-dock",
+    title: "Steam Controller + Puck Dock",
+    category: "Living Room",
+    status: "Official CAD located",
+    image: "/projects/steam-controller-dock-concept.svg",
+    summary: "A controller-first dock with a dedicated Puck bay, cable routing, and desk or wall mounting.",
+    thesis: "Use Valve's released shell geometry so the holder disappears around the hardware instead of guessing the fit.",
+    description: "The first direction is a soft-contact cradle that supports the controller beneath the grips, leaves buttons and status areas clear, and routes the charging lead through the rear. A replaceable base converts between tabletop, wall, and under-shelf use; the Puck gets its own ventilated bay rather than becoming loose desk clutter.",
+    facts: [["Official CAD", "STP + STL reference"], ["3 mounts", "Desk / wall / shelf"], ["2–3 parts", "Replaceable base"]],
+    modules: [["Controller cradle", "Grip support with TPU or felt contact pads"], ["Puck bay", "Ventilated home with cable and antenna keep-outs"], ["Cable spine", "Rear routing with strain-relief space"], ["Mounting base", "Interchangeable tabletop, screw, or adhesive plate"]],
+    questions: ["New 2026 Steam Controller, original 2015 model, or another gamepad?", "Tabletop, wall, under-shelf, or a convertible mount?", "Should the controller charge while stored, and where does the Puck sit?"],
+    prompt: "Design a minimal Steam Controller and Puck dock using Valve's official released CAD and engineering keep-out drawings as the fit authority. The cradle should support the controller beneath the grips with soft contact pads, preserve controls, LEDs, antennas, ventilation, and charging access, and use an interchangeable tabletop, wall, or under-shelf base. Confirm whether this is the new 2026 Steam Controller or the original 2015 model, the mounting location, charging behavior, and Puck placement before CAD.",
+    sources: [["Valve controller + Puck CAD release", "https://steamcommunity.com/groups/steam_hardware/announcements/detail/702141174212723353"], ["Official CAD repository", "https://gitlab.steamos.cloud/SteamHardware/SteamController"]],
+  },
+  {
+    id: "quiet-utility-kit",
+    title: "Apartment Quiet Utility Kit",
+    category: "Apartment",
+    status: "Four low-clutter ideas",
+    image: "/projects/apartment-quiet-utility-concept.svg",
+    summary: "A coordinated set of small organizers that use dead space and visually recede into the apartment.",
+    thesis: "Every part should remove visible clutter, occupy no new floor area, and earn its place in one daily motion.",
+    description: "The starter kit combines a shallow entry ledge, a couch-side remote rail, an under-shelf charging bridge, and a narrow cleaning-tool clip rail. Shared edge radii, hidden fasteners, and two neutral colorways keep the pieces feeling architectural rather than gadget-like. Each module remains optional and is sized only after photographing the actual location.",
+    facts: [["4 modules", "One visual family"], ["0 floor area", "Uses walls + shelves"], ["Reversible", "Low-damage mounting"]],
+    modules: [["Entry ledge", "Keys, wallet, and one mail slot without a catch-all bowl"], ["Remote rail", "Slim couch-side home for remotes and one controller"], ["Charging bridge", "Under-shelf phone shelf with hidden cable slack"], ["Tool clip rail", "Broom, duster, or vacuum tools in a narrow service zone"]],
+    questions: ["Which three items are most often left without a home?", "Where are screw holes acceptable versus removable adhesive only?", "Wall, cabinet, and furniture colors to match or intentionally contrast?"],
+    prompt: "Design a coordinated apartment quiet-utility kit that removes visible clutter without taking floor space: a shallow entry ledge, couch-side remote rail, under-shelf charging bridge, and narrow cleaning-tool clip rail. Use shared edge radii, hidden fasteners, reversible mounting options, and neutral finishes. Before CAD, ask which items lack a home, photograph and measure each exact location, identify screw-safe versus adhesive-only surfaces, and choose match-versus-contrast colors.",
   },
 ];
 
@@ -472,7 +532,7 @@ function ProjectsPage(props: DashboardProps) {
       <section className="project-index-section concept-index-section" aria-labelledby="concept-projects-title">
         <div className="project-index-heading">
           <div><span className="page-eyebrow">Concept queue</span><h2 id="concept-projects-title">New projects to measure and shape</h2></div>
-          <span>5 projects</span>
+          <span>{conceptProjects.length} projects</span>
         </div>
         <div className="project-index-grid concept-index-grid">
           {conceptProjects.map((project) => <button className={`project-index-card ${selectedProject === project.id ? "selected" : ""}`} aria-pressed={selectedProject === project.id} onClick={() => chooseProject(project.id)} key={project.id}>
