@@ -1,6 +1,13 @@
 # PrintPath Implementation Roadmap
 
-Last updated: 2026-08-14
+Last updated: 2026-08-19
+
+## 2026-08-19 — Bathroom additions
+
+- Added a priority Sink Rack Drain Bridge concept: removable PETG catch adapter plus measured drain channel so the rack can sit level. CAD remains gated on the rack outlet, sink reach, and available fall; the first artifact is an outlet-and-slope coupon.
+- Added two low-clutter bathroom concepts: a ventilated Retainer Drying Dock with washable insert, and a Low-Profile Shower Tool Rail with replaceable open-draining clips.
+- Project counts now reflect 17 top-level projects: 1 completed, 4 active, and 12 concepts.
+- Next physical input: one straight side photo of the rack and sink, plus the outlet size, horizontal reach to the inside sink edge, and vertical drop.
 
 This is the living implementation record for PrintPath. Update it whenever a feature ships, a workflow decision changes, or a new project exposes friction.
 

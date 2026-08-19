@@ -100,7 +100,8 @@ const plateOptions = [
 type VaseVersionId = "petal-twist" | "leaf-bloom";
 type ConceptProjectId =
   | "pottery-stamps" | "perfume-susan" | "phone-stands" | "ceramic-risers" | "film-camera-tools"
-  | "token-upgrades" | "magnetic-island" | "steam-controller-dock" | "quiet-utility-kit";
+  | "token-upgrades" | "magnetic-island" | "steam-controller-dock" | "quiet-utility-kit"
+  | "sink-rack-drain-bridge" | "retainer-drying-dock" | "shower-tool-rail";
 type ProjectSelection = "drawer-gap" | "vase" | "seven-wonders" | "cozy" | "magnetic" | ConceptProjectId;
 
 const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v1";
@@ -149,6 +150,51 @@ const conceptProjects: Array<{
   prompt: string;
   sources?: Array<[string, string]>;
 }> = [
+  {
+    id: "sink-rack-drain-bridge",
+    title: "Sink Rack Drain Bridge",
+    category: "Bathroom",
+    status: "Priority · Fit coupon first",
+    image: "/projects/sink-rack-drain-bridge-concept.svg",
+    summary: "A removable, low-profile drain extension that lets the drying rack sit level beside the sink.",
+    thesis: "Bring the water to the sink—not the rack—and keep the counter setup level.",
+    description: "The recommended direction is a two-piece PETG bridge: a shallow catch adapter clips beneath the rack's existing drain, then a measured slide-out channel reaches past the sink lip with a positive slope. A small outlet-and-slope coupon proves the clip, clearance, and drainage before the full bridge is printed. The channel lifts off for cleaning and never relies on a permanent counter adhesive.",
+    facts: [["2 parts", "Adapter + channel"], ["PETG", "Wet-area starting material"], ["Coupon first", "Clip + slope test"]],
+    modules: [["Catch adapter", "Fits below the rack outlet without lifting the rack"], ["Drain bridge", "Measured reach with ribs that preserve a steady fall"], ["Sink lip", "Wide spill-safe nose projects past the inner sink edge"], ["Clean-out stop", "Slide lock releases without tools for washing"]],
+    questions: ["Rack outlet width, depth, and underside clearance?", "Horizontal gap from outlet to the inside sink edge?", "Vertical drop available across that gap, plus a side photo of the setup?"],
+    prompt: "Design a removable two-piece PETG drain bridge for a bathroom sink drying rack so the rack can remain level. Use a fitted catch adapter beneath the existing rack drain and a slide-out channel that crosses the measured counter gap with positive fall, ends past the inside sink edge, and lifts off for cleaning. Start with a compact outlet-and-slope coupon before the full bridge. Confirm the outlet width and depth, underside clearance, horizontal reach to the inner sink edge, available vertical drop, and attachment preference from a straight side photo before CAD.",
+    sources: [["Removable swivel-spout precedent", "https://www.simplehuman.com/pages/indepth-dishrack"], ["Bambu PETG water resistance", "https://eu.store.bambulab.com/en-mt/products/petg-hf"]],
+  },
+  {
+    id: "retainer-drying-dock",
+    title: "Retainer Drying Dock",
+    category: "Bathroom",
+    status: "Ventilated case outlined",
+    image: "/projects/retainer-drying-dock-concept.svg",
+    summary: "A compact, protected home for a night guard or retainer with real airflow and a washable drip insert.",
+    thesis: "Give the dental appliance a clean visual home without sealing dampness inside it.",
+    description: "A small clamshell-style dock keeps the appliance off the counter, while offset vents allow air to pass without leaving it exposed to splashes. The curved insert lifts out for washing and the lower tray catches drips. The dock is storage only: care and cleaning still follow the appliance maker or dental provider's instructions.",
+    facts: [["3 parts", "Shell / insert / tray"], ["Ventilated", "Air path on both sides"], ["PETG", "Washable prototype"]],
+    modules: [["Vent shell", "Splash-shielded slots and a quiet hinged or lift-off lid"], ["Guard cradle", "Rounded removable insert with no sharp contact points"], ["Drip tray", "Shallow pull-out base for quick rinsing"], ["Name tile", "Optional subtle label for two-person bathrooms"]],
+    questions: ["Night guard, clear retainer, or both—and its outside envelope?", "One appliance or a paired his-and-hers dock?", "Countertop, medicine cabinet, or wall location?"],
+    prompt: "Design a compact ventilated drying dock for a measured night guard or retainer. Use a splash-shielded outer shell, removable rounded cradle, and shallow washable drip tray; keep air paths open and avoid sharp contact points. Treat it as storage only and do not make hygiene or medical claims. Confirm the appliance type and outside dimensions, one-versus-two-person capacity, and countertop, cabinet, or wall location before CAD.",
+    sources: [["AAO retainer storage guidance", "https://aaoinfo.org/resources/faqs/"], ["AAO case-care guidance", "https://aaoinfo.org/whats-trending/taking-care-of-retainers/"]],
+  },
+  {
+    id: "shower-tool-rail",
+    title: "Low-Profile Shower Tool Rail",
+    category: "Bathroom",
+    status: "Three-tool rail outlined",
+    image: "/projects/shower-tool-rail-concept.svg",
+    summary: "A narrow, removable rail for a squeegee, loofah, and scrub brush that drains instead of becoming a shelf.",
+    thesis: "Organize the wet tools already in the shower without adding another bulky caddy.",
+    description: "The rail uses one slim backplate and three lift-off tool clips rather than a basket. Drip noses hold each item away from the tile, open bottoms drain freely, and the mounting plate can be sized for bathroom-rated removable strips or screws. Each clip is independently replaceable when a handle size changes.",
+    facts: [["1 rail", "Three modular clips"], ["No shelf", "Open drainage"], ["PETG", "Wet-area prototype"]],
+    modules: [["Squeegee cradle", "Two-point support that avoids the flexible blade"], ["Loop hook", "Open hook for a loofah or wash cloth"], ["Brush clip", "Measured snap coupon before the full rail"], ["Mounting plate", "Separate adhesive-strip or screw-backed version"]],
+    questions: ["Which three shower tools and their handle or loop dimensions?", "Available tile width and grout-line locations?", "Bathroom-rated adhesive strips, screws, or an over-door mount?"],
+    prompt: "Design a low-profile modular shower-tool rail for a squeegee, loofah or wash cloth, and scrub brush. Use one narrow backplate, open-draining lift-off clips, replaceable tool modules, and no basket or shelf. Confirm each tool's handle or loop dimensions, available tile width and grout lines, and whether the mount uses bathroom-rated removable strips, screws, or an over-door adapter. Print one clip and mounting coupon before the full rail.",
+    sources: [["3M bathroom-strip conditions", "https://www.3m.com/3M/en_US/p/d/b5005604003/"], ["Squeegee storage precedent", "https://www.3m.com/3M/en_US/p/c/cleaning-supplies/equipment/squeegees/b/command/i/consumer/"]],
+  },
   {
     id: "pottery-stamps",
     title: "Jessa + Willy Pottery Stamps",
