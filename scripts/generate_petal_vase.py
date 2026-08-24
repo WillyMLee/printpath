@@ -15,6 +15,7 @@ HEIGHT = 245.0
 WALL = 2.4
 FLOOR = 3.2
 FLUTES = 8
+REED_FLUTES = 36
 ANGULAR_SEGMENTS = 128
 VERTICAL_RINGS = 80
 
@@ -51,8 +52,22 @@ def leaf_bloom_outer_radius(z: float, theta: float) -> float:
     return core + amplitude * leaf_fold
 
 
+def porcelain_reed_outer_radius(z: float, theta: float) -> float:
+    """A calm, fine-fluted body with a planted foot and clean circular rim."""
+    t = max(0.0, min(1.0, z / HEIGHT))
+    core = interpolate_profile(t, [(0.0, 53.0), (0.08, 57.0), (0.22, 56.0), (0.55, 52.5), (0.84, 49.5), (1.0, 48.0)])
+    amplitude = interpolate_profile(t, [(0.0, 0.9), (0.10, 1.35), (0.62, 1.15), (1.0, 0.85)])
+    phase = REED_FLUTES * theta
+    fine_rib = 0.78 * math.cos(phase) + 0.22 * math.cos(2.0 * phase)
+    return core + amplitude * fine_rib
+
+
 def vertex(z: float, theta: float, inward: float = 0.0, style: str = "petal-twist") -> Vec3:
-    radius_function = leaf_bloom_outer_radius if style == "leaf-bloom" else outer_radius
+    radius_function = {
+        "petal-twist": outer_radius,
+        "leaf-bloom": leaf_bloom_outer_radius,
+        "porcelain-reed": porcelain_reed_outer_radius,
+    }[style]
     radius = radius_function(z, theta) - inward
     return (radius * math.cos(theta), radius * math.sin(theta), z)
 
@@ -62,9 +77,11 @@ def top_vertex(theta: float, inward: float = 0.0, style: str = "petal-twist") ->
         # A deeper seven-leaf crown opens the silhouette without exceeding 245 mm.
         phase = 7.0 * (theta + math.radians(34.0))
         z = HEIGHT - 4.0 + 4.0 * math.cos(phase)
-    else:
+    elif style == "petal-twist":
         # Eight shallow petals: the highest points remain at the approved 245 mm bound.
         z = HEIGHT - 2.5 + 2.5 * math.cos(FLUTES * theta)
+    else:
+        z = HEIGHT
     return vertex(HEIGHT, theta, inward, style)[:2] + (z,)
 
 
@@ -81,7 +98,7 @@ def add_side(triangles: list[Triangle], lower: list[Vec3], upper: list[Vec3], in
 
 
 def generate(style: str = "petal-twist") -> list[Triangle]:
-    angular_segments = 168 if style == "leaf-bloom" else ANGULAR_SEGMENTS
+    angular_segments = 216 if style == "porcelain-reed" else 168 if style == "leaf-bloom" else ANGULAR_SEGMENTS
     angles = [2.0 * math.pi * index / angular_segments for index in range(angular_segments)]
     regular_z = [(HEIGHT - 8.0) * index / (VERTICAL_RINGS - 1) for index in range(VERTICAL_RINGS)]
     outer_rings = [[vertex(z, angle, style=style) for angle in angles] for z in regular_z]
@@ -123,7 +140,12 @@ def normal(triangle: Triangle) -> Vec3:
 def write_binary_stl(path: Path, triangles: list[Triangle], style: str = "petal-twist") -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("wb") as handle:
-        label = b"PrintPath Leaf Bloom Vase" if style == "leaf-bloom" else b"PrintPath Petal Twist Vase"
+        labels = {
+            "petal-twist": b"PrintPath Petal Twist Vase",
+            "leaf-bloom": b"PrintPath Leaf Bloom Vase",
+            "porcelain-reed": b"PrintPath Porcelain Reed Vase",
+        }
+        label = labels[style]
         handle.write(label.ljust(80, b"\0"))
         handle.write(struct.pack("<I", len(triangles)))
         for triangle in triangles:
@@ -156,7 +178,7 @@ def validate(triangles: list[Triangle]) -> dict[str, object]:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("output", type=Path)
-    parser.add_argument("--style", choices=("petal-twist", "leaf-bloom"), default="petal-twist")
+    parser.add_argument("--style", choices=("petal-twist", "leaf-bloom", "porcelain-reed"), default="petal-twist")
     args = parser.parse_args()
     mesh = generate(args.style)
     report = validate(mesh)

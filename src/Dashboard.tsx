@@ -97,7 +97,7 @@ const plateOptions = [
   "Engineering Plate",
 ];
 
-type VaseVersionId = "petal-twist" | "leaf-bloom";
+type VaseVersionId = "petal-twist" | "leaf-bloom" | "porcelain-reed";
 type PhoneOceanVersionId = "tidepool-buddy" | "capiz-cove";
 type ConceptProjectId =
   | "pottery-stamps" | "perfume-susan" | "phone-stands" | "ceramic-risers" | "film-camera-tools"
@@ -105,7 +105,7 @@ type ConceptProjectId =
   | "sink-rack-drain-bridge" | "retainer-drying-dock" | "shower-tool-rail";
 type ProjectSelection = "drawer-gap" | "vase" | "seven-wonders" | "cozy" | "magnetic" | ConceptProjectId;
 
-const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v1";
+const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v2";
 const SELECTED_PHONE_VERSION_KEY = "printpath-selected-phone-ocean-version-v1";
 
 const vaseVersions = [
@@ -134,6 +134,19 @@ const vaseVersions = [
     description: "Seven leaf-like folds rise into a wider, gently flared opening for fuller greenery.",
     historyNote: "Seven twisted botanical folds and a wider flared opening for fuller, leaf-heavy arrangements.",
     facts: [["122.9 × 122.5 × 245 mm", "P1S-safe size"], ["≈105 mm", "Average inner opening"], ["PETG", "One-piece body"]],
+  },
+  {
+    id: "porcelain-reed" as const,
+    version: 3,
+    name: "Porcelain Reed Vase",
+    image: "/projects/porcelain-reed-vase-aug-2026-product.png",
+    stl: "/projects/porcelain-reed-vase-aug-2026.stl",
+    guide: "/projects/porcelain-reed-vase-aug-2026-print-guide.md",
+    dimensions: "116.7 × 116.7 × 245 mm",
+    opening: "≈91 mm opening",
+    description: "A quiet white vessel with 36 fine vertical ribs, a softly planted foot, and a clean round rim for real or printed flowers.",
+    historyNote: "Fine porcelain-like ribs and a restrained taper based on the new white-vase reference, paired with the modular Evergarden bouquet study.",
+    facts: [["116.7 × 116.7 × 245 mm", "P1S-safe size"], ["36 ribs", "Fine vertical texture"], ["White PETG", "Water-capable body"]],
   },
 ];
 
@@ -488,8 +501,8 @@ function OverviewPage(props: DashboardProps) {
         <section className="page-card recent-projects">
           <div className="card-heading-row"><div><span className="page-eyebrow">Your projects</span><h2>Pick up where you left off</h2></div><button className="text-link" onClick={() => props.onNavigate("projects")}>View all <ChevronRight size={15} /></button></div>
           <button className="recent-project-row" onClick={() => props.onNavigate("projects")}>
-            <span className="project-cover-thumb"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Rendered Petal Twist Vase" /></span>
-            <div><strong>Petal Twist Vase</strong><small>245 mm tall · PETG · 2 saved versions</small></div>
+            <span className="project-cover-thumb"><img src="/projects/porcelain-reed-vase-aug-2026-product.png" alt="Rendered Porcelain Reed Vase" /></span>
+            <div><strong>Porcelain Reed Vase</strong><small>245 mm tall · white PETG · 3 saved versions</small></div>
             <span className="review-mini">Review draft</span>
             <ChevronRight size={17} />
           </button>
@@ -592,12 +605,13 @@ function ProjectsPage(props: DashboardProps) {
   const [selectedProject, setSelectedProject] = useState<ProjectSelection>("vase");
   const [selectedVaseId, setSelectedVaseId] = useState<VaseVersionId>(() => {
     try {
-      return localStorage.getItem(SELECTED_VASE_VERSION_KEY) === "leaf-bloom" ? "leaf-bloom" : "petal-twist";
+      const saved = localStorage.getItem(SELECTED_VASE_VERSION_KEY);
+      return saved === "petal-twist" || saved === "leaf-bloom" || saved === "porcelain-reed" ? saved : "porcelain-reed";
     } catch {
-      return "petal-twist";
+      return "porcelain-reed";
     }
   });
-  const selectedVase = vaseVersions.find((version) => version.id === selectedVaseId) ?? vaseVersions[0];
+  const selectedVase = vaseVersions.find((version) => version.id === selectedVaseId) ?? vaseVersions[2];
   const [selectedPhoneVersionId, setSelectedPhoneVersionId] = useState<PhoneOceanVersionId>(() => {
     try {
       return localStorage.getItem(SELECTED_PHONE_VERSION_KEY) === "tidepool-buddy" ? "tidepool-buddy" : "capiz-cove";
@@ -651,8 +665,8 @@ function ProjectsPage(props: DashboardProps) {
         </div>
         <div className="project-index-grid">
           <button className={`project-index-card ${selectedProject === "vase" ? "selected" : ""}`} aria-pressed={selectedProject === "vase"} onClick={() => chooseProject("vase")}>
-            <span className="project-index-art"><img src="/projects/petal-twist-vase-aug-2026-product.png" alt="Petal Twist Vase render" /><em className="project-index-badge recent">Most recent</em></span>
-            <span className="project-index-copy"><span><strong>Petal Twist Vase</strong><small>Review two saved designs</small></span><ChevronRight size={18} /></span>
+            <span className="project-index-art"><img src="/projects/porcelain-reed-vase-aug-2026-product.png" alt="Porcelain Reed Vase render" /><em className="project-index-badge recent">Most recent</em></span>
+            <span className="project-index-copy"><span><strong>Porcelain Reed Vase</strong><small>Vase STL ready · bouquet study</small></span><ChevronRight size={18} /></span>
           </button>
           <button className={`project-index-card ${selectedProject === "seven-wonders" ? "selected" : ""}`} aria-pressed={selectedProject === "seven-wonders"} onClick={() => chooseProject("seven-wonders")}>
             <span className="project-index-art"><img src="/projects/seven-wonders-duel-organizer-concept.svg?v=2" alt="7 Wonders Duel organizer concept" /><em className="project-index-badge">Fit check</em></span>
@@ -702,7 +716,7 @@ function ProjectsPage(props: DashboardProps) {
       <section className="design-history page-card" aria-labelledby="vase-history-title">
         <div className="card-heading-row">
           <div><span className="page-eyebrow">Vase project · Design history</span><h2 id="vase-history-title">Every version stays in the record.</h2><p>New directions never replace earlier work. Each version keeps its preview, design notes, and printable STL.</p></div>
-          <span className="version-count">2 saved versions</span>
+          <span className="version-count">3 saved versions</span>
         </div>
         <div className="design-version-grid">
           {vaseVersions.map((version) => {
@@ -720,6 +734,33 @@ function ProjectsPage(props: DashboardProps) {
           })}
         </div>
       </section>
+
+      {selectedVase.id === "porcelain-reed" && <section className="organizer-concept vase-bouquet-plan page-card" aria-labelledby="bouquet-plan-title">
+        <div className="card-heading-row">
+          <div><span className="page-eyebrow">Companion project · Printable flowers</span><h2 id="bouquet-plan-title">Build one bouquet that can keep changing.</h2><p>The vase body is printable now. The coordinated flower system is staged as interchangeable heads, flat-print stems, leaves, color centers, and a removable arrangement grid.</p></div>
+          <span className="research-badge"><Flower2 size={14} /> Bouquet · design review</span>
+        </div>
+        <div className="organizer-concept-grid">
+          <div className="organizer-concept-art"><img src="/projects/porcelain-reed-bouquet-concept.svg" alt="Porcelain Reed vase with modular printable flowers" /></div>
+          <div className="organizer-concept-copy">
+            <span className="recommendation-tag"><BadgeCheck size={14} /> White vase · reusable dry arrangement</span>
+            <h3>Use one universal stem connection across every flower.</h3>
+            <p>Three flower silhouettes keep the bouquet varied without creating a pile of one-off parts. Heads, centers, stems, and leaves separate by color; a hidden grid under the rim keeps the arrangement open and balanced.</p>
+            <div className="project-spec-strip concept-facts">
+              <span><Layers3 size={16} /><small>Estimated plan</small><strong>Vase + 3 plates</strong></span>
+              <span><Component size={16} /><small>Starter bouquet</small><strong>7 stems</strong></span>
+              <span><Printer size={16} /><small>Color changes</small><strong>No AMS required</strong></span>
+            </div>
+            <div className="organizer-module-grid concept-module-grid">
+              <span><Flower2 size={17} /><strong>Hero blooms</strong><small>Six-petal, eight-petal, and star silhouettes</small></span>
+              <span><Sprout size={17} /><strong>Stems + leaves</strong><small>Flat-print profiles with keyed snap joints</small></span>
+              <span><CircleDot size={17} /><strong>Color centers</strong><small>Small replaceable inserts for palette changes</small></span>
+              <span><Grid3X3 size={17} /><strong>Stem grid</strong><small>Removable insert sized to the 91 mm opening</small></span>
+            </div>
+            <button className="primary-button organizer-start" onClick={() => props.onStartIdea("Continue the Porcelain Reed Evergarden bouquet. Keep the approved 245 mm white fine-fluted vase. Design seven reusable 3D-printed flowers using three original head silhouettes, one universal keyed stem joint, flat-print stems and leaves, separate snap-fit color centers, and a removable arrangement grid for the approximately 91 mm vase opening. Keep every part support-free for a Bambu Lab P1S with a 0.4 mm nozzle and split the bouquet into practical color plates without requiring an AMS.")}>Continue the flower kit <ArrowRight size={16} /></button>
+          </div>
+        </div>
+      </section>}
 
       <section className="vase-inspiration page-card" aria-labelledby="vase-inspiration-title">
         <div className="card-heading-row">

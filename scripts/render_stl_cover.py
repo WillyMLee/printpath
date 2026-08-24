@@ -57,6 +57,13 @@ def shade(base: tuple[int, int, int], amount: float) -> tuple[int, int, int, int
     return tuple(max(0, min(255, round(channel * amount))) for channel in base) + (255,)
 
 
+def parse_hex_color(value: str) -> tuple[int, int, int]:
+    value = value.lstrip("#")
+    if len(value) != 6:
+        raise ValueError("Colors must use six-digit hex notation, for example #ecebe5.")
+    return tuple(int(value[index:index + 2], 16) for index in (0, 2, 4))
+
+
 def rounded_label(draw: ImageDraw.ImageDraw, box: tuple[int, int, int, int], text: str, fill: str, color: str) -> None:
     draw.rounded_rectangle(box, radius=(box[3] - box[1]) // 2, fill=fill)
     draw.text((box[0] + 20, box[1] + 11), text, font=font(20, True), fill=color)
@@ -75,6 +82,7 @@ def render(
     footer: str = "SOFT MATTE PREVIEW  •  AUG 2026",
     portrait: bool = False,
     clean: bool = False,
+    base_color: tuple[int, int, int] = (105, 207, 170),
 ) -> None:
     scale_factor = 2
     width, height = 1200 * scale_factor, 675 * scale_factor
@@ -127,8 +135,6 @@ def render(
     light /= np.linalg.norm(light)
     intensity = 0.62 + np.maximum(0, normals @ light) * 0.48
     order = np.argsort(depth.mean(axis=1))
-    base_color = (105, 207, 170)
-
     for index in order:
         polygon = [tuple(point) for point in projected[index]]
         draw.polygon(polygon, fill=shade(base_color, float(intensity[index])))
@@ -150,7 +156,8 @@ def render(
             upper.pop()
         upper.append(point)
     hull = lower[:-1] + upper[:-1]
-    draw.line(hull + [hull[0]], fill=(28, 103, 80, 190), width=2 * scale_factor, joint="curve")
+    outline_color = tuple(round(channel * 0.52) for channel in base_color) + (190,)
+    draw.line(hull + [hull[0]], fill=outline_color, width=2 * scale_factor, joint="curve")
 
     if not clean:
         # Labeled covers are retained for sharing; the website uses clean product renders.
@@ -180,6 +187,7 @@ if __name__ == "__main__":
     parser.add_argument("--footer", default="SOFT MATTE PREVIEW  •  AUG 2026")
     parser.add_argument("--portrait", action="store_true")
     parser.add_argument("--clean", action="store_true")
+    parser.add_argument("--base-color", default="#69cfaa")
     args = parser.parse_args()
     render(
         args.stl,
@@ -193,4 +201,5 @@ if __name__ == "__main__":
         footer=args.footer,
         portrait=args.portrait,
         clean=args.clean,
+        base_color=parse_hex_color(args.base_color),
     )

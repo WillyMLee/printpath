@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Porcelain Reed vase and printable Evergarden bouquet</title>
+  <desc id="desc">A white fine-fluted vase with interchangeable three-dimensional flowers, stems, leaves, and a removable arrangement grid.</desc>
+  <defs>
+    <linearGradient id="stage" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8f9f5"/><stop offset="1" stop-color="#edf3ef"/></linearGradient>
+    <linearGradient id="vase" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#d8dcd8"/><stop offset=".22" stop-color="#fff"/><stop offset=".58" stop-color="#eceeeb"/><stop offset=".82" stop-color="#fff"/><stop offset="1" stop-color="#ced3cf"/></linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9dd6e5"/><stop offset="1" stop-color="#5aa6c0"/></linearGradient>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#315d78"/><stop offset="1" stop-color="#173b55"/></linearGradient>
+    <filter id="shadow"><feGaussianBlur stdDeviation="13"/></filter>
+    <pattern id="ribs" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M2 0v10" stroke="#b7bdb9" stroke-width="2" opacity=".65"/><path d="M6 0v10" stroke="#fff" stroke-width="2" opacity=".85"/></pattern>
+  </defs>
+  <rect width="1200" height="675" rx="28" fill="url(#stage)"/>
+  <g stroke="#99afa6" opacity=".16"><path d="M0 520h1200M0 565h1200M0 610h1200"/><path d="M220 675 600 315 980 675M390 675 600 315 810 675M540 675l60-360 60 360"/></g>
+  <text x="54" y="58" fill="#37735f" font-family="Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="2">VASE STUDY · VERSION 03</text>
+  <text x="54" y="98" fill="#18362d" font-family="Arial,sans-serif" font-size="34" font-weight="700">Porcelain Reed + Evergarden</text>
+  <text x="54" y="128" fill="#718079" font-family="Arial,sans-serif" font-size="16">Fine white flutes · reusable bouquet · modular stem grid</text>
+
+  <ellipse cx="626" cy="592" rx="200" ry="34" fill="#4e6e62" opacity=".16" filter="url(#shadow)"/>
+
+  <!-- printable stems and leaves -->
+  <g fill="none" stroke="#5b8b71" stroke-width="8" stroke-linecap="round">
+    <path d="M588 400Q558 290 500 210"/><path d="M620 400Q620 270 620 165"/><path d="M650 405Q692 300 742 218"/><path d="M605 405Q560 330 545 280"/><path d="M640 405Q655 322 684 268"/>
+  </g>
+  <g fill="#7caf8e" stroke="#46745d" stroke-width="3">
+    <path d="M562 312q-52-32-72 14 39 27 72-14Z"/><path d="M645 318q56-34 72 16-43 25-72-16Z"/><path d="M600 275q-47-25-58 18 34 22 58-18Z"/><path d="M663 276q45-30 61 12-33 28-61-12Z"/>
+  </g>
+
+  <!-- flower heads -->
+  <g transform="translate(494 201)">
+    <g fill="url(#blue)" stroke="#4f91a8" stroke-width="3"><ellipse rx="18" ry="43" transform="rotate(0) translate(0 -29)"/><ellipse rx="18" ry="43" transform="rotate(60) translate(0 -29)"/><ellipse rx="18" ry="43" transform="rotate(120) translate(0 -29)"/><ellipse rx="18" ry="43" transform="rotate(180) translate(0 -29)"/><ellipse rx="18" ry="43" transform="rotate(240) translate(0 -29)"/><ellipse rx="18" ry="43" transform="rotate(300) translate(0 -29)"/></g><circle r="17" fill="#f6d890" stroke="#c99d46" stroke-width="3"/>
+  </g>
+  <g transform="translate(620 154)">
+    <g fill="#f7f5ef" stroke="#c5ccc7" stroke-width="3"><ellipse rx="15" ry="40" transform="rotate(0) translate(0 -27)"/><ellipse rx="15" ry="40" transform="rotate(45) translate(0 -27)"/><ellipse rx="15" ry="40" transform="rotate(90) translate(0 -27)"/><ellipse rx="15" ry="40" transform="rotate(135) translate(0 -27)"/><ellipse rx="15" ry="40" transform="rotate(180) translate(0 -27)"/><ellipse rx="15" ry="40" transform="rotate(225) translate(0 -27)"/><ellipse rx="15" ry="40" transform="rotate(270) translate(0 -27)"/><ellipse rx="15" ry="40" transform="rotate(315) translate(0 -27)"/></g><circle r="18" fill="#83b8c9" stroke="#4f91a8" stroke-width="3"/>
+  </g>
+  <g transform="translate(746 211)">
+    <path d="m0-53 14 30 35-8-19 29 25 25-35 3-6 35-20-29-32 15 10-34-30-18 34-10Z" fill="url(#navy)" stroke="#173b55" stroke-width="4" stroke-linejoin="round"/><circle r="15" fill="#f7f5ef"/>
+  </g>
+  <g transform="translate(548 272)"><path d="M0 0c-42-28-54-67-22-83 14 24 32 24 44 0 32 16 20 55-22 83Z" fill="#89c8d9" stroke="#4f91a8" stroke-width="3"/><circle cy="-42" r="11" fill="#f5d27f"/></g>
+  <g transform="translate(684 264)"><path d="M0 0c-39-29-50-63-20-79 13 23 28 23 40 0 30 16 19 50-20 79Z" fill="#f7f5ef" stroke="#c5ccc7" stroke-width="3"/><circle cy="-39" r="10" fill="#5aa6c0"/></g>
+
+  <!-- white fluted vase -->
+  <path d="M520 382Q516 413 506 548Q505 585 532 606Q626 635 720 606 747 585 746 548 736 413 732 382 625 356 520 382Z" fill="url(#vase)" stroke="#929d97" stroke-width="4"/>
+  <path d="M525 392Q626 414 727 392L720 604Q626 625 532 604Z" fill="url(#ribs)" opacity=".72"/>
+  <ellipse cx="626" cy="383" rx="106" ry="28" fill="#f9faf8" stroke="#929d97" stroke-width="4"/>
+  <ellipse cx="626" cy="385" rx="82" ry="16" fill="#29473d" opacity=".8"/>
+  <ellipse cx="626" cy="385" rx="68" ry="12" fill="#d7e2dc" stroke="#8ea39a" stroke-width="2" stroke-dasharray="4 6"/>
+  <g fill="#79958a"><circle cx="582" cy="383" r="4"/><circle cx="604" cy="379" r="4"/><circle cx="626" cy="377" r="4"/><circle cx="648" cy="379" r="4"/><circle cx="670" cy="383" r="4"/></g>
+
+  <!-- specification callouts -->
+  <g font-family="Arial,sans-serif">
+    <rect x="54" y="518" width="230" height="88" rx="18" fill="#fff" stroke="#d9e2dd"/>
+    <text x="74" y="547" fill="#39725f" font-size="12" font-weight="700" letter-spacing="1.4">VASE BODY</text><text x="74" y="575" fill="#18362d" font-size="19" font-weight="700">245 mm · white PETG</text><text x="74" y="596" fill="#718079" font-size="13">36 fine flutes · water-capable</text>
+    <rect x="906" y="172" width="240" height="214" rx="20" fill="#fff" stroke="#d9e2dd"/>
+    <text x="930" y="207" fill="#39725f" font-size="12" font-weight="700" letter-spacing="1.4">EVERGARDEN KIT</text>
+    <circle cx="943" cy="241" r="9" fill="#89c8d9"/><text x="963" y="247" fill="#233d34" font-size="15" font-weight="700">3 flower silhouettes</text>
+    <circle cx="943" cy="280" r="9" fill="#7caf8e"/><text x="963" y="286" fill="#233d34" font-size="15" font-weight="700">Flat-print stems + leaves</text>
+    <circle cx="943" cy="319" r="9" fill="#f5d27f"/><text x="963" y="325" fill="#233d34" font-size="15" font-weight="700">Snap-fit color centers</text>
+    <circle cx="943" cy="358" r="9" fill="#d7e2dc"/><text x="963" y="364" fill="#233d34" font-size="15" font-weight="700">Removable stem grid</text>
+    <rect x="906" y="408" width="240" height="72" rx="18" fill="#e6f4ee" stroke="#badbce"/>
+    <text x="930" y="436" fill="#39725f" font-size="12" font-weight="700" letter-spacing="1.2">PRINT PLAN</text><text x="930" y="462" fill="#18362d" font-size="17" font-weight="700">Vase + 3 bouquet plates</text>
+  </g>
+</svg>

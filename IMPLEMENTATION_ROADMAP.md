@@ -2,6 +2,14 @@
 
 Last updated: 2026-08-24
 
+## 2026-08-24 — Porcelain Reed vase + Evergarden bouquet
+
+- Added a third saved vase version without replacing Petal Twist or Leaf Bloom.
+- Translated the supplied white-vase reference into original printable geometry: 245 mm tall, 36 fine vertical ribs, a softly planted base, a clean round rim, 2.4 mm walls, and a 3.2 mm floor.
+- Added the approved vase STL and a white-PETG print guide; the body remains capable of holding real flowers after a leak test.
+- Added a coordinated printable-flower study with three interchangeable head silhouettes, universal keyed stems, leaves, snap-fit color centers, and a removable arrangement grid.
+- Kept the bouquet labeled as design review until its joints and seven-stem composition have fit-tested STLs.
+
 ## 2026-08-24 — Capiz Cove shell study
 
 - Added Capiz Cove as version 4 inside the existing phone-stand project rather than replacing Tidepool Buddy.
