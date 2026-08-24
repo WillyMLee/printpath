@@ -21,6 +21,14 @@
 - Brim: 6–8 mm if the plate is not freshly cleaned
 - Seam: align to rear
 
+## Planning estimate
+
+- Geometry volume: approximately **216.5 cm³**
+- Material: approximately **275 g PETG** at 1.27 g/cm³
+- Time budget: approximately **9–11 hours** at 0.20 mm with four walls
+
+Treat the time as a planning range. Bambu Studio's sliced estimate is authoritative for the selected filament profile, speeds, seam placement, and acceleration.
+
 ## Before flowers or water
 
 1. Confirm the model reports **245 mm** tall and remains inside the P1S build volume.

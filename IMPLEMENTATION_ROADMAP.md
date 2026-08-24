@@ -2,6 +2,13 @@
 
 Last updated: 2026-08-24
 
+## 2026-08-24 — Vase estimate + Cozy Harvest phone stand
+
+- Calculated the Porcelain Reed STL's solid volume at approximately 216.5 cm³, or about 275 g of PETG; added a clearly labeled 9–11 hour planning range pending the final Bambu Studio slice.
+- Added Cozy Harvest Dock as phone-stand version 5 without replacing Tidepool Buddy, Capiz Cove, or the two earlier saved directions.
+- Kept the farming-game influence at the level of original pixel geometry: terraced field, structural barn support, stone-bridge cable lip, and replaceable crop tiles; no copied Stardew Valley sprites, logo, characters, or map.
+- Expanded the phone selector to three featured studies with responsive three-, two-, and one-column layouts.
+
 ## 2026-08-24 — Porcelain Reed vase + Evergarden bouquet
 
 - Added a third saved vase version without replacing Petal Twist or Leaf Bloom.

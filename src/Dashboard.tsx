@@ -98,7 +98,7 @@ const plateOptions = [
 ];
 
 type VaseVersionId = "petal-twist" | "leaf-bloom" | "porcelain-reed";
-type PhoneOceanVersionId = "tidepool-buddy" | "capiz-cove";
+type PhoneOceanVersionId = "tidepool-buddy" | "capiz-cove" | "cozy-harvest";
 type ConceptProjectId =
   | "pottery-stamps" | "perfume-susan" | "phone-stands" | "ceramic-risers" | "film-camera-tools"
   | "token-upgrades" | "magnetic-island" | "steam-controller-dock" | "quiet-utility-kit"
@@ -106,7 +106,7 @@ type ConceptProjectId =
 type ProjectSelection = "drawer-gap" | "vase" | "seven-wonders" | "cozy" | "magnetic" | ConceptProjectId;
 
 const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v2";
-const SELECTED_PHONE_VERSION_KEY = "printpath-selected-phone-ocean-version-v1";
+const SELECTED_PHONE_VERSION_KEY = "printpath-selected-phone-ocean-version-v2";
 
 const vaseVersions = [
   {
@@ -146,7 +146,7 @@ const vaseVersions = [
     opening: "≈91 mm opening",
     description: "A quiet white vessel with 36 fine vertical ribs, a softly planted foot, and a clean round rim for real or printed flowers.",
     historyNote: "Fine porcelain-like ribs and a restrained taper based on the new white-vase reference, paired with the modular Evergarden bouquet study.",
-    facts: [["116.7 × 116.7 × 245 mm", "P1S-safe size"], ["36 ribs", "Fine vertical texture"], ["White PETG", "Water-capable body"]],
+    facts: [["116.7 × 116.7 × 245 mm", "P1S-safe size"], ["≈9–11 hr", "Planning estimate"], ["≈275 g PETG", "Geometry-based material"]],
   },
 ];
 
@@ -178,6 +178,20 @@ const phoneOceanVersions = [
     modules: [["Capiz fan", "White · repeating shell panes with light-catching ribs"], ["Scallop reef", "Dark blue · radial structure and anti-tip footprint"], ["Tide cradle", "Light blue · measured case lip and cable notch"], ["Fit coupon", "Two lip depths plus 55° and 65° viewing tests"]] as Array<[string, string]>,
     prompt: "Design version 4 of the saved phone-stand project as an original Filipino-first Capiz Cove shell stand. Use a white structural fan of softly translucent capiz-pane-inspired geometry, a dark-blue scallop reef base with radial load-bearing ribs, and a separate light-blue tide cradle with a centered charging notch. Treat capiz as a documented Filipino art and architectural material reference without copying a historical window panel or claiming a traditional symbol. Keep all three colors as separately printable support-free P1S parts. Confirm the exact phone and case envelope, camera bump, portrait-versus-landscape use, preferred viewing angle, and wired-versus-MagSafe charging; print a lip-depth and angle coupon first.",
     sources: [["National Museum capiz exhibition", "https://www.nationalmuseum.gov.ph/exhibitions/fine-arts/gallery-20/"], ["Capiz architectural precedent", "https://www.nationalmuseum.gov.ph/2023/02/16/built-tradition-of-the-aduana-building-in-cebu-city/"], ["Separate color-insert precedent", "https://makerworld.com/en/models/739533-phone-stand-01-by-teeti3d"]] as Array<[string, string]>,
+  },
+  {
+    id: "cozy-harvest" as const,
+    version: 5,
+    name: "Cozy Harvest Dock",
+    image: "/projects/cozy-harvest-phone-stand-concept.svg",
+    label: "Pixel farm study",
+    summary: "An original cozy-farming stand with a terraced field base, structural barn roof, stone-bridge lip, and seasonal crop tiles.",
+    thesis: "Let the farm scene carry the phone instead of decorating a generic stand afterward.",
+    description: "A wide terraced field forms the anti-tip base, while a cream barn wall and clay-red roof hide the structural back support. The phone rests on a gray stone-bridge lip with a blue cable channel underneath. Small crop tiles snap into the field so the scene can change by season without reprinting the load-bearing parts. The pixel-block language evokes cozy farming games without reproducing Stardew Valley sprites, logos, or characters.",
+    facts: [["4 parts", "Field / barn / bridge / tiles"], ["Seasonal", "Replaceable crop details"], ["AMS optional", "Separate-color assembly"]] as Array<[string, string]>,
+    modules: [["Terraced field", "Forest green · wide anti-tip footprint"], ["Barn support", "Cream + clay · concealed structural back"], ["Stone bridge", "Gray lip · centered blue cable route"], ["Crop tiles", "Gold, green, or coral · replaceable pixel inserts"]] as Array<[string, string]>,
+    prompt: "Design version 5 of the saved phone-stand project as an original cozy pixel-farm stand inspired by the mood of Stardew Valley without copying its sprites, logo, characters, or map. Use a wide forest-green terraced field as the anti-tip base, a cream barn wall with a clay-red roof as the structural back support, a gray stone-bridge front lip with a centered blue charging channel, and small replaceable seasonal crop tiles. Keep the load-bearing parts support-free and separately printable on a Bambu Lab P1S so an AMS is optional. Confirm the exact phone and case envelope, camera bump, portrait-versus-landscape use, preferred viewing angle, and wired-versus-MagSafe charging; print a lip-depth and angle coupon first.",
+    sources: [["Mood reference", "https://www.stardewvalley.net/"]] as Array<[string, string]>,
   },
 ];
 
@@ -275,16 +289,16 @@ const conceptProjects: Array<{
     id: "phone-stands",
     title: "Ocean Nature Phone Stands",
     category: "Desk & Bedroom",
-    status: "4 directions · 2 ocean studies",
-    image: "/projects/capiz-cove-phone-stand-concept.svg",
-    summary: "Two selectable ocean studies—Tidepool Buddy and Filipino-first Capiz Cove—plus the preserved forest and fern concepts.",
+    status: "5 directions · 3 featured studies",
+    image: "/projects/cozy-harvest-phone-stand-concept.svg",
+    summary: "Three selectable studies—Tidepool Buddy, Filipino-first Capiz Cove, and Cozy Harvest—plus the preserved forest and fern concepts.",
     thesis: "Choose the emotional silhouette first; the same measured phone fit can serve every saved shell.",
-    description: "The ocean branch now contains two selectable directions in light blue, dark blue, and white. Tidepool Buddy uses a manta stance and curling wave; Capiz Cove uses pearlescent shell-pane rhythm and a scalloped reef base. The earlier forest guardian and fern cradle remain preserved rather than being replaced.",
-    facts: [["2 ocean versions", "Selectable below"], ["4 directions", "One project history"], ["1 shared coupon", "Case + angle test"]],
-    modules: [["Tidepool Buddy", "Manta stance · curling wave · foam accents"], ["Capiz Cove", "Filipino shell panes · scallop reef · tide cradle"], ["Shared fit core", "One phone envelope and charging route"], ["Color assembly", "Three separate parts · AMS optional"]],
+    description: "The featured branch now contains two ocean directions and one cozy pixel-farm direction. Tidepool Buddy uses a manta stance and curling wave; Capiz Cove uses pearlescent shell-pane rhythm and a scalloped reef base; Cozy Harvest turns the structural support into a terraced field, barn, and cable bridge. The earlier forest guardian and fern cradle remain preserved rather than being replaced.",
+    facts: [["3 featured versions", "Selectable below"], ["5 directions", "One project history"], ["1 shared coupon", "Case + angle test"]],
+    modules: [["Tidepool Buddy", "Manta stance · curling wave · foam accents"], ["Capiz Cove", "Filipino shell panes · scallop reef · tide cradle"], ["Cozy Harvest", "Pixel field · barn support · cable bridge"], ["Shared fit core", "One phone envelope and charging route"]],
     questions: ["Exact phone model and case thickness, including any camera bump?", "Portrait and landscape, or portrait only—and preferred viewing angle?", "Wired charging, MagSafe, or both while the phone is docked?"],
-    prompt: phoneOceanVersions[1].prompt,
-    sources: phoneOceanVersions[1].sources,
+    prompt: phoneOceanVersions[2].prompt,
+    sources: phoneOceanVersions[2].sources,
   },
   {
     id: "ceramic-risers",
@@ -502,7 +516,7 @@ function OverviewPage(props: DashboardProps) {
           <div className="card-heading-row"><div><span className="page-eyebrow">Your projects</span><h2>Pick up where you left off</h2></div><button className="text-link" onClick={() => props.onNavigate("projects")}>View all <ChevronRight size={15} /></button></div>
           <button className="recent-project-row" onClick={() => props.onNavigate("projects")}>
             <span className="project-cover-thumb"><img src="/projects/porcelain-reed-vase-aug-2026-product.png" alt="Rendered Porcelain Reed Vase" /></span>
-            <div><strong>Porcelain Reed Vase</strong><small>245 mm tall · white PETG · 3 saved versions</small></div>
+            <div><strong>Porcelain Reed Vase</strong><small>≈9–11 hr · ≈275 g PETG · 3 saved versions</small></div>
             <span className="review-mini">Review draft</span>
             <ChevronRight size={17} />
           </button>
@@ -614,12 +628,13 @@ function ProjectsPage(props: DashboardProps) {
   const selectedVase = vaseVersions.find((version) => version.id === selectedVaseId) ?? vaseVersions[2];
   const [selectedPhoneVersionId, setSelectedPhoneVersionId] = useState<PhoneOceanVersionId>(() => {
     try {
-      return localStorage.getItem(SELECTED_PHONE_VERSION_KEY) === "tidepool-buddy" ? "tidepool-buddy" : "capiz-cove";
+      const saved = localStorage.getItem(SELECTED_PHONE_VERSION_KEY);
+      return saved === "tidepool-buddy" || saved === "capiz-cove" || saved === "cozy-harvest" ? saved : "cozy-harvest";
     } catch {
-      return "capiz-cove";
+      return "cozy-harvest";
     }
   });
-  const selectedPhoneVersion = phoneOceanVersions.find((version) => version.id === selectedPhoneVersionId) ?? phoneOceanVersions[1];
+  const selectedPhoneVersion = phoneOceanVersions.find((version) => version.id === selectedPhoneVersionId) ?? phoneOceanVersions[2];
   const phoneStandProject = conceptProjects.find((project) => project.id === "phone-stands") ?? conceptProjects[0];
   const chooseProject = (id: ProjectSelection) => {
     setSelectedProject(id);
