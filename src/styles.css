@@ -505,6 +505,19 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
 .project-detail-heading { max-width: 1370px; margin: 34px auto 0; padding-top: 2px; scroll-margin-top: 18px; }
 .project-detail-heading h2 { margin: 4px 0 0; font-size: 23px; letter-spacing: -.04em; }
 .concept-project-detail .organizer-concept-art { background: #f2f5f0; }
+.phone-version-switcher { margin-top: 20px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.phone-version-button { min-width: 0; padding: 8px; display: grid; grid-template-columns: 128px minmax(0,1fr); align-items: center; gap: 12px; border: 1px solid #dfe6e2; border-radius: 13px; color: #233f36; background: #fbfcfa; text-align: left; cursor: pointer; transition: border-color .18s, background .18s, box-shadow .18s; }
+.phone-version-button:hover { border-color: #aacfc1; background: #f7fbf8; }
+.phone-version-button.selected { border-color: #69aa94; background: #f1faf6; box-shadow: 0 0 0 2px #dff1ea; }
+.phone-version-button:focus-visible { outline: 3px solid rgba(73,151,125,.28); outline-offset: 3px; }
+.phone-version-thumb { overflow: hidden; aspect-ratio: 16 / 9; border: 1px solid #dce6e1; border-radius: 9px; background: #edf4f1; }
+.phone-version-thumb img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.phone-version-button > span:last-child { min-width: 0; }
+.phone-version-button small, .phone-version-button strong { display: block; }
+.phone-version-button small { overflow: hidden; color: #788780; font-size: 9.5px; font-weight: 800; letter-spacing: .035em; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.phone-version-button strong { margin-top: 5px; font-size: 12px; }
+.phone-version-button em { margin-top: 7px; display: inline-flex; align-items: center; gap: 4px; color: #337a65; font-size: 10px; font-style: normal; font-weight: 800; }
+.phone-selected-version { margin-top: 16px; padding-top: 20px; border-top: 1px solid #e6ebe7; }
 .concept-facts { margin-top: 17px; }
 .concept-module-grid { margin-top: 10px; }
 .concept-question-list { margin-top: 14px; padding: 13px 14px; border-radius: 11px; display: grid; gap: 8px; color: #687771; background: #f1f4f0; }
@@ -1109,6 +1122,8 @@ button:disabled { cursor: not-allowed; opacity: 0.4; }
   .organizer-concept .card-heading-row { align-items: flex-start; flex-direction: column; }
   .organizer-concept-art { min-height: 0; aspect-ratio: 16 / 9; }
   .organizer-concept-art img { min-height: 0; }
+  .phone-version-switcher { grid-template-columns: 1fr; }
+  .phone-version-button { grid-template-columns: 105px minmax(0,1fr); }
   .organizer-module-grid, .organizer-gates { grid-template-columns: 1fr; }
   .organizer-gates strong { grid-column: auto; }
   .organizer-start { width: 100%; justify-content: center; }

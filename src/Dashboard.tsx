@@ -98,6 +98,7 @@ const plateOptions = [
 ];
 
 type VaseVersionId = "petal-twist" | "leaf-bloom";
+type PhoneOceanVersionId = "tidepool-buddy" | "capiz-cove";
 type ConceptProjectId =
   | "pottery-stamps" | "perfume-susan" | "phone-stands" | "ceramic-risers" | "film-camera-tools"
   | "token-upgrades" | "magnetic-island" | "steam-controller-dock" | "quiet-utility-kit"
@@ -105,6 +106,7 @@ type ConceptProjectId =
 type ProjectSelection = "drawer-gap" | "vase" | "seven-wonders" | "cozy" | "magnetic" | ConceptProjectId;
 
 const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v1";
+const SELECTED_PHONE_VERSION_KEY = "printpath-selected-phone-ocean-version-v1";
 
 const vaseVersions = [
   {
@@ -132,6 +134,37 @@ const vaseVersions = [
     description: "Seven leaf-like folds rise into a wider, gently flared opening for fuller greenery.",
     historyNote: "Seven twisted botanical folds and a wider flared opening for fuller, leaf-heavy arrangements.",
     facts: [["122.9 × 122.5 × 245 mm", "P1S-safe size"], ["≈105 mm", "Average inner opening"], ["PETG", "One-piece body"]],
+  },
+];
+
+const phoneOceanVersions = [
+  {
+    id: "tidepool-buddy" as const,
+    version: 3,
+    name: "Tidepool Buddy",
+    image: "/projects/ocean-nature-phone-stand-concept.svg",
+    label: "Manta + wave",
+    summary: "A broad manta-like base, curling wave support, and white foam accents in the original ocean palette.",
+    thesis: "Make the ocean shape do the structural work, then let the cute details stay light and replaceable.",
+    description: "A dark-blue manta-like base resists tipping, a light-blue curling wave supports the phone, and white snap-in foam pieces soften the silhouette. A centered cable canyon keeps wired charging open. Each color prints as a separate flat-oriented part, so AMS remains optional.",
+    facts: [["3 colors", "Separate snap-fit parts"], ["Manta stance", "Wide anti-tip footprint"], ["1 coupon", "Case + angle test first"]] as Array<[string, string]>,
+    modules: [["Manta base", "Dark blue · optional hidden washer pockets"], ["Curling wave", "Light blue · structural back support"], ["Foam accents", "White · replaceable crest and front lip"], ["Cable canyon", "Centered path for wired charging"]] as Array<[string, string]>,
+    prompt: "Design version 3 of the saved phone-stand project as an original Tidepool Buddy ocean stand. Use a broad dark-blue manta-like base for stability, a light-blue curling wave as the structural phone support, and separate white snap-in sea-foam accents plus a soft front-lip shell. Preserve a centered charging-cable path, target support-free P1S printing, and keep each color as a separately printable part so AMS is optional. Confirm the exact phone and case envelope, camera bump, portrait-versus-landscape use, preferred viewing angle, and wired-versus-MagSafe charging; print a lip-depth and angle coupon first.",
+    sources: [["Wave geometry", "https://thangs.com/designer/Bamingo%20Design/3d-model/Wave%20Phone%20Stand-1564576"], ["Manta stability", "https://thangs.com/bundle/designer/Decorartor/3d-model/Manta%20Ray%20Ramp%20Phone%20Stand%20with%20Swirl%20Patterns-1528958"]] as Array<[string, string]>,
+  },
+  {
+    id: "capiz-cove" as const,
+    version: 4,
+    name: "Capiz Cove",
+    image: "/projects/capiz-cove-phone-stand-concept.svg",
+    label: "Filipino shell study",
+    summary: "A Filipino-first shell stand with pearlescent capiz-pane rhythm, a scalloped reef base, and tide-blue cradle.",
+    thesis: "Use capiz as a light-and-geometry reference—not a pasted-on symbol.",
+    description: "The phone leans against a structural fan of white, softly translucent shell panes arranged like a compact capiz window. A dark-blue scallop base supplies the load-bearing ribs, while a light-blue tide cradle and cable notch handle the actual phone fit. The shell fan, base, and cradle print separately, keeping the light blue, dark blue, and white palette practical on a single-nozzle P1S.",
+    facts: [["3 parts", "Shell / reef / cradle"], ["Capiz rhythm", "Pearlescent pane geometry"], ["No AMS", "Separate-color assembly"]] as Array<[string, string]>,
+    modules: [["Capiz fan", "White · repeating shell panes with light-catching ribs"], ["Scallop reef", "Dark blue · radial structure and anti-tip footprint"], ["Tide cradle", "Light blue · measured case lip and cable notch"], ["Fit coupon", "Two lip depths plus 55° and 65° viewing tests"]] as Array<[string, string]>,
+    prompt: "Design version 4 of the saved phone-stand project as an original Filipino-first Capiz Cove shell stand. Use a white structural fan of softly translucent capiz-pane-inspired geometry, a dark-blue scallop reef base with radial load-bearing ribs, and a separate light-blue tide cradle with a centered charging notch. Treat capiz as a documented Filipino art and architectural material reference without copying a historical window panel or claiming a traditional symbol. Keep all three colors as separately printable support-free P1S parts. Confirm the exact phone and case envelope, camera bump, portrait-versus-landscape use, preferred viewing angle, and wired-versus-MagSafe charging; print a lip-depth and angle coupon first.",
+    sources: [["National Museum capiz exhibition", "https://www.nationalmuseum.gov.ph/exhibitions/fine-arts/gallery-20/"], ["Capiz architectural precedent", "https://www.nationalmuseum.gov.ph/2023/02/16/built-tradition-of-the-aduana-building-in-cebu-city/"], ["Separate color-insert precedent", "https://makerworld.com/en/models/739533-phone-stand-01-by-teeti3d"]] as Array<[string, string]>,
   },
 ];
 
@@ -227,18 +260,18 @@ const conceptProjects: Array<{
   },
   {
     id: "phone-stands",
-    title: "Tidepool Buddy Phone Stand",
+    title: "Ocean Nature Phone Stands",
     category: "Desk & Bedroom",
-    status: "Version 3 · Ocean direction",
-    image: "/projects/ocean-nature-phone-stand-concept.svg",
-    summary: "A friendly manta-and-wave cradle in light blue, dark blue, and white—designed as separate color parts.",
-    thesis: "Make the ocean shape do the structural work, then let the cute details stay light and replaceable.",
-    description: "The third saved direction is Tidepool Buddy: a broad dark-blue manta-like base resists tipping, a light-blue curling wave supports the phone at a relaxed viewing angle, and white snap-in foam pieces soften the silhouette. A centered cable canyon keeps wired charging open. The three colors print as separate flat-oriented parts, so the P1S can make the full palette without an AMS; the earlier forest guardian and fern cradle remain preserved in this project's history.",
-    facts: [["3 colors", "Separate snap-fit parts"], ["3 versions", "Earlier concepts preserved"], ["1 coupon", "Case + angle test first"]],
-    modules: [["Manta base", "Dark blue · wide stance · optional hidden washer pockets"], ["Curling wave", "Light blue · structural back support · support-free target"], ["Foam accents", "White · replaceable crest and soft front-lip shell"], ["Cable canyon", "Centered wired-charging path for portrait or landscape"]],
+    status: "4 directions · 2 ocean studies",
+    image: "/projects/capiz-cove-phone-stand-concept.svg",
+    summary: "Two selectable ocean studies—Tidepool Buddy and Filipino-first Capiz Cove—plus the preserved forest and fern concepts.",
+    thesis: "Choose the emotional silhouette first; the same measured phone fit can serve every saved shell.",
+    description: "The ocean branch now contains two selectable directions in light blue, dark blue, and white. Tidepool Buddy uses a manta stance and curling wave; Capiz Cove uses pearlescent shell-pane rhythm and a scalloped reef base. The earlier forest guardian and fern cradle remain preserved rather than being replaced.",
+    facts: [["2 ocean versions", "Selectable below"], ["4 directions", "One project history"], ["1 shared coupon", "Case + angle test"]],
+    modules: [["Tidepool Buddy", "Manta stance · curling wave · foam accents"], ["Capiz Cove", "Filipino shell panes · scallop reef · tide cradle"], ["Shared fit core", "One phone envelope and charging route"], ["Color assembly", "Three separate parts · AMS optional"]],
     questions: ["Exact phone model and case thickness, including any camera bump?", "Portrait and landscape, or portrait only—and preferred viewing angle?", "Wired charging, MagSafe, or both while the phone is docked?"],
-    prompt: "Design version 3 of the saved phone-stand project as an original Tidepool Buddy ocean stand. Use a broad dark-blue manta-like base for stability, a light-blue curling wave as the structural phone support, and separate white snap-in sea-foam accents plus a soft front-lip shell. Preserve a centered charging-cable path, target support-free P1S printing, and keep each color as a separately printable part so AMS is optional. Preserve the earlier forest-guardian and fern-cradle directions in project history. Before CAD, confirm the exact phone and case envelope, camera bump, portrait-versus-landscape use, preferred viewing angle, and wired-versus-MagSafe charging; print a lip-depth and angle coupon first.",
-    sources: [["Wave geometry reference", "https://thangs.com/designer/Bamingo%20Design/3d-model/Wave%20Phone%20Stand-1564576"], ["Manta stability reference", "https://thangs.com/bundle/designer/Decorartor/3d-model/Manta%20Ray%20Ramp%20Phone%20Stand%20with%20Swirl%20Patterns-1528958"], ["Cute whale reference", "https://makerworld.com/en/models/141635"], ["Bambu PLA color material", "https://us.store.bambulab.com/products/pla-basic-filament"]],
+    prompt: phoneOceanVersions[1].prompt,
+    sources: phoneOceanVersions[1].sources,
   },
   {
     id: "ceramic-risers",
@@ -508,6 +541,53 @@ function ConceptProjectDetail({ project, onStart }: { project: (typeof conceptPr
   );
 }
 
+function PhoneStandProjectDetail({
+  project,
+  selectedVersion,
+  onSelect,
+  onStart,
+}: {
+  project: (typeof conceptProjects)[number];
+  selectedVersion: (typeof phoneOceanVersions)[number];
+  onSelect: (id: PhoneOceanVersionId) => void;
+  onStart: (idea: string) => void;
+}) {
+  return (
+    <section className="organizer-concept concept-project-detail phone-stand-detail page-card" aria-labelledby="phone-stands-title">
+      <div className="card-heading-row">
+        <div><span className="page-eyebrow">{project.category} · Saved design study</span><h2 id="phone-stands-title">{project.title}</h2><p>{project.summary}</p></div>
+        <span className="research-badge"><Sparkles size={14} /> {project.status}</span>
+      </div>
+      <div className="phone-version-switcher" aria-label="Ocean phone stand versions">
+        {phoneOceanVersions.map((version) => {
+          const selected = selectedVersion.id === version.id;
+          return <button className={`phone-version-button ${selected ? "selected" : ""}`} aria-pressed={selected} onClick={() => onSelect(version.id)} key={version.id}>
+            <span className="phone-version-thumb"><img src={version.image} alt="" /></span>
+            <span><small>Version {version.version} · {version.label}</small><strong>{version.name}</strong><em>{selected ? <><Check size={12} /> Selected</> : "View direction"}</em></span>
+          </button>;
+        })}
+      </div>
+      <div className="organizer-concept-grid phone-selected-version">
+        <div className="organizer-concept-art"><img src={selectedVersion.image} alt={`${selectedVersion.name} phone stand concept diagram`} /></div>
+        <div className="organizer-concept-copy">
+          <span className="recommendation-tag"><BadgeCheck size={14} /> Selected · Version {selectedVersion.version} · dimensions still required</span>
+          <h3>{selectedVersion.thesis}</h3>
+          <p>{selectedVersion.description}</p>
+          <div className="project-spec-strip concept-facts">
+            {selectedVersion.facts.map(([value, label]) => <span key={label}><Ruler size={16} /><small>{label}</small><strong>{value}</strong></span>)}
+          </div>
+          <div className="organizer-module-grid concept-module-grid">
+            {selectedVersion.modules.map(([name, detail]) => <span key={name}><Box size={17} /><strong>{name}</strong><small>{detail}</small></span>)}
+          </div>
+          <div className="concept-question-list"><strong>Three answers unlock shared fit CAD</strong>{project.questions.map((question, index) => <span key={question}><b>{index + 1}</b>{question}</span>)}</div>
+          <button className="primary-button organizer-start" onClick={() => onStart(selectedVersion.prompt)}>Start {selectedVersion.name} measurements <ArrowRight size={16} /></button>
+          <div className="organizer-sources"><span>Research:</span>{selectedVersion.sources.map(([label, url]) => <a href={url} target="_blank" rel="noreferrer" key={url}>{label}</a>)}</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ProjectsPage(props: DashboardProps) {
   const [selectedProject, setSelectedProject] = useState<ProjectSelection>("vase");
   const [selectedVaseId, setSelectedVaseId] = useState<VaseVersionId>(() => {
@@ -518,6 +598,15 @@ function ProjectsPage(props: DashboardProps) {
     }
   });
   const selectedVase = vaseVersions.find((version) => version.id === selectedVaseId) ?? vaseVersions[0];
+  const [selectedPhoneVersionId, setSelectedPhoneVersionId] = useState<PhoneOceanVersionId>(() => {
+    try {
+      return localStorage.getItem(SELECTED_PHONE_VERSION_KEY) === "tidepool-buddy" ? "tidepool-buddy" : "capiz-cove";
+    } catch {
+      return "capiz-cove";
+    }
+  });
+  const selectedPhoneVersion = phoneOceanVersions.find((version) => version.id === selectedPhoneVersionId) ?? phoneOceanVersions[1];
+  const phoneStandProject = conceptProjects.find((project) => project.id === "phone-stands") ?? conceptProjects[0];
   const chooseProject = (id: ProjectSelection) => {
     setSelectedProject(id);
     requestAnimationFrame(() => document.getElementById("selected-project-detail")?.scrollIntoView({ behavior: "smooth", block: "start" }));
@@ -527,6 +616,11 @@ function ProjectsPage(props: DashboardProps) {
     setSelectedVaseId(id);
     try { localStorage.setItem(SELECTED_VASE_VERSION_KEY, id); } catch { /* Local persistence is optional. */ }
     requestAnimationFrame(() => document.getElementById("selected-project-detail")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  };
+  const selectPhoneVersion = (id: PhoneOceanVersionId) => {
+    setSelectedProject("phone-stands");
+    setSelectedPhoneVersionId(id);
+    try { localStorage.setItem(SELECTED_PHONE_VERSION_KEY, id); } catch { /* Local persistence is optional. */ }
   };
   return (
     <>
@@ -734,7 +828,8 @@ function ProjectsPage(props: DashboardProps) {
         </div>
       </section>}
 
-      {conceptProjects.map((project) => selectedProject === project.id ? <ConceptProjectDetail project={project} onStart={props.onStartIdea} key={project.id} /> : null)}
+      {selectedProject === "phone-stands" && <PhoneStandProjectDetail project={phoneStandProject} selectedVersion={selectedPhoneVersion} onSelect={selectPhoneVersion} onStart={props.onStartIdea} />}
+      {conceptProjects.map((project) => selectedProject === project.id && project.id !== "phone-stands" ? <ConceptProjectDetail project={project} onStart={props.onStartIdea} key={project.id} /> : null)}
 
     </>
   );

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title desc">
+  <title id="title">Capiz Cove shell phone stand concept</title>
+  <desc id="desc">A Filipino-inspired phone stand with a white capiz-pane shell fan, dark blue scalloped reef base, light blue phone cradle, and separate color parts.</desc>
+  <defs>
+    <linearGradient id="capiz-bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fbfcfb"/><stop offset="1" stop-color="#edf5f7"/></linearGradient>
+    <linearGradient id="reef" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#173f6b"/><stop offset="1" stop-color="#08284a"/></linearGradient>
+    <linearGradient id="tide" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a4e1f3"/><stop offset="1" stop-color="#4cadd4"/></linearGradient>
+    <radialGradient id="pane"><stop stop-color="#ffffff" stop-opacity=".98"/><stop offset=".75" stop-color="#e9f7fa" stop-opacity=".9"/><stop offset="1" stop-color="#b9dce8" stop-opacity=".75"/></radialGradient>
+    <filter id="capiz-shadow"><feDropShadow dx="0" dy="12" stdDeviation="11" flood-color="#173d59" flood-opacity=".16"/></filter>
+  </defs>
+  <rect width="800" height="450" rx="26" fill="url(#capiz-bg)"/>
+  <path d="M0 350h800M0 390h800M106 0v450M222 0v450M338 0v450M454 0v450M570 0v450M686 0v450" stroke="#dce9eb"/>
+  <g font-family="Arial,sans-serif">
+    <text x="42" y="44" fill="#266b8a" font-size="13" font-weight="700" letter-spacing="2">FILIPINO SHELL STUDY · VERSION 04</text>
+    <text x="42" y="73" fill="#123650" font-size="26" font-weight="700">Capiz Cove</text>
+    <text x="42" y="96" fill="#687f8b" font-size="12">Pearlescent panes · scallop reef · single-nozzle assembly</text>
+  </g>
+  <ellipse cx="468" cy="378" rx="244" ry="31" fill="#cfdee3" opacity=".68"/>
+  <g filter="url(#capiz-shadow)">
+    <path d="M214 345c28-73 72-126 132-157 64-33 136-39 216-16 53 15 98 46 135 91-70 80-152 119-248 117-92-2-170-14-235-35z" fill="url(#reef)" stroke="#092947" stroke-width="3"/>
+    <g stroke="#8cb7c7" stroke-width="4" fill="url(#pane)">
+      <ellipse cx="360" cy="222" rx="47" ry="58" transform="rotate(-28 360 222)"/>
+      <ellipse cx="420" cy="178" rx="50" ry="65" transform="rotate(-13 420 178)"/>
+      <ellipse cx="488" cy="160" rx="52" ry="68"/>
+      <ellipse cx="555" cy="179" rx="50" ry="65" transform="rotate(13 555 179)"/>
+      <ellipse cx="615" cy="223" rx="47" ry="58" transform="rotate(28 615 223)"/>
+    </g>
+    <path d="M332 304l166 24 18-164-164-24z" fill="#ffffff" fill-opacity=".92" stroke="#173f60" stroke-width="4"/>
+    <path d="M350 286l131 19 14-126-130-19z" fill="#e7f2f5"/>
+    <circle cx="374" cy="176" r="7" fill="#173f6b"/><circle cx="391" cy="179" r="7" fill="#70c2df"/>
+    <path d="M312 312c28-15 60-19 95-12 26 5 48 18 65 38l-17 32H318l-25-30c2-11 8-20 19-28z" fill="url(#tide)" stroke="#247ca5" stroke-width="3"/>
+    <path d="M352 329c12-7 25-9 38-6 11 2 19 8 26 17l-10 25h-60l-9-23c3-5 8-10 15-13z" fill="#fff" stroke="#d6e7ec" stroke-width="3"/>
+  </g>
+  <g stroke="#3e7391" stroke-width="3" opacity=".78"><path d="M267 337l82-118M303 352l92-143M344 365l74-153M612 326l-69-117M571 354l-63-144M528 369l-42-156"/></g>
+  <path d="M380 347v31" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <g fill="#fff" stroke="#b6d5df" stroke-width="2"><circle cx="279" cy="317" r="8"/><circle cx="296" cy="291" r="6"/><circle cx="641" cy="297" r="7"/><circle cx="655" cy="319" r="5"/></g>
+  <g font-family="Arial,sans-serif" font-size="11" font-weight="700">
+    <g transform="translate(105 213)"><rect width="137" height="29" rx="14" fill="#fff"/><circle cx="17" cy="14.5" r="6" fill="#fff" stroke="#9bbfcb"/><text x="31" y="19" fill="#36566c">01 · capiz fan</text></g>
+    <g transform="translate(571 252)"><rect width="143" height="29" rx="14" fill="#fff"/><circle cx="17" cy="14.5" r="6" fill="#173f6b"/><text x="31" y="19" fill="#36566c">02 · scallop reef</text></g>
+    <g transform="translate(545 303)"><rect width="138" height="29" rx="14" fill="#fff"/><circle cx="17" cy="14.5" r="6" fill="#70c2df"/><text x="31" y="19" fill="#36566c">03 · tide cradle</text></g>
+  </g>
+  <g transform="translate(42 378)" font-family="Arial,sans-serif"><rect width="320" height="43" rx="12" fill="#fff" stroke="#d4e4e8"/><text x="15" y="17" fill="#78909d" font-size="9" font-weight="700">FIT GATE</text><text x="15" y="33" fill="#173d59" font-size="12" font-weight="700">Case lip + 55° / 65° angle coupon</text></g>
+  <g transform="translate(610 37)" font-family="Arial,sans-serif"><rect width="148" height="37" rx="18" fill="#fff" stroke="#d7e8ec"/><circle cx="19" cy="18.5" r="6" fill="#173f6b"/><circle cx="38" cy="18.5" r="6" fill="#70c2df"/><circle cx="57" cy="18.5" r="6" fill="#fff" stroke="#c6d8df"/><text x="72" y="23" fill="#466579" font-size="10" font-weight="700">3-color kit</text></g>
+</svg>

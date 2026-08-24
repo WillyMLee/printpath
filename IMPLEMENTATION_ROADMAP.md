@@ -2,6 +2,13 @@
 
 Last updated: 2026-08-24
 
+## 2026-08-24 — Capiz Cove shell study
+
+- Added Capiz Cove as version 4 inside the existing phone-stand project rather than replacing Tidepool Buddy.
+- Chose a Filipino-first visual language: white pearlescent capiz-pane rhythm, dark-blue scallop reef structure, and a light-blue measured phone cradle.
+- Added a compact two-version selector so Tidepool Buddy and Capiz Cove can be compared and reopened independently; the earlier forest and fern directions remain recorded in project history.
+- Avoided reproducing Niʻihau shell lei patterns. Hawaiian shell lei remain a living, specific practice; Capiz Cove keeps only a broad shoreline mood while sourcing its cultural design reference from documented Filipino capiz art and architecture.
+
 ## 2026-08-24 — Tidepool Buddy phone stand
 
 - Advanced the saved phone-stand project to a third direction: an original ocean-themed Tidepool Buddy with a manta-like base, curling wave support, and removable sea-foam accents.
