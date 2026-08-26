@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Cozy Stickerville organizer layout pipeline</title>
+  <desc id="desc">An exploded isometric plan showing a Year Library, Catalog Library, Resource Village, and Save Dock, followed by research, dimensions, CAD, and slice stages.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8faf6"/><stop offset="1" stop-color="#eaf1ec"/></linearGradient>
+    <linearGradient id="year" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f3d99d"/><stop offset="1" stop-color="#d6ae62"/></linearGradient>
+    <linearGradient id="catalog" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#9edbc2"/><stop offset="1" stop-color="#5eaa8b"/></linearGradient>
+    <linearGradient id="resource" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f3b695"/><stop offset="1" stop-color="#d77d5d"/></linearGradient>
+    <linearGradient id="save" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a9cce1"/><stop offset="1" stop-color="#6f9db8"/></linearGradient>
+    <filter id="shadow" x="-40%" y="-40%" width="180%" height="210%"><feDropShadow dx="0" dy="15" stdDeviation="13" flood-color="#203d35" flood-opacity=".18"/></filter>
+    <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M34 0H0V34" fill="none" stroke="#42685c" stroke-opacity=".07"/></pattern>
+  </defs>
+
+  <rect width="1200" height="675" rx="28" fill="url(#bg)"/>
+  <rect y="110" width="1200" height="455" fill="url(#grid)"/>
+  <path d="M0 442L600 126l600 316v123H0Z" fill="#fff" opacity=".2"/>
+
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="64" y="54" fill="#32745f" font-size="13" font-weight="800" letter-spacing="2.2">LAYOUT PIPELINE · CONCEPT 01</text>
+    <text x="64" y="88" fill="#152b25" font-size="27" font-weight="800">Cozy Stickerville organizer</text>
+    <g transform="translate(756 35)">
+      <rect width="181" height="56" rx="14" fill="#fff" stroke="#d7e1da"/>
+      <text x="16" y="21" fill="#7a8a84" font-size="10" font-weight="700" letter-spacing="1">PUBLISHED BOX</text>
+      <text x="16" y="42" fill="#203b32" font-size="15" font-weight="800">305 × 225 × 51 mm</text>
+    </g>
+    <g transform="translate(949 35)">
+      <rect width="187" height="56" rx="14" fill="#e1f2ea" stroke="#c6e2d6"/>
+      <text x="16" y="21" fill="#4c7b6b" font-size="10" font-weight="700" letter-spacing="1">CARD SYSTEM</text>
+      <text x="16" y="42" fill="#245a49" font-size="15" font-weight="800">181 · 63 × 88 mm</text>
+    </g>
+
+    <!-- ghost box envelope -->
+    <g opacity=".55">
+      <path d="M322 264L576 128l350 184-255 137Z" fill="#fff" fill-opacity=".36" stroke="#5f8b7d" stroke-width="2" stroke-dasharray="8 9"/>
+      <path d="M322 264v122l349 185V449Z" fill="#cddbd5" fill-opacity=".18" stroke="#5f8b7d" stroke-dasharray="8 9"/>
+      <path d="M671 449l255-137v122L671 571Z" fill="#afc9bf" fill-opacity=".16" stroke="#5f8b7d" stroke-dasharray="8 9"/>
+      <text x="637" y="334" text-anchor="middle" fill="#6e877e" font-size="12" font-weight="700" letter-spacing="1.4">MODULAR P1S ENVELOPE</text>
+    </g>
+
+    <!-- assembly connectors -->
+    <g fill="none" stroke="#5f8b7d" stroke-width="2" stroke-dasharray="5 7" opacity=".75">
+      <path d="M349 260L482 314"/><path d="M851 256L758 318"/><path d="M365 468L506 414"/><path d="M842 474L738 416"/>
+    </g>
+    <g fill="#fff" stroke="#4d806f" stroke-width="2"><circle cx="482" cy="314" r="5"/><circle cx="758" cy="318" r="5"/><circle cx="506" cy="414" r="5"/><circle cx="738" cy="416" r="5"/></g>
+
+    <!-- year library -->
+    <g transform="translate(122 180)" filter="url(#shadow)">
+      <path d="M0 60L112 0l173 91-113 61Z" fill="url(#year)" stroke="#9a763d" stroke-width="2"/>
+      <path d="M0 60v85l172 91v-84Z" fill="#c79c52" stroke="#8b6c39" stroke-width="2"/>
+      <path d="M172 152l113-61v84l-113 61Z" fill="#aa7f42" stroke="#795e37" stroke-width="2"/>
+      <g stroke="#9a763d" stroke-width="2" opacity=".8"><path d="M40 55l171 90"/><path d="M76 35l171 90"/><path d="M112 15l171 90"/></g>
+    </g>
+    <g transform="translate(70 154)"><rect width="174" height="31" rx="15.5" fill="#fff" stroke="#e1d8c5"/><text x="15" y="20" fill="#70552e" font-size="11" font-weight="800" letter-spacing="1">01 · YEAR LIBRARY</text></g>
+
+    <!-- catalog -->
+    <g transform="translate(830 178)" filter="url(#shadow)">
+      <path d="M0 75L103 20l169 89-104 56Z" fill="url(#catalog)" stroke="#347f66" stroke-width="2"/>
+      <path d="M0 75v78l168 89v-77Z" fill="#559e83" stroke="#34735f" stroke-width="2"/>
+      <path d="M168 165l104-56v78l-104 55Z" fill="#3b806a" stroke="#2e6856" stroke-width="2"/>
+      <g transform="translate(58 46)" fill="#edf8f2" stroke="#3d8b70"><path d="M0 38l65-35 94 50-66 35Z"/><path d="M7 29l65-35 94 50"/><path d="M15 20L80-15l94 50"/></g>
+    </g>
+    <g transform="translate(940 148)"><rect width="188" height="31" rx="15.5" fill="#fff" stroke="#cce2d8"/><text x="15" y="20" fill="#2f6855" font-size="11" font-weight="800" letter-spacing="1">02 · CATALOG LIBRARY</text></g>
+
+    <!-- resource village -->
+    <g transform="translate(795 410)" filter="url(#shadow)">
+      <path d="M0 62L105 6l182 96-106 57Z" fill="url(#resource)" stroke="#a65d43" stroke-width="2"/>
+      <path d="M0 62v64l181 96v-63Z" fill="#cf7658" stroke="#9c553e" stroke-width="2"/>
+      <path d="M181 159l106-57v64l-106 56Z" fill="#b35f45" stroke="#8d4937" stroke-width="2"/>
+      <g fill="#fff4ed" stroke="#ac6045" stroke-width="2"><ellipse cx="83" cy="73" rx="30" ry="18"/><ellipse cx="150" cy="108" rx="30" ry="18"/><ellipse cx="152" cy="59" rx="28" ry="17"/><ellipse cx="217" cy="95" rx="28" ry="17"/></g>
+    </g>
+    <g transform="translate(929 557)"><rect width="199" height="31" rx="15.5" fill="#fff" stroke="#ead2c7"/><text x="15" y="20" fill="#8a4d38" font-size="11" font-weight="800" letter-spacing="1">03 · RESOURCE VILLAGE</text></g>
+
+    <!-- save dock -->
+    <g transform="translate(105 407)" filter="url(#shadow)">
+      <path d="M0 62L108 4l181 95-109 59Z" fill="url(#save)" stroke="#4c7892" stroke-width="2"/>
+      <path d="M0 62v64l180 95v-63Z" fill="#719db5" stroke="#4b7085" stroke-width="2"/>
+      <path d="M180 158l109-59v64l-109 58Z" fill="#537f98" stroke="#406578" stroke-width="2"/>
+      <path d="M62 68l62-34 96 51-63 34Z" fill="#eff7fa" stroke="#587f96" stroke-width="2"/>
+      <path d="M124 34v35" stroke="#7ca0b4" stroke-width="2"/>
+    </g>
+    <g transform="translate(74 556)"><rect width="170" height="31" rx="15.5" fill="#fff" stroke="#cedee7"/><text x="15" y="20" fill="#456d83" font-size="11" font-weight="800" letter-spacing="1">04 · SAVE DOCK</text></g>
+
+    <!-- pipeline -->
+    <g transform="translate(318 594)">
+      <rect width="565" height="58" rx="18" fill="#fff" fill-opacity=".92" stroke="#d8e2dc"/>
+      <path d="M61 24H501" stroke="#d8dfda" stroke-width="4" stroke-linecap="round"/>
+      <path d="M61 24H208" stroke="#56ad8e" stroke-width="4" stroke-linecap="round"/>
+      <g font-size="10" font-weight="800" text-anchor="middle">
+        <circle cx="61" cy="24" r="8" fill="#3f9074"/><path d="M57 24l3 3 6-7" fill="none" stroke="#fff" stroke-width="2"/>
+        <text x="61" y="47" fill="#32745f">RESEARCH</text>
+        <circle cx="208" cy="24" r="9" fill="#f0ad69" stroke="#fff" stroke-width="3"/><text x="208" y="47" fill="#8f5a2e">DIMENSIONS</text>
+        <circle cx="355" cy="24" r="6" fill="#d8dfda"/><text x="355" y="47" fill="#82908a">CAD</text>
+        <circle cx="501" cy="24" r="6" fill="#d8dfda"/><text x="501" y="47" fill="#82908a">SLICE</text>
+      </g>
+    </g>
+  </g>
+</svg>
