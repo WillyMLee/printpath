@@ -156,11 +156,12 @@ const phoneOceanVersions = [
     version: 3,
     name: "Tidepool Buddy",
     image: "/projects/ocean-nature-phone-stand-concept.svg",
+    render: "/projects/tidepool-buddy-product-draft.png",
     label: "Manta + wave",
     summary: "A broad manta-like base, curling wave support, and white foam accents in the original ocean palette.",
     thesis: "Make the ocean shape do the structural work, then let the cute details stay light and replaceable.",
     description: "A dark-blue manta-like base resists tipping, a light-blue curling wave supports the phone, and white snap-in foam pieces soften the silhouette. A centered cable canyon keeps wired charging open. Each color prints as a separate flat-oriented part, so AMS remains optional.",
-    facts: [["3 colors", "Separate snap-fit parts"], ["Manta stance", "Wide anti-tip footprint"], ["1 coupon", "Case + angle test first"]] as Array<[string, string]>,
+    facts: [["2 plates", "Estimated print plan"], ["≈4–6 hr", "Pre-CAD time"], ["≈90–120 g PLA", "Pre-CAD material"]] as Array<[string, string]>,
     modules: [["Manta base", "Dark blue · optional hidden washer pockets"], ["Curling wave", "Light blue · structural back support"], ["Foam accents", "White · replaceable crest and front lip"], ["Cable canyon", "Centered path for wired charging"]] as Array<[string, string]>,
     prompt: "Design version 3 of the saved phone-stand project as an original Tidepool Buddy ocean stand. Use a broad dark-blue manta-like base for stability, a light-blue curling wave as the structural phone support, and separate white snap-in sea-foam accents plus a soft front-lip shell. Preserve a centered charging-cable path, target support-free P1S printing, and keep each color as a separately printable part so AMS is optional. Confirm the exact phone and case envelope, camera bump, portrait-versus-landscape use, preferred viewing angle, and wired-versus-MagSafe charging; print a lip-depth and angle coupon first.",
     sources: [["Wave geometry", "https://thangs.com/designer/Bamingo%20Design/3d-model/Wave%20Phone%20Stand-1564576"], ["Manta stability", "https://thangs.com/bundle/designer/Decorartor/3d-model/Manta%20Ray%20Ramp%20Phone%20Stand%20with%20Swirl%20Patterns-1528958"]] as Array<[string, string]>,
@@ -170,11 +171,12 @@ const phoneOceanVersions = [
     version: 4,
     name: "Capiz Cove",
     image: "/projects/capiz-cove-phone-stand-concept.svg",
+    render: "/projects/capiz-cove-product-draft.png",
     label: "Filipino shell study",
     summary: "A Filipino-first shell stand with pearlescent capiz-pane rhythm, a scalloped reef base, and tide-blue cradle.",
     thesis: "Use capiz as a light-and-geometry reference—not a pasted-on symbol.",
     description: "The phone leans against a structural fan of white, softly translucent shell panes arranged like a compact capiz window. A dark-blue scallop base supplies the load-bearing ribs, while a light-blue tide cradle and cable notch handle the actual phone fit. The shell fan, base, and cradle print separately, keeping the light blue, dark blue, and white palette practical on a single-nozzle P1S.",
-    facts: [["3 parts", "Shell / reef / cradle"], ["Capiz rhythm", "Pearlescent pane geometry"], ["No AMS", "Separate-color assembly"]] as Array<[string, string]>,
+    facts: [["3 plates", "Estimated print plan"], ["≈5–7 hr", "Pre-CAD time"], ["≈105–135 g PLA", "Pre-CAD material"]] as Array<[string, string]>,
     modules: [["Capiz fan", "White · repeating shell panes with light-catching ribs"], ["Scallop reef", "Dark blue · radial structure and anti-tip footprint"], ["Tide cradle", "Light blue · measured case lip and cable notch"], ["Fit coupon", "Two lip depths plus 55° and 65° viewing tests"]] as Array<[string, string]>,
     prompt: "Design version 4 of the saved phone-stand project as an original Filipino-first Capiz Cove shell stand. Use a white structural fan of softly translucent capiz-pane-inspired geometry, a dark-blue scallop reef base with radial load-bearing ribs, and a separate light-blue tide cradle with a centered charging notch. Treat capiz as a documented Filipino art and architectural material reference without copying a historical window panel or claiming a traditional symbol. Keep all three colors as separately printable support-free P1S parts. Confirm the exact phone and case envelope, camera bump, portrait-versus-landscape use, preferred viewing angle, and wired-versus-MagSafe charging; print a lip-depth and angle coupon first.",
     sources: [["National Museum capiz exhibition", "https://www.nationalmuseum.gov.ph/exhibitions/fine-arts/gallery-20/"], ["Capiz architectural precedent", "https://www.nationalmuseum.gov.ph/2023/02/16/built-tradition-of-the-aduana-building-in-cebu-city/"], ["Separate color-insert precedent", "https://makerworld.com/en/models/739533-phone-stand-01-by-teeti3d"]] as Array<[string, string]>,
@@ -184,11 +186,12 @@ const phoneOceanVersions = [
     version: 5,
     name: "Cozy Harvest Dock",
     image: "/projects/cozy-harvest-phone-stand-concept.svg",
+    render: "/projects/cozy-harvest-product-draft.png",
     label: "Pixel farm study",
     summary: "An original cozy-farming stand with a terraced field base, structural barn roof, stone-bridge lip, and seasonal crop tiles.",
     thesis: "Let the farm scene carry the phone instead of decorating a generic stand afterward.",
     description: "A wide terraced field forms the anti-tip base, while a cream barn wall and clay-red roof hide the structural back support. The phone rests on a gray stone-bridge lip with a blue cable channel underneath. Small crop tiles snap into the field so the scene can change by season without reprinting the load-bearing parts. The pixel-block language evokes cozy farming games without reproducing Stardew Valley sprites, logos, or characters.",
-    facts: [["4 parts", "Field / barn / bridge / tiles"], ["Seasonal", "Replaceable crop details"], ["AMS optional", "Separate-color assembly"]] as Array<[string, string]>,
+    facts: [["3–4 plates", "Estimated print plan"], ["≈6–8 hr", "Pre-CAD time"], ["≈120–160 g PLA", "Pre-CAD material"]] as Array<[string, string]>,
     modules: [["Terraced field", "Forest green · wide anti-tip footprint"], ["Barn support", "Cream + clay · concealed structural back"], ["Stone bridge", "Gray lip · centered blue cable route"], ["Crop tiles", "Gold, green, or coral · replaceable pixel inserts"]] as Array<[string, string]>,
     prompt: "Design version 5 of the saved phone-stand project as an original cozy pixel-farm stand inspired by the mood of Stardew Valley without copying its sprites, logo, characters, or map. Use a wide forest-green terraced field as the anti-tip base, a cream barn wall with a clay-red roof as the structural back support, a gray stone-bridge front lip with a centered blue charging channel, and small replaceable seasonal crop tiles. Keep the load-bearing parts support-free and separately printable on a Bambu Lab P1S so an AMS is optional. Confirm the exact phone and case envelope, camera bump, portrait-versus-landscape use, preferred viewing angle, and wired-versus-MagSafe charging; print a lip-depth and angle coupon first.",
     sources: [["Mood reference", "https://www.stardewvalley.net/"]] as Array<[string, string]>,
@@ -595,9 +598,9 @@ function PhoneStandProjectDetail({
         })}
       </div>
       <div className="organizer-concept-grid phone-selected-version">
-        <div className="organizer-concept-art"><img src={selectedVersion.image} alt={`${selectedVersion.name} phone stand concept diagram`} /></div>
+        <div className="organizer-concept-art geometry-render-art"><img src={selectedVersion.render} alt={`${selectedVersion.name} geometry draft product render`} /><span className="geometry-render-label">Geometry draft · assumed phone envelope</span></div>
         <div className="organizer-concept-copy">
-          <span className="recommendation-tag"><BadgeCheck size={14} /> Selected · Version {selectedVersion.version} · dimensions still required</span>
+          <span className="recommendation-tag"><BadgeCheck size={14} /> Version {selectedVersion.version} render · final dimensions required</span>
           <h3>{selectedVersion.thesis}</h3>
           <p>{selectedVersion.description}</p>
           <div className="project-spec-strip concept-facts">
@@ -756,15 +759,15 @@ function ProjectsPage(props: DashboardProps) {
           <span className="research-badge"><Flower2 size={14} /> Bouquet · design review</span>
         </div>
         <div className="organizer-concept-grid">
-          <div className="organizer-concept-art"><img src="/projects/porcelain-reed-bouquet-concept.svg" alt="Porcelain Reed vase with modular printable flowers" /></div>
+          <div className="organizer-concept-art geometry-render-art"><img src="/projects/evergarden-bouquet-product-draft.png" alt="Evergarden printable flower geometry draft arranged in the Porcelain Reed Vase" /><span className="geometry-render-label">Approved vase STL · flower geometry draft</span></div>
           <div className="organizer-concept-copy">
             <span className="recommendation-tag"><BadgeCheck size={14} /> White vase · reusable dry arrangement</span>
             <h3>Use one universal stem connection across every flower.</h3>
             <p>Three flower silhouettes keep the bouquet varied without creating a pile of one-off parts. Heads, centers, stems, and leaves separate by color; a hidden grid under the rim keeps the arrangement open and balanced.</p>
             <div className="project-spec-strip concept-facts">
-              <span><Layers3 size={16} /><small>Estimated plan</small><strong>Vase + 3 plates</strong></span>
-              <span><Component size={16} /><small>Starter bouquet</small><strong>7 stems</strong></span>
-              <span><Printer size={16} /><small>Color changes</small><strong>No AMS required</strong></span>
+              <span><Layers3 size={16} /><small>Flower kit</small><strong>3 plates</strong></span>
+              <span><Printer size={16} /><small>Pre-CAD time</small><strong>≈4–6 hr</strong></span>
+              <span><Component size={16} /><small>Pre-CAD material</small><strong>≈70–95 g PLA</strong></span>
             </div>
             <div className="organizer-module-grid concept-module-grid">
               <span><Flower2 size={17} /><strong>Hero blooms</strong><small>Six-petal, eight-petal, and star silhouettes</small></span>

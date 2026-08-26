@@ -82,6 +82,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | Project master-detail workspace | Completed-first project index, most-recent marker, minimal clickable cards, and one selected detail workbench | Shipped |
 | New concept queue | Pottery signature stamps, perfume Lazy Susan, three saved phone-stand directions, ceramic cabinet risers, and a film-camera toolkit with measurement gates | Outlined |
 | Board-game and apartment concepts | Token upgrade studio, five-plate magnetic 3D island scaffold, official-CAD Steam Controller dock, and four-part quiet utility kit | Outlined |
+| Draft geometry renders | Product-style mesh previews for Tidepool Buddy, Capiz Cove, Cozy Harvest, and the Evergarden bouquet, with clearly labeled pre-CAD plate, time, and material ranges | Shipped |
 
 ## Next implementation candidates
 
@@ -167,3 +168,4 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-17:** Stage the magnetic 19-hex island across five planning plates; keep board magnets permanently captured and prefer ferrous inserts over second magnets in small player pieces.
 - **2026-08-17:** Use Valve's official Steam Controller and Puck CAD plus keep-out drawings as the fit authority before creating the holder geometry.
 - **2026-08-17:** Group small apartment optimizations into one quiet utility family whose pieces consume no new floor area and share a restrained visual language.
+- **2026-08-26:** Distinguish approved-STL renders from geometry-draft renders; show conservative planning ranges for draft projects and keep Bambu Studio as the source of final print time and filament usage.
