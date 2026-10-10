@@ -231,7 +231,8 @@ const conceptProjects: Array<{
     questions: ["Does the 15 mm pole measurement also match its front-to-back depth?", "Which coupon clicks firmly without rattling or leaving white stress marks?", "What is the deepest wire or plug projection behind the proposed panel face?"],
     prompt: "Continue the Printer Stand Wire Panels prototype. Preserve the 500 × 380 mm and 500 × 400 mm outside dimensions, 5 × 2 tile grids, thin ribbed black faces, hidden seam keys, and replaceable left/right PETG latches. Record the winning 15 mm frame coupon fit, confirm the frame tube depth and rounded-corner shape, and confirm the deepest wire projection before approving the ten full panel plates.",
     primaryFiles: [
-      { label: "1 · Frame fit coupon", url: "/projects/printer-stand-wire-panels-oct-2026/printer-stand-frame-fit-coupon-15mm-oct-2026.stl", download: true },
+      { label: "1 · Open prepared P1S coupon", url: "/projects/printer-stand-wire-panels-oct-2026/printer-stand-frame-fit-coupon-p1s-petg-oct-2026.3mf", download: true },
+      { label: "Raw coupon STL", url: "/projects/printer-stand-wire-panels-oct-2026/printer-stand-frame-fit-coupon-15mm-oct-2026.stl", download: true },
       { label: "Print + assembly guide", url: "/projects/printer-stand-wire-panels-oct-2026/PRINT-GUIDE.md" },
     ],
     files: [

@@ -15,7 +15,9 @@ The visible surface is only 0.8 mm thick. A 3.0 mm total ribbed depth on the hid
 
 ## Do this first: frame coupon
 
-Print `printer-stand-frame-fit-coupon-15mm-oct-2026.stl` in black PETG before any panel plate.
+Open `printer-stand-frame-fit-coupon-p1s-petg-oct-2026.3mf` in Bambu Studio and print it in black PETG before any panel plate. The prepared project is already laid on its broad side for a support-free print. The raw source is `printer-stand-frame-fit-coupon-15mm-oct-2026.stl` if you want to arrange it yourself.
+
+The prepared P1S slice uses the 0.4 mm nozzle, Textured PEI Plate, 0.20 mm Standard profile, and Generic PETG. Its current estimate is **25 minutes 54 seconds and 5.91 g**. Confirm that filament slot 1 matches the PETG spool actually loaded before sending the plate.
 
 The coupon contains three clips from left to right:
 
