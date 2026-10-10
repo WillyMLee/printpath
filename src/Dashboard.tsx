@@ -215,6 +215,7 @@ const conceptProjects: Array<{
   renderLabel?: string;
   primaryFiles?: Array<{ label: string; url: string; download?: boolean }>;
   files?: Array<{ label: string; detail: string; url: string }>;
+  printPlan?: Array<{ range: string; title: string; detail: string; meta: string; ready: boolean }>;
 }> = [
   {
     id: "printer-stand-wire-panels",
@@ -234,6 +235,12 @@ const conceptProjects: Array<{
       { label: "1 · Open prepared P1S coupon", url: "/projects/printer-stand-wire-panels-oct-2026/printer-stand-frame-fit-coupon-p1s-petg-oct-2026.3mf", download: true },
       { label: "Raw coupon STL", url: "/projects/printer-stand-wire-panels-oct-2026/printer-stand-frame-fit-coupon-15mm-oct-2026.stl", download: true },
       { label: "Print + assembly guide", url: "/projects/printer-stand-wire-panels-oct-2026/PRINT-GUIDE.md" },
+    ],
+    printPlan: [
+      { range: "Plate 1", title: "Frame-fit coupon", detail: "Print this now and test all three latch fits on the actual stand.", meta: "Ready · 25m 54s · 5.91 g PETG", ready: true },
+      { range: "Plates 2–6", title: "Panel 1 · 500 × 380 mm", detail: "Five numbered tile plates form the upper opening.", meta: "Print after the coupon passes", ready: false },
+      { range: "Plates 7–11", title: "Panel 2 · 500 × 400 mm", detail: "Five numbered tile plates form the lower opening.", meta: "Print after the coupon passes", ready: false },
+      { range: "Plates 12–13", title: "Seams + frame latches", detail: "One seam-key plate, then both latch packs together.", meta: "Print after choosing the winning fit", ready: false },
     ],
     files: [
       ...Array.from({ length: 5 }, (_, index) => ({ label: `Panel 1 · Plate ${index + 1}`, detail: "500 × 380 mm cover", url: `/projects/printer-stand-wire-panels-oct-2026/printer-stand-panel-1-plate-0${index + 1}-oct-2026.stl` })),
@@ -592,6 +599,7 @@ function ConceptProjectDetail({ project, onStart }: { project: (typeof conceptPr
           <div className="organizer-module-grid concept-module-grid">
             {project.modules.map(([name, detail]) => <span key={name}><Box size={17} /><strong>{name}</strong><small>{detail}</small></span>)}
           </div>
+          {project.printPlan && <div className="project-print-plan" aria-label="Plate-by-plate print plan"><div className="project-print-plan-heading"><span>13-plate print order</span><small>Only Plate 1 is ready now</small></div>{project.printPlan.map((phase) => <div className={`project-print-plan-step ${phase.ready ? "is-ready" : "is-gated"}`} key={phase.range}><span className="project-print-plan-status">{phase.ready ? <Check size={14} /> : <LockKeyhole size={13} />}</span><div><small>{phase.range}</small><strong>{phase.title}</strong><p>{phase.detail}</p></div><b>{phase.meta}</b></div>)}</div>}
           <div className="concept-question-list"><strong>{project.primaryFiles ? "Three checks before full-panel printing" : "Three answers unlock CAD"}</strong>{project.questions.map((question, index) => <span key={question}><b>{index + 1}</b>{question}</span>)}</div>
           {project.primaryFiles && <div className="project-primary-actions">{project.primaryFiles.map((file, index) => <a className={index === 0 ? "primary-button" : "secondary-button"} href={file.url} download={file.download || undefined} target={file.download ? undefined : "_blank"} rel={file.download ? undefined : "noreferrer"} key={file.url}>{index === 0 ? <Download size={16} /> : <ShieldCheck size={16} />}{file.label}</a>)}</div>}
           {project.files && <details className="project-file-drawer"><summary><span>Panel plates and connector packs</span><small>{project.files.length} printable files</small><ChevronRight size={16} /></summary><div className="project-file-grid">{project.files.map((file) => <a href={file.url} download key={file.url}><Download size={15} /><span><strong>{file.label}</strong><small>{file.detail}</small></span></a>)}</div></details>}
