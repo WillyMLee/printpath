@@ -1,0 +1,6 @@
+# Copy to .dev.vars for local Worker development. Never use production values here.
+AUTH_USERNAME=local-maker
+AUTH_PASSWORD=replace-with-a-local-only-password
+SESSION_SECRET=replace-with-at-least-32-random-characters
+# Optional: AI remains safely disabled when this is blank or omitted.
+OPENAI_API_KEY=

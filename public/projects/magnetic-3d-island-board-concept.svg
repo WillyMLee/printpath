@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="title desc">
+  <title id="title">Magnetic modular 3D island board</title><desc id="desc">Nineteen terrain hex tiles arranged as an island with visible connector points and staged plate groups.</desc>
+  <defs><linearGradient id="bg" x2="0" y2="1"><stop stop-color="#f5f4ec"/><stop offset="1" stop-color="#eaf2ee"/></linearGradient><filter id="s"><feDropShadow dy="10" stdDeviation="8" flood-color="#263f37" flood-opacity=".18"/></filter><path id="h" d="M0-37 32-18.5 32 18.5 0 37-32 18.5-32-18.5z"/></defs>
+  <rect width="800" height="450" fill="url(#bg)"/><ellipse cx="400" cy="368" rx="276" ry="48" fill="#dce9e2"/><g transform="translate(400 215) scale(1.25 .72) rotate(30)" filter="url(#s)" stroke="#2f6d59" stroke-width="3">
+    <g fill="#7fc2a6"><use href="#h" x="-66" y="-114"/><use href="#h" x="0" y="-114"/><use href="#h" x="66" y="-114"/></g>
+    <g fill="#d8b967"><use href="#h" x="-99" y="-57"/><use href="#h" x="-33" y="-57"/><use href="#h" x="33" y="-57"/><use href="#h" x="99" y="-57"/></g>
+    <g fill="#9bc27d"><use href="#h" x="-132" y="0"/><use href="#h" x="-66" y="0"/><use href="#h" x="0" y="0" fill="#e2c99c"/><use href="#h" x="66" y="0"/><use href="#h" x="132" y="0"/></g>
+    <g fill="#b57a5d"><use href="#h" x="-99" y="57"/><use href="#h" x="-33" y="57"/><use href="#h" x="33" y="57"/><use href="#h" x="99" y="57"/></g>
+    <g fill="#899c9b"><use href="#h" x="-66" y="114"/><use href="#h" x="0" y="114"/><use href="#h" x="66" y="114"/></g>
+  </g>
+  <g fill="#2e735d" opacity=".9"><circle cx="238" cy="219" r="6"/><circle cx="303" cy="175" r="6"/><circle cx="368" cy="130" r="6"/><circle cx="432" cy="130" r="6"/><circle cx="497" cy="175" r="6"/><circle cx="562" cy="219" r="6"/><circle cx="530" cy="307" r="6"/><circle cx="270" cy="307" r="6"/></g>
+  <g fill="#386f5d" stroke="#f1faf6" stroke-width="3"><path d="M252 167l16-27 16 27zM287 150l14-24 14 24z"/><path d="M488 244l15-28 15 28zM520 230l13-24 13 24z"/><path d="M349 300l18-34 18 34zM383 286l14-25 14 25z"/></g>
+  <g fill="#fbfaf5" stroke="#6e8c80" stroke-width="3"><circle cx="401" cy="207" r="20"/><circle cx="337" cy="250" r="20"/><circle cx="466" cy="250" r="20"/></g>
+  <path d="M114 145h155M530 145h155M141 358h198M460 358h198" stroke="#739789" stroke-width="4" stroke-dasharray="10 9"/><g fill="#4d806e"><circle cx="114" cy="145" r="7"/><circle cx="685" cy="145" r="7"/><circle cx="141" cy="358" r="7"/><circle cx="658" cy="358" r="7"/></g>
+</svg>
