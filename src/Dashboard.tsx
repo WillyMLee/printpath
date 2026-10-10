@@ -102,7 +102,7 @@ type PhoneOceanVersionId = "tidepool-buddy" | "capiz-cove" | "cozy-harvest";
 type ConceptProjectId =
   | "pottery-stamps" | "perfume-susan" | "phone-stands" | "ceramic-risers" | "film-camera-tools"
   | "token-upgrades" | "magnetic-island" | "steam-controller-dock" | "quiet-utility-kit"
-  | "sink-rack-drain-bridge" | "retainer-drying-dock" | "shower-tool-rail";
+  | "sink-rack-drain-bridge" | "retainer-drying-dock" | "shower-tool-rail" | "printer-stand-wire-panels";
 type ProjectSelection = "drawer-gap" | "vase" | "seven-wonders" | "cozy" | "magnetic" | ConceptProjectId;
 
 const SELECTED_VASE_VERSION_KEY = "printpath-selected-vase-version-v2";
@@ -212,7 +212,36 @@ const conceptProjects: Array<{
   questions: string[];
   prompt: string;
   sources?: Array<[string, string]>;
+  renderLabel?: string;
+  primaryFiles?: Array<{ label: string; url: string; download?: boolean }>;
+  files?: Array<{ label: string; detail: string; url: string }>;
 }> = [
+  {
+    id: "printer-stand-wire-panels",
+    title: "Printer Stand Wire Panels",
+    category: "Desk & Workshop",
+    status: "Prototype CAD ready · coupon first",
+    image: "/projects/printer-stand-wire-panels-product-draft.png",
+    renderLabel: "CAD-derived render · 15 mm frame assumption",
+    summary: "Two thin, ribbed black panel systems that hide the lower-side wiring and snap onto the stand's vertical frame poles.",
+    thesis: "Make the visible face quiet and continuous; keep every fit-critical latch small, replaceable, and testable.",
+    description: "Each opening uses ten face-down tiles in a 5 × 2 grid. A 0.8 mm matte face and 3.0 mm ribbed depth stay light while rear slide-lock keys stiffen the seams. Eight separate PETG latch cassettes snap onto the two 15 mm vertical poles, so the worktop edge never needs to be accessed and a worn latch can be replaced without reprinting a tile.",
+    facts: [["13 plates", "Coupon + two panels"], ["≈30–38 hr", "Pre-slice estimate"], ["≈679 g PETG", "Geometry-based material"]],
+    modules: [["20 face tiles", "99.6 mm wide · two fit per P1S plate"], ["26 seam keys", "Hidden rear slide-lock connections"], ["8 frame latches", "Replaceable left/right C-clips"], ["3-fit coupon", "15.2, 15.6, and 16.0 mm internal fits"]],
+    questions: ["Does the 15 mm pole measurement also match its front-to-back depth?", "Which coupon clicks firmly without rattling or leaving white stress marks?", "What is the deepest wire or plug projection behind the proposed panel face?"],
+    prompt: "Continue the Printer Stand Wire Panels prototype. Preserve the 500 × 380 mm and 500 × 400 mm outside dimensions, 5 × 2 tile grids, thin ribbed black faces, hidden seam keys, and replaceable left/right PETG latches. Record the winning 15 mm frame coupon fit, confirm the frame tube depth and rounded-corner shape, and confirm the deepest wire projection before approving the ten full panel plates.",
+    primaryFiles: [
+      { label: "1 · Frame fit coupon", url: "/projects/printer-stand-wire-panels-oct-2026/printer-stand-frame-fit-coupon-15mm-oct-2026.stl", download: true },
+      { label: "Print + assembly guide", url: "/projects/printer-stand-wire-panels-oct-2026/PRINT-GUIDE.md" },
+    ],
+    files: [
+      ...Array.from({ length: 5 }, (_, index) => ({ label: `Panel 1 · Plate ${index + 1}`, detail: "500 × 380 mm cover", url: `/projects/printer-stand-wire-panels-oct-2026/printer-stand-panel-1-plate-0${index + 1}-oct-2026.stl` })),
+      ...Array.from({ length: 5 }, (_, index) => ({ label: `Panel 2 · Plate ${index + 1}`, detail: "500 × 400 mm cover", url: `/projects/printer-stand-wire-panels-oct-2026/printer-stand-panel-2-plate-0${index + 1}-oct-2026.stl` })),
+      { label: "Seam key pack", detail: "26 hidden rear connectors", url: "/projects/printer-stand-wire-panels-oct-2026/printer-stand-seam-key-26-pack-oct-2026.stl" },
+      { label: "Left latch pack", detail: "4 replaceable 15.6 mm clips", url: "/projects/printer-stand-wire-panels-oct-2026/printer-stand-frame-latch-left-4-pack-oct-2026.stl" },
+      { label: "Right latch pack", detail: "4 replaceable 15.6 mm clips", url: "/projects/printer-stand-wire-panels-oct-2026/printer-stand-frame-latch-right-4-pack-oct-2026.stl" },
+    ],
+  },
   {
     id: "sink-rack-drain-bridge",
     title: "Sink Rack Drain Bridge",
@@ -551,9 +580,9 @@ function ConceptProjectDetail({ project, onStart }: { project: (typeof conceptPr
         <span className="research-badge"><Sparkles size={14} /> {project.status}</span>
       </div>
       <div className="organizer-concept-grid">
-        <div className="organizer-concept-art"><img src={project.image} alt={`${project.title} concept diagram`} /></div>
+        <div className={`organizer-concept-art ${project.renderLabel ? "geometry-render-art" : ""}`}><img src={project.image} alt={`${project.title} ${project.renderLabel ? "CAD render" : "concept diagram"}`} />{project.renderLabel && <span className="geometry-render-label">{project.renderLabel}</span>}</div>
         <div className="organizer-concept-copy">
-          <span className="recommendation-tag"><BadgeCheck size={14} /> P1S-aware starting direction · dimensions still required</span>
+          <span className="recommendation-tag"><BadgeCheck size={14} /> {project.primaryFiles ? "Prototype CAD ready · physical fit still required" : "P1S-aware starting direction · dimensions still required"}</span>
           <h3>{project.thesis}</h3>
           <p>{project.description}</p>
           <div className="project-spec-strip concept-facts">
@@ -562,8 +591,10 @@ function ConceptProjectDetail({ project, onStart }: { project: (typeof conceptPr
           <div className="organizer-module-grid concept-module-grid">
             {project.modules.map(([name, detail]) => <span key={name}><Box size={17} /><strong>{name}</strong><small>{detail}</small></span>)}
           </div>
-          <div className="concept-question-list"><strong>Three answers unlock CAD</strong>{project.questions.map((question, index) => <span key={question}><b>{index + 1}</b>{question}</span>)}</div>
-          <button className="primary-button organizer-start" onClick={() => onStart(project.prompt)}>Start measurements <ArrowRight size={16} /></button>
+          <div className="concept-question-list"><strong>{project.primaryFiles ? "Three checks before full-panel printing" : "Three answers unlock CAD"}</strong>{project.questions.map((question, index) => <span key={question}><b>{index + 1}</b>{question}</span>)}</div>
+          {project.primaryFiles && <div className="project-primary-actions">{project.primaryFiles.map((file, index) => <a className={index === 0 ? "primary-button" : "secondary-button"} href={file.url} download={file.download || undefined} target={file.download ? undefined : "_blank"} rel={file.download ? undefined : "noreferrer"} key={file.url}>{index === 0 ? <Download size={16} /> : <ShieldCheck size={16} />}{file.label}</a>)}</div>}
+          {project.files && <details className="project-file-drawer"><summary><span>Panel plates and connector packs</span><small>{project.files.length} printable files</small><ChevronRight size={16} /></summary><div className="project-file-grid">{project.files.map((file) => <a href={file.url} download key={file.url}><Download size={15} /><span><strong>{file.label}</strong><small>{file.detail}</small></span></a>)}</div></details>}
+          <button className={project.primaryFiles ? "secondary-button organizer-start" : "primary-button organizer-start"} onClick={() => onStart(project.prompt)}>{project.primaryFiles ? "Record coupon result" : "Start measurements"} <ArrowRight size={16} /></button>
           {project.sources && <div className="organizer-sources"><span>Research:</span>{project.sources.map(([label, url]) => <a href={url} target="_blank" rel="noreferrer" key={url}>{label}</a>)}</div>}
         </div>
       </div>

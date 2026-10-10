@@ -1,0 +1,165 @@
+{
+  "design": {
+    "finished_panels_mm": [
+      [
+        500,
+        380
+      ],
+      [
+        500,
+        400
+      ]
+    ],
+    "grid_per_panel": [
+      5,
+      2
+    ],
+    "tile_width_mm": 99.6,
+    "tile_heights_mm": [
+      189.75,
+      199.75
+    ],
+    "visible_face_mm": 0.8,
+    "ribbed_thickness_mm": 3.0,
+    "assumed_tube_mm": 15.0,
+    "selected_clip_clearance_mm": 0.6
+  },
+  "files": {
+    "printer-stand-panel-1-plate-01-oct-2026.stl": {
+      "dimensions_mm": [
+        203.2,
+        189.75,
+        4.6
+      ],
+      "triangles": 3240,
+      "petg_grams": 60.5
+    },
+    "printer-stand-panel-1-plate-02-oct-2026.stl": {
+      "dimensions_mm": [
+        203.2,
+        189.75,
+        4.0
+      ],
+      "triangles": 2312,
+      "petg_grams": 58.0
+    },
+    "printer-stand-panel-1-plate-03-oct-2026.stl": {
+      "dimensions_mm": [
+        203.2,
+        189.75,
+        4.6
+      ],
+      "triangles": 4168,
+      "petg_grams": 63.0
+    },
+    "printer-stand-panel-1-plate-04-oct-2026.stl": {
+      "dimensions_mm": [
+        203.2,
+        189.75,
+        4.0
+      ],
+      "triangles": 2312,
+      "petg_grams": 58.0
+    },
+    "printer-stand-panel-1-plate-05-oct-2026.stl": {
+      "dimensions_mm": [
+        203.2,
+        189.75,
+        4.6
+      ],
+      "triangles": 3240,
+      "petg_grams": 60.5
+    },
+    "printer-stand-panel-2-plate-01-oct-2026.stl": {
+      "dimensions_mm": [
+        203.2,
+        199.75,
+        4.6
+      ],
+      "triangles": 3240,
+      "petg_grams": 63.2
+    },
+    "printer-stand-panel-2-plate-02-oct-2026.stl": {
+      "dimensions_mm": [
+        203.2,
+        199.75,
+        4.0
+      ],
+      "triangles": 2312,
+      "petg_grams": 60.5
+    },
+    "printer-stand-panel-2-plate-03-oct-2026.stl": {
+      "dimensions_mm": [
+        203.2,
+        199.75,
+        4.6
+      ],
+      "triangles": 4168,
+      "petg_grams": 65.8
+    },
+    "printer-stand-panel-2-plate-04-oct-2026.stl": {
+      "dimensions_mm": [
+        203.2,
+        199.75,
+        4.0
+      ],
+      "triangles": 2312,
+      "petg_grams": 60.5
+    },
+    "printer-stand-panel-2-plate-05-oct-2026.stl": {
+      "dimensions_mm": [
+        203.2,
+        199.75,
+        4.6
+      ],
+      "triangles": 3240,
+      "petg_grams": 63.2
+    },
+    "printer-stand-seam-key-26-pack-oct-2026.stl": {
+      "dimensions_mm": [
+        216.5,
+        84.8,
+        2.1
+      ],
+      "triangles": 2808,
+      "petg_grams": 26.1
+    },
+    "printer-stand-frame-latch-left-4-pack-oct-2026.stl": {
+      "dimensions_mm": [
+        68.8,
+        40.0,
+        30.0
+      ],
+      "triangles": 880,
+      "petg_grams": 20.0
+    },
+    "printer-stand-frame-latch-right-4-pack-oct-2026.stl": {
+      "dimensions_mm": [
+        68.80000000000001,
+        40.0,
+        30.0
+      ],
+      "triangles": 880,
+      "petg_grams": 20.0
+    },
+    "printer-stand-frame-fit-coupon-15mm-oct-2026.stl": {
+      "dimensions_mm": [
+        77.19999999999999,
+        18.4,
+        15.6
+      ],
+      "triangles": 312,
+      "petg_grams": 7.3
+    }
+  },
+  "planning": {
+    "panel_1_petg_grams": 333.0,
+    "panel_2_petg_grams": 346.0,
+    "total_petg_grams": 679.0,
+    "plates": 13,
+    "time_range_hours": [
+      30,
+      38
+    ]
+  }
+}

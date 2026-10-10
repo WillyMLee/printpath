@@ -83,6 +83,7 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 | New concept queue | Pottery signature stamps, perfume Lazy Susan, three saved phone-stand directions, ceramic cabinet risers, and a film-camera toolkit with measurement gates | Outlined |
 | Board-game and apartment concepts | Token upgrade studio, five-plate magnetic 3D island scaffold, official-CAD Steam Controller dock, and four-part quiet utility kit | Outlined |
 | Draft geometry renders | Product-style mesh previews for Tidepool Buddy, Capiz Cove, Cozy Harvest, and the Evergarden bouquet, with clearly labeled pre-CAD plate, time, and material ranges | Shipped |
+| Printer-stand wire panels | Two exact-size 5 × 2 modular covers, ten P1S tile plates, hidden rear seam keys, replaceable side latches, and a three-fit 15 mm frame coupon | Prototype CAD ready |
 
 ## Next implementation candidates
 
@@ -169,3 +170,4 @@ This is the living implementation record for PrintPath. Update it whenever a fea
 - **2026-08-17:** Use Valve's official Steam Controller and Puck CAD plus keep-out drawings as the fit authority before creating the holder geometry.
 - **2026-08-17:** Group small apartment optimizations into one quiet utility family whose pieces consume no new floor area and share a restrained visual language.
 - **2026-08-26:** Distinguish approved-STL renders from geometry-draft renders; show conservative planning ranges for draft projects and keep Bambu Studio as the source of final print time and filament usage.
+- **2026-10-10:** Cover the 500 × 380 mm and 500 × 400 mm stand openings with thin face-down tiles, hidden rear keys, and replaceable side-only PETG latches; require the 15 mm frame coupon before any full-panel plate.
